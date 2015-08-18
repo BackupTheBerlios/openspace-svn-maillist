@@ -1,0 +1,255 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r288 - trunk/src/plugins/filelist
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r288%20-%20trunk/src/plugins/filelist&In-Reply-To=%3C200604281848.k3SIm0SF014513%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000068.html">
+   <LINK REL="Next"  HREF="000070.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r288 - trunk/src/plugins/filelist</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r288%20-%20trunk/src/plugins/filelist&In-Reply-To=%3C200604281848.k3SIm0SF014513%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r288 - trunk/src/plugins/filelist">compbatant at berlios.de
+       </A><BR>
+    <I>Fri Apr 28 20:48:00 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000068.html">[Openspace-svn] r287 - trunk/src/plugins/filelist
+</A></li>
+        <LI>Next message: <A HREF="000070.html">[Openspace-svn] r289 - in trunk/src: . plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#69">[ date ]</a>
+              <a href="thread.html#69">[ thread ]</a>
+              <a href="subject.html#69">[ subject ]</a>
+              <a href="author.html#69">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-28 20:47:57 +0200 (Fri, 28 Apr 2006)
+New Revision: 288
+
+Modified:
+   trunk/src/plugins/filelist/OSVfsSftp.cpp
+Log:
+download i upload pojedynczych plikow :)
+
+
+Modified: trunk/src/plugins/filelist/OSVfsSftp.cpp
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-28 18:03:00 UTC (rev 287)
++++ trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-28 18:47:57 UTC (rev 288)
+@@ -30,6 +30,10 @@
+ #include &lt;pwd.h&gt;
+ #include &lt;grp.h&gt;
+ 
++#include &lt;sys/stat.h&gt;
++#include &lt;fcntl.h&gt;
++
++
+ #include &lt;string&gt;
+ #include &lt;vector&gt;
+ #include &lt;iostream&gt;
+@@ -56,6 +60,7 @@
+ 
+ 
+     dirsftp=NULL;
++    sftp=NULL;
+ 
+     
+     SSH_OPTIONS *options;
+@@ -253,7 +258,16 @@
+     return os_file;
+     }
+ 
++    if(!sftp_dir_eof(dirsftp)){
++        ssh_say(0,&quot;error : %s\n&quot;,ssh_get_error(session));
++        //return;
++    }
+ 
++   if(sftp_dir_close(dirsftp)){
++        ssh_say(0,&quot;Error : %s\n&quot;,ssh_get_error(session));
++        //return;
++    }
++
+     os_file.name = &quot;&quot;;
+     return os_file;
+ 
+@@ -273,8 +287,8 @@
+ int OSVfsSftp::osopendir (std::string dir)
+ {
+   
+-    if(dirsftp)
+-    sftp_dir_close(dirsftp);   
++    //if(dirsftp)
++    //sftp_dir_close(dirsftp);   
+ 
+     
+     /* opening a directory */
+@@ -286,18 +300,25 @@
+         ssh_say(0,&quot;Directory not opened(%s)\n&quot;,ssh_get_error(session));
+         return -1;
+     }
++    else
++    {
++    this-&gt;dir=dir;
++    }
+ 
+ 
+ }
+ 
+ int OSVfsSftp::mkdir (std::string dir, int mode)
+ {
++
++  string file=this-&gt;dir+&quot;/&quot;+dir;
+   
++  return sftp_mkdir(sftp, (char*)file.c_str(), NULL);
+ }
+ 
+ int OSVfsSftp::copy ( OSThreadExec * te)
+ {
+-
++copymove(te,true);
+ }
+ 
+ int OSVfsSftp::move (OSThreadExec* te)
+@@ -322,6 +343,86 @@
+ int OSVfsSftp::copymove (OSThreadExec* te, bool copy)
+ {
+ 
++
++std::vector &lt; std::string &gt;::iterator iter;
++
++std::string::size_type pos = te-&gt;options.find ( &quot;upload&quot; );
++    if ( pos == std::string::npos )
++    {
++
++	for (iter = te-&gt;src.begin (); iter != te-&gt;src.end(); iter++)
++  	{
++	
++		
++		SFTP_FILE *dst;
++		int src;
++		int len=1;
++    		char data[1024];
++		
++		std::string ds = te-&gt;dst;
++	   	ds.append (SEPARATOR);
++	  	ds.append (FXFile::name (iter-&gt;c_str ()).text ());
++				
++		src=open(iter-&gt;c_str(),O_RDONLY,NULL);
++		
++    		dst=sftp_open(sftp,(char*)ds.c_str(),O_WRONLY|O_CREAT,NULL);
++		if(dst)
++		{
++		
++		
++		
++			while((len=read(src,data,1024)) &gt; 0)
++			{
++       				if(sftp_write(dst,data,len)!=len)
++				{
++            			ssh_say(0,&quot;error writing %d bytes : %s\n&quot;,len,ssh_get_error(session));
++            			return -1;
++        			}
++		
++			}
++		sftp_file_close(dst);
++		close(src);
++    		}	
++	
++    
++    	}
++    }
++    else
++    {
++    	for (iter = te-&gt;src.begin (); iter != te-&gt;src.end(); iter++)
++  	{
++		SFTP_FILE *src;
++		int dst;
++		int len=1;
++    		char data[1024];
++		
++    		src=sftp_open(sftp,(char*)iter-&gt;c_str(),O_RDONLY,NULL);
++		if(src)
++		{
++		
++		std::string ds = te-&gt;dst;
++	   	ds.append (SEPARATOR);
++	  	ds.append (FXFile::name (iter-&gt;c_str ()).text ());
++		
++		dst=open(ds.c_str(),O_WRONLY | O_CREAT | O_TRUNC,S_IRUSR+S_IWUSR);
++		
++			while((len=sftp_read(src,data,1024)) &gt; 0)
++			{
++       				if(write(dst,data,len)!=len)
++				{
++            			ssh_say(0,&quot;error writing %d bytes : %s\n&quot;,len,ssh_get_error(session));
++            			return -1;
++        			}
++		
++			}
++		sftp_file_close(src);
++		close(dst);
++    		}	
++    	}
++    }	
++
++
++
+   
+ }
+ 
+@@ -370,7 +471,7 @@
+ 
+ std::string OSVfsSftp::symlink (std::string path)
+ {
+-  
++  return &quot;&quot;;
+ }
+ bool OSVfsSftp::symlink (std::string src, std::string dst)
+ {
+@@ -384,7 +485,7 @@
+ 
+ int OSVfsSftp::quit (void)
+ {
+-    if(dirsftp)
++    if(sftp)
+     ssh_disconnect(session);
+     return 0;
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000068.html">[Openspace-svn] r287 - trunk/src/plugins/filelist
+</A></li>
+	<LI>Next message: <A HREF="000070.html">[Openspace-svn] r289 - in trunk/src: . plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#69">[ date ]</a>
+              <a href="thread.html#69">[ thread ]</a>
+              <a href="subject.html#69">[ subject ]</a>
+              <a href="author.html#69">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

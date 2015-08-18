@@ -1,0 +1,193 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r258 - in trunk: icons/default src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r258%20-%20in%20trunk%3A%20icons/default%20src&In-Reply-To=%3C200603062333.k26NXJLX020470%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000038.html">
+   <LINK REL="Next"  HREF="000040.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r258 - in trunk: icons/default src</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r258%20-%20in%20trunk%3A%20icons/default%20src&In-Reply-To=%3C200603062333.k26NXJLX020470%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r258 - in trunk: icons/default src">compbatant at berlios.de
+       </A><BR>
+    <I>Tue Mar  7 00:33:19 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000038.html">[Openspace-svn] r257 - in trunk: . icons icons/mini src
+</A></li>
+        <LI>Next message: <A HREF="000040.html">[Openspace-svn] r259 - in trunk: icons/default icons/mini src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#39">[ date ]</a>
+              <a href="thread.html#39">[ thread ]</a>
+              <a href="subject.html#39">[ subject ]</a>
+              <a href="author.html#39">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-03-07 00:33:15 +0100 (Tue, 07 Mar 2006)
+New Revision: 258
+
+Added:
+   trunk/icons/default/commands_settings.png
+   trunk/icons/default/look_and_feel.png
+   trunk/icons/default/main_settings.png
+   trunk/icons/default/speed_and_delays.png
+Modified:
+   trunk/src/OSPreferences.cpp
+Log:
+dalej pracuje nad wygladem :)
+
+
+Added: trunk/icons/default/commands_settings.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/commands_settings.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/default/look_and_feel.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/look_and_feel.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/default/main_settings.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/main_settings.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/default/speed_and_delays.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/speed_and_delays.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Modified: trunk/src/OSPreferences.cpp
+===================================================================
+--- trunk/src/OSPreferences.cpp	2006-03-06 18:46:28 UTC (rev 257)
++++ trunk/src/OSPreferences.cpp	2006-03-06 23:33:15 UTC (rev 258)
+@@ -343,7 +343,7 @@
+ 
+     FXVerticalFrame *mainpane = new FXVerticalFrame ( switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y );
+ 
+-    new FXButton ( buttons, &quot;Main Settings&quot;, NULL, switcher, FXSwitcher::ID_OPEN_FIRST, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
++    new FXButton ( buttons, &quot;Main Settings&quot;, objmanager-&gt;osicons[&quot;main_settings&quot;], switcher, FXSwitcher::ID_OPEN_FIRST, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
+     new FXLabel ( mainpane, &quot;Let program to autoconfigure file type associacion settings&quot; );
+     FXHorizontalFrame *hoz1 = new FXHorizontalFrame ( mainpane, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+     new FXButton ( hoz1, &quot;Semi-Auto configure&quot;, NULL, this, OSPreferences::ID_MIME_APP );
+@@ -436,7 +436,7 @@
+ 
+     FXVerticalFrame *buttonsPane = new FXVerticalFrame ( switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+ 
+-    new FXButton ( buttons, &quot;Menu and Buttons Settings&quot;, NULL, switcher, FXSwitcher::ID_OPEN_SECOND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
++    new FXButton ( buttons, &quot;Menu and Buttons Settings&quot;, objmanager-&gt;osicons[&quot;menu_and_buttons&quot;], switcher, FXSwitcher::ID_OPEN_SECOND, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
+ 
+     new FXLabel ( buttonsPane, &quot;Buttons in configurable toolbox:&quot;, NULL, LAYOUT_LEFT );
+ 
+@@ -554,7 +554,7 @@
+ 
+     FXVerticalFrame *commandPluginsPane = new FXVerticalFrame ( switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+ 
+-    new FXButton ( buttons, &quot;Command plugins Settings&quot;, NULL, switcher, FXSwitcher::ID_OPEN_THIRD, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
++    new FXButton ( buttons, &quot;Command plugins Settings&quot;, objmanager-&gt;osicons[&quot;command_plugins&quot;], switcher, FXSwitcher::ID_OPEN_THIRD, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
+ 
+     new FXLabel ( commandPluginsPane, &quot;installed plugins&quot; );
+     commandPluginsList = new FXListBox ( commandPluginsPane, this, ID_COMMANDPLUGIN_CHANGE );
+@@ -626,7 +626,7 @@
+     commandsPane = new FXVerticalFrame ( switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+     new FXLabel ( commandsPane, &quot;Commands settings&quot;, NULL, LAYOUT_LEFT );
+ 
+-    new FXButton ( buttons, &quot;Commands Settings&quot;, NULL, switcher, FXSwitcher::ID_OPEN_FOURTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
++    new FXButton ( buttons, &quot;Commands Settings&quot;, objmanager-&gt;osicons[&quot;commands_settings&quot;], switcher, FXSwitcher::ID_OPEN_FOURTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
+ 
+     commandsCombo = new FXListBox ( commandsPane, this, ID_COMMAND_CHANGE );
+     new FXLabel ( commandsPane, &quot;icon: &quot;, NULL, LAYOUT_LEFT );
+@@ -767,7 +767,7 @@
+ 
+     filetypePane = new FXVerticalFrame ( switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+ 
+-    new FXButton ( buttons, &quot;File types Settings&quot;, NULL, switcher, FXSwitcher::ID_OPEN_FIFTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
++    new FXButton ( buttons, &quot;File types Settings&quot;, objmanager-&gt;osicons[&quot;file_types_settings&quot;], switcher, FXSwitcher::ID_OPEN_FIFTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
+ 
+ 
+ 
+@@ -919,7 +919,7 @@
+ 
+     //====================================================LOOK AND FEEL============================================================
+ 
+-    new FXButton ( buttons, &quot;Look and feel&quot;, NULL, switcher, FXSwitcher::ID_OPEN_SIXTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
++    new FXButton ( buttons, &quot;Look and feel&quot;,objmanager-&gt;osicons[&quot;look_and_feel&quot;], switcher, FXSwitcher::ID_OPEN_SIXTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
+ 
+     FXVerticalFrame *vframe = new FXVerticalFrame( switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+ 
+@@ -1032,7 +1032,7 @@
+ 
+ 
+ 
+-    new FXButton ( buttons, &quot;Speed and delays&quot;, NULL, switcher, FXSwitcher::ID_OPEN_SEVENTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
++    new FXButton ( buttons, &quot;Speed and delays&quot;, objmanager-&gt;osicons[&quot;speed_and_delays&quot;], switcher, FXSwitcher::ID_OPEN_SEVENTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
+ 
+ 
+     hframe = new FXHorizontalFrame( switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+@@ -1113,7 +1113,7 @@
+     vfsPane = new FXVerticalFrame ( switcher, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+     new FXLabel ( vfsPane, &quot;VFS settings&quot;, NULL, LAYOUT_LEFT );
+ 
+-    new FXButton ( buttons, &quot;Virtual File System Settings&quot;, NULL, switcher, FXSwitcher::ID_OPEN_EIGHTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
++    new FXButton ( buttons, &quot;Virtual File System Settings&quot;, objmanager-&gt;osicons[&quot;vfs_settings&quot;], switcher, FXSwitcher::ID_OPEN_EIGHTH, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
+ 
+ 
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000038.html">[Openspace-svn] r257 - in trunk: . icons icons/mini src
+</A></li>
+	<LI>Next message: <A HREF="000040.html">[Openspace-svn] r259 - in trunk: icons/default icons/mini src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#39">[ date ]</a>
+              <a href="thread.html#39">[ thread ]</a>
+              <a href="subject.html#39">[ subject ]</a>
+              <a href="author.html#39">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

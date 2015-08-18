@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r301 - trunk/src/plugins/filelist
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-May/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r301%20-%20trunk/src/plugins/filelist&In-Reply-To=%3C200605031441.k43EfjS7002697%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000081.html">
+   <LINK REL="Next"  HREF="000083.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r301 - trunk/src/plugins/filelist</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r301%20-%20trunk/src/plugins/filelist&In-Reply-To=%3C200605031441.k43EfjS7002697%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r301 - trunk/src/plugins/filelist">compbatant at berlios.de
+       </A><BR>
+    <I>Wed May  3 16:41:45 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000081.html">[Openspace-svn] r300 - trunk/src/plugins/filelist
+</A></li>
+        <LI>Next message: <A HREF="000083.html">[Openspace-svn] r302 - in trunk: . icons/big icons/default icons/mini src src/plugins/cmddialog src/plugins/filelist templates
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#82">[ date ]</a>
+              <a href="thread.html#82">[ thread ]</a>
+              <a href="subject.html#82">[ subject ]</a>
+              <a href="author.html#82">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-05-03 16:41:39 +0200 (Wed, 03 May 2006)
+New Revision: 301
+
+Modified:
+   trunk/src/plugins/filelist/OSVfsSftp.cpp
+Log:
+sftp-poprawki na connecta
+
+
+Modified: trunk/src/plugins/filelist/OSVfsSftp.cpp
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-05-03 13:50:07 UTC (rev 300)
++++ trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-05-03 14:41:39 UTC (rev 301)
+@@ -116,20 +116,20 @@
+                 ssh_disconnect(session);
+               return -1;
+         case SSH_SERVER_NOT_KNOWN:
+-            fprintf(stderr,&quot;The server is unknown. Do you trust the host key ?\n&quot;);
++            //fprintf(stderr,&quot;The server is unknown. Do you trust the host key ?\n&quot;);
+             ssh_get_pubkey_hash(session,hash);
+             ssh_print_hexa(&quot;Public key hash&quot;,(unsigned char*)hash,MD5_DIGEST_LEN);
+-            fgets(buf,sizeof(buf),stdin);
+-            if(strncasecmp(buf,&quot;yes&quot;,3)!=0){
+-                ssh_disconnect(session);
+-                return -1;
+-            }
+-            fprintf(stderr,&quot;This new key will be written on disk for further usage. do you agree ?\n&quot;);
+-            fgets(buf,sizeof(buf),stdin);
+-            if(strncasecmp(buf,&quot;yes&quot;,3)==0){
++            //fgets(buf,sizeof(buf),stdin);
++            //if(strncasecmp(buf,&quot;yes&quot;,3)!=0){
++            //   ssh_disconnect(session);
++            //   return -1;
++            //}
++            //fprintf(stderr,&quot;This new key will be written on disk for further usage. do you agree ?\n&quot;);
++            //fgets(buf,sizeof(buf),stdin);
++            //if(strncasecmp(buf,&quot;yes&quot;,3)==0){
+                 if(ssh_write_knownhost(session))
+                     fprintf(stderr,&quot;error %s\n&quot;,ssh_get_error(session));
+-            }
++           // }
+             
+             break;
+         case SSH_SERVER_ERROR:
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000081.html">[Openspace-svn] r300 - trunk/src/plugins/filelist
+</A></li>
+	<LI>Next message: <A HREF="000083.html">[Openspace-svn] r302 - in trunk: . icons/big icons/default icons/mini src src/plugins/cmddialog src/plugins/filelist templates
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#82">[ date ]</a>
+              <a href="thread.html#82">[ thread ]</a>
+              <a href="subject.html#82">[ subject ]</a>
+              <a href="author.html#82">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,191 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r290 - in trunk: . src src/plugins/filelist
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r290%20-%20in%20trunk%3A%20.%20src%20src/plugins/filelist&In-Reply-To=%3C200604282158.k3SLw5jI020190%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000070.html">
+   <LINK REL="Next"  HREF="000072.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r290 - in trunk: . src src/plugins/filelist</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r290%20-%20in%20trunk%3A%20.%20src%20src/plugins/filelist&In-Reply-To=%3C200604282158.k3SLw5jI020190%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r290 - in trunk: . src src/plugins/filelist">compbatant at berlios.de
+       </A><BR>
+    <I>Fri Apr 28 23:58:05 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000070.html">[Openspace-svn] r289 - in trunk/src: . plugins/filelist
+</A></li>
+        <LI>Next message: <A HREF="000072.html">[Openspace-svn] r291 - trunk/src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#71">[ date ]</a>
+              <a href="thread.html#71">[ thread ]</a>
+              <a href="subject.html#71">[ subject ]</a>
+              <a href="author.html#71">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-28 23:58:04 +0200 (Fri, 28 Apr 2006)
+New Revision: 290
+
+Modified:
+   trunk/openspacerc.in
+   trunk/src/OSFileListItem.cpp
+   trunk/src/plugins/filelist/OSVfsSftp.cpp
+   trunk/src/plugins/filelist/OSVfsSftp.h
+Log:
+dziala rename dla sftp, poprawiona szerokosc wyswietlanych ikon
+
+
+Modified: trunk/openspacerc.in
+===================================================================
+--- trunk/openspacerc.in	2006-04-28 20:28:58 UTC (rev 289)
++++ trunk/openspacerc.in	2006-04-28 21:58:04 UTC (rev 290)
+@@ -628,10 +628,18 @@
+ 		&lt;sftp&gt;
+ 			&lt;type&gt;network&lt;/type&gt;
+ 			&lt;style&gt;small icons&lt;/style&gt;
++			&lt;headers&gt;
++				&lt;header&gt;size&lt;/header&gt;
++			&lt;/headers&gt;
+ 			&lt;properties&gt;
+ 				&lt;name&gt;
+ 					&lt;width&gt;400&lt;/width&gt;					
+ 				&lt;/name&gt;
++				&lt;size&gt;
++					&lt;width&gt;80&lt;/width&gt;
++					&lt;display&gt;MB&lt;/display&gt;
++					&lt;type&gt;size&lt;/type&gt;
++				&lt;/size&gt;
+ 			&lt;/properties&gt;	
+ 		&lt;/sftp&gt;
+ 		&lt;search&gt;
+
+Modified: trunk/src/OSFileListItem.cpp
+===================================================================
+--- trunk/src/OSFileListItem.cpp	2006-04-28 20:28:58 UTC (rev 289)
++++ trunk/src/OSFileListItem.cpp	2006-04-28 21:58:04 UTC (rev 290)
+@@ -286,11 +286,11 @@
+         //=============CHANGES==========================================
+         for ( int i = 0;i &lt; osf.attrib.size();i++ )
+         {
+-            th = th + 4 + font1-&gt;getFontHeight();
++            th = th + 2 + font1-&gt;getFontHeight();
+         }
+         //=============CHANGES==========================================
+ 
+-        if ( ih &gt; th )
++        if ( ih + firstth &gt; th )
+             h = BIG_LINE_SPACING + ih + firstth + 4;
+         else
+             h = BIG_LINE_SPACING + th;
+
+Modified: trunk/src/plugins/filelist/OSVfsSftp.cpp
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-28 20:28:58 UTC (rev 289)
++++ trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-28 21:58:04 UTC (rev 290)
+@@ -46,6 +46,7 @@
+ 	OSVirtualFileSystemInfo v;
+ 	
+ 	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;name&quot;));
++	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;size&quot;,&quot;size&quot;));	
+ 	v.information=&quot;SFTP file list - default plugin&quot;;
+ 	v.version=&quot;1&quot;;
+ 	
+@@ -57,6 +58,7 @@
+     this-&gt;id=id;
+     fields = (*vector_name);
+ 
++    fieldsnum = vector_name-&gt;size ();
+ 
+ 
+     dirsftp=NULL;
+@@ -251,6 +253,29 @@
+ 	os_file.type = FOLDER;
+ 	else
+         os_file.type = 0;
++	
++	os_file.size=file-&gt;size;
++	
++	
++	
++	
++    for (int i = 0; i &lt; fieldsnum - 1; i++)
++    {
++
++	if (fields[i + 1] == &quot;size&quot;)
++	    os_file.attrib.push_back(numtostring (os_file.size));
++	
++
++    }
++	
++	
++	
++	
++	
++	
++	
++	
++	
+     
+     //fxmessage(&quot;name=%s type=%x\n&quot;,file-&gt;name,file-&gt;permissions);
+     
+@@ -336,7 +361,7 @@
+ 
+ int OSVfsSftp::rename (std::string orgname, std::string newname)
+ {
+-
++return sftp_rename(sftp,(char*)orgname.c_str(),(char*)newname.c_str());
+ }
+ 
+ 
+
+Modified: trunk/src/plugins/filelist/OSVfsSftp.h
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsSftp.h	2006-04-28 20:28:58 UTC (rev 289)
++++ trunk/src/plugins/filelist/OSVfsSftp.h	2006-04-28 21:58:04 UTC (rev 290)
+@@ -54,7 +54,7 @@
+ {
+ private:
+ 
+-    
++    int fieldsnum;
+     std::string dir;
+     std::vector&lt;std::string&gt; fields;
+     int copymove( OSThreadExec * te, bool copy = true );
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000070.html">[Openspace-svn] r289 - in trunk/src: . plugins/filelist
+</A></li>
+	<LI>Next message: <A HREF="000072.html">[Openspace-svn] r291 - trunk/src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#71">[ date ]</a>
+              <a href="thread.html#71">[ thread ]</a>
+              <a href="subject.html#71">[ subject ]</a>
+              <a href="author.html#71">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

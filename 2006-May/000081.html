@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r300 - trunk/src/plugins/filelist
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-May/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r300%20-%20trunk/src/plugins/filelist&In-Reply-To=%3C200605031350.k43DoE2p000724%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000082.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r300 - trunk/src/plugins/filelist</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r300%20-%20trunk/src/plugins/filelist&In-Reply-To=%3C200605031350.k43DoE2p000724%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r300 - trunk/src/plugins/filelist">compbatant at berlios.de
+       </A><BR>
+    <I>Wed May  3 15:50:14 CEST 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000082.html">[Openspace-svn] r301 - trunk/src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#81">[ date ]</a>
+              <a href="thread.html#81">[ thread ]</a>
+              <a href="subject.html#81">[ subject ]</a>
+              <a href="author.html#81">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-05-03 15:50:07 +0200 (Wed, 03 May 2006)
+New Revision: 300
+
+Modified:
+   trunk/src/plugins/filelist/OSVfsFtp.h
+   trunk/src/plugins/filelist/OSVfsSftp.cpp
+   trunk/src/plugins/filelist/OSVfsSftp.h
+Log:
+sftp-mozliwosc wybrania portu, rekurencyjny chmod
+
+
+Modified: trunk/src/plugins/filelist/OSVfsFtp.h
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsFtp.h	2006-04-30 16:42:35 UTC (rev 299)
++++ trunk/src/plugins/filelist/OSVfsFtp.h	2006-05-03 13:50:07 UTC (rev 300)
+@@ -95,6 +95,7 @@
+     OSFile priv_osreaddir( std::map &lt;std::string, OSFile&gt; &amp; filesMap, std::map &lt;std::string, OSFile&gt;::iterator &amp; iter2 );
+     void getRecursiveFiles( std::vector&lt;std::string&gt; src, unsigned long &amp;size );
+     void goLocalRecursive( std::string path, std::string prefix, OSThreadExec* te );
++    void chmodRecursive(std::string path, unsigned int mod);
+     void local_totalsize( std::string path, unsigned long &amp;size );
+     int str_mode_int( std::string per );
+ 
+
+Modified: trunk/src/plugins/filelist/OSVfsSftp.cpp
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-30 16:42:35 UTC (rev 299)
++++ trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-05-03 13:50:07 UTC (rev 300)
+@@ -87,6 +87,8 @@
+       
+     options_set_username(options,(char*)pt.user.c_str());
+     options_set_host(options,(char*)pt.server.c_str());
++    if(pt.port!=&quot;&quot;)
++    options_set_port(options,atoi(pt.port.c_str()));
+     session=ssh_connect(options);
+     
+     if(!session)
+@@ -883,6 +885,9 @@
+ bool OSVfsSftp::mode (std::string file, unsigned int mod, bool recursive)
+ {
+ 
++  if(!recursive)
++  {
++
+ 	SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)file.c_str ());
+         if(attr) 
+ 	{
+@@ -891,9 +896,70 @@
+ 	sftp_attributes_free(attr);
+ 	}
+ 
++  }
++  else
++  {
++  chmodRecursive(file,mod);
++  }
++
++
++
+     
+ }
+ 
++void OSVfsSftp::chmodRecursive(string path, unsigned int mod)
++{
++
++
++
++SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)path.c_str ());
++SFTP_DIR *dirsftp;
++
++ if(attr) 
++ {
++  if((attr-&gt;permissions &amp; S_IFMT) == S_IFDIR)
++  {
++	
++  attr-&gt;permissions=mod;
++  sftp_setstat(sftp,(char*)path.c_str (),attr);	 
++  
++  dirsftp=sftp_opendir(sftp,(char*)path.c_str());
++
++   if(dirsftp)
++   { 
++
++    SFTP_ATTRIBUTES *file;
++    
++    while(file=sftp_readdir(sftp,dirsftp))
++    {
++
++    	if (file-&gt;name[0] != '.' || (file-&gt;name[1] != '\0' &amp;&amp; (file-&gt;name[1] != '.' || file-&gt;name[2] != '\0')))
++    	{
++   
++    		std::string filename = path;
++		filename.append (&quot;/&quot;);
++		filename.append (file-&gt;name);
++ 
++    	        chmodRecursive(filename,mod);
++	}
++	
++    }
++   sftp_dir_close (dirsftp);
++   }
++  }
++  else
++  {
++	attr-&gt;permissions=mod;
++	sftp_setstat(sftp,(char*)path.c_str (),attr);  
++  
++  }    
++ sftp_attributes_free(attr);
++ } 
++
++
++
++}
++
+ std::string OSVfsSftp::owner (std::string file)
+ {
+ 
+
+Modified: trunk/src/plugins/filelist/OSVfsSftp.h
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsSftp.h	2006-04-30 16:42:35 UTC (rev 299)
++++ trunk/src/plugins/filelist/OSVfsSftp.h	2006-05-03 13:50:07 UTC (rev 300)
+@@ -89,6 +89,7 @@
+     void local_totalsize ( std::string path, unsigned long &amp;size );
+     void goLocalRecursive ( std::string path, std::string prefix, OSThreadExec *te );
+     void goRecursive ( std::string path, std::string prefix, OSThreadExec *te );
++    void chmodRecursive(std::string path, unsigned int mod);
+     int removeRecursive ( std::string path, OSThreadExec *te );
+     int  uploadFile (std::string from, std::string to, OSThreadExec* te);
+     int  downloadFile (std::string from, std::string to, OSThreadExec* te);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000082.html">[Openspace-svn] r301 - trunk/src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#81">[ date ]</a>
+              <a href="thread.html#81">[ thread ]</a>
+              <a href="subject.html#81">[ subject ]</a>
+              <a href="author.html#81">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

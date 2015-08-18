@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r228 - branches/mloskot-style-refactoring/src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r228%20-%20branches/mloskot-style-refactoring/src&In-Reply-To=%3C200511111825.jABIPGaX022502%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000009.html">
+   <LINK REL="Next"  HREF="000010.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r228 - branches/mloskot-style-refactoring/src</H1>
+    <B>compbatant at berlios.de</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r228%20-%20branches/mloskot-style-refactoring/src&In-Reply-To=%3C200511111825.jABIPGaX022502%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r228 - branches/mloskot-style-refactoring/src">compbatant at berlios.de
+       </A><BR>
+    <I>Fri Nov 11 19:25:16 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000009.html">[Openspace-svn] r227 - in branches/mloskot-style-refactoring: . src
+</A></li>
+        <LI>Next message: <A HREF="000010.html">[Openspace-svn] r229 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#8">[ date ]</a>
+              <a href="thread.html#8">[ thread ]</a>
+              <a href="subject.html#8">[ subject ]</a>
+              <a href="author.html#8">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2005-11-11 19:25:12 +0100 (Fri, 11 Nov 2005)
+New Revision: 228
+
+Modified:
+   branches/mloskot-style-refactoring/src/OSFileList.cpp
+Log:
+teraz dziala, zostaje naprawic kompatybilnosc reszty pluginow 
+
+
+Modified: branches/mloskot-style-refactoring/src/OSFileList.cpp
+===================================================================
+--- branches/mloskot-style-refactoring/src/OSFileList.cpp	2005-11-11 18:07:47 UTC (rev 227)
++++ branches/mloskot-style-refactoring/src/OSFileList.cpp	2005-11-11 18:25:12 UTC (rev 228)
+@@ -151,11 +151,11 @@
+ 
+     if (type == &quot;local&quot;)
+     {
+-    string size = conf-&gt;readonestring (&quot;/OpenspaceConfig/OSFileList/local/thumbs/size&quot;);
++    string size = conf-&gt;readonestring (&quot;/OpenspaceConfig/filelist/local/thumbs/size&quot;);
+     thumb_size = atoi (size.c_str ());
+     }
+ 
+-    string style = conf-&gt;readonestring (&quot;/OpenspaceConfig/OSFileList/&quot; + this-&gt;type + &quot;/style&quot;);
++    string style = conf-&gt;readonestring (&quot;/OpenspaceConfig/filelist/&quot; + this-&gt;type + &quot;/style&quot;);
+     if (style == &quot;big icons&quot;)
+     {
+     this-&gt;setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
+@@ -303,7 +303,7 @@
+     vector_name.push_back (&quot;name&quot;);
+     string wi;
+ 
+-    if ((wi = conf-&gt;readonestring (&quot;/OpenspaceConfig/OSFileList/&quot;+type+&quot;/properties/name/width&quot;)) != &quot;&quot;)
++    if ((wi = conf-&gt;readonestring (&quot;/OpenspaceConfig/filelist/&quot;+type+&quot;/properties/name/width&quot;)) != &quot;&quot;)
+     vector_width.push_back (atoi (wi.c_str ()));
+     else
+     vector_width.push_back (100);
+@@ -315,14 +315,14 @@
+ 
+    // display_size = conf-&gt;readonestring (&quot;/OpenspaceConfig/OSFileList/&quot;+type+&quot;/properties/name/display&quot;);
+ 
+-    if (conf-&gt;openxpath (&quot;/OpenspaceConfig/OSFileList/&quot;+type+&quot;/headers/header&quot;) != -1)
++    if (conf-&gt;openxpath (&quot;/OpenspaceConfig/filelist/&quot;+type+&quot;/headers/header&quot;) != -1)
+     {
+     string res;
+     while (conf-&gt;getnextstring (res))
+     {
+ 
+ 
+-        if ((wi = conf-&gt;readonestring (&quot;/OpenspaceConfig/OSFileList/&quot;+type+&quot;/properties/&quot; + res + &quot;/width&quot;)) != &quot;&quot;)
++        if ((wi = conf-&gt;readonestring (&quot;/OpenspaceConfig/filelist/&quot;+type+&quot;/properties/&quot; + res + &quot;/width&quot;)) != &quot;&quot;)
+         vector_width.push_back (atoi (wi.c_str ()));
+         else
+         vector_width.push_back (40);
+@@ -330,7 +330,7 @@
+ 
+         vector_name.push_back (res);
+ 
+-        string fieldtype=conf-&gt;readonestring (&quot;/OpenspaceConfig/OSFileList/&quot;+type+&quot;/properties/&quot; + res + &quot;/type&quot;);
++        string fieldtype=conf-&gt;readonestring (&quot;/OpenspaceConfig/filelist/&quot;+type+&quot;/properties/&quot; + res + &quot;/type&quot;);
+                 
+         if (fieldtype == &quot;size&quot;)
+         vector_type.push_back (1);
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000009.html">[Openspace-svn] r227 - in branches/mloskot-style-refactoring: . src
+</A></li>
+	<LI>Next message: <A HREF="000010.html">[Openspace-svn] r229 - tags
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#8">[ date ]</a>
+              <a href="thread.html#8">[ thread ]</a>
+              <a href="subject.html#8">[ subject ]</a>
+              <a href="author.html#8">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,108 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r298 - trunk/src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r298%20-%20trunk/src&In-Reply-To=%3C200604301637.k3UGbS7G008263%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000078.html">
+   <LINK REL="Next"  HREF="000080.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r298 - trunk/src</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r298%20-%20trunk/src&In-Reply-To=%3C200604301637.k3UGbS7G008263%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r298 - trunk/src">compbatant at berlios.de
+       </A><BR>
+    <I>Sun Apr 30 18:37:28 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000078.html">[Openspace-svn] r297 - in trunk: . src
+</A></li>
+        <LI>Next message: <A HREF="000080.html">[Openspace-svn] r299 - trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#79">[ date ]</a>
+              <a href="thread.html#79">[ thread ]</a>
+              <a href="subject.html#79">[ subject ]</a>
+              <a href="author.html#79">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-30 18:37:25 +0200 (Sun, 30 Apr 2006)
+New Revision: 298
+
+Modified:
+   trunk/src/OSFileList.cpp
+Log:
+jescze poprawka na rozpoznawanie typow plikow po zawartosci
+
+
+Modified: trunk/src/OSFileList.cpp
+===================================================================
+--- trunk/src/OSFileList.cpp	2006-04-30 16:23:02 UTC (rev 297)
++++ trunk/src/OSFileList.cpp	2006-04-30 16:37:25 UTC (rev 298)
+@@ -492,12 +492,8 @@
+ 
+     string r;
+     
+-    if(!mime_magic || type!=&quot;local&quot; || type!=&quot;search&quot;)
++    if(mime_magic &amp;&amp; (type==&quot;local&quot; || type==&quot;search&quot;))
+     {
+-      r = OSMimeType::getMimeFromName (name);      
+-    }
+-    else
+-    {	
+       r = magic_file(ms, name.c_str());
+       string::size_type n;
+       if((n=r.find(&quot;;&quot;))!=string::npos)
+@@ -505,10 +501,14 @@
+        r=r.substr(0,n);
+       }
+       
+-      if(r==&quot;&quot; || r==&quot;video/unknown&quot; || r==&quot;application/octet-stream&quot; || r==&quot;audio/X-HX-AAC-ADTS&quot;) // .serverauth.9710: video/unknown
++      if(r==&quot;&quot; || r==&quot;video/unknown&quot; || r==&quot;application/octet-stream&quot; || r==&quot;FFF6    0xFFF0          audio/X-HX-AAC-ADTS&quot;) // .serverauth.9710: video/unknown
+ 
+-      r = OSMimeType::getMimeFromName (name);
+-      
++      r = OSMimeType::getMimeFromName (name);    
++    }
++    else
++    {	
++     r = OSMimeType::getMimeFromName (name);
++ 
+     } 
+    //printf(&quot;Name: '%s' MimeType: '%s'\n&quot;, name.c_str(), r.c_str());
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000078.html">[Openspace-svn] r297 - in trunk: . src
+</A></li>
+	<LI>Next message: <A HREF="000080.html">[Openspace-svn] r299 - trunk
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#79">[ date ]</a>
+              <a href="thread.html#79">[ thread ]</a>
+              <a href="subject.html#79">[ subject ]</a>
+              <a href="author.html#79">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

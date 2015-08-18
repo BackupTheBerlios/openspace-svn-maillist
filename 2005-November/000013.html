@@ -1,0 +1,566 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r232 - in branches/mloskot-style-refactoring/src: . plugins plugins/cmddialog plugins/filelist
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r232%20-%20in%20branches/mloskot-style-refactoring/src%3A%20.%20plugins%20plugins/cmddialog%20plugins/filelist&In-Reply-To=%3C200511112205.jABM5xI5004756%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000012.html">
+   <LINK REL="Next"  HREF="000014.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r232 - in branches/mloskot-style-refactoring/src: . plugins plugins/cmddialog plugins/filelist</H1>
+    <B>mloskot at berlios.de</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r232%20-%20in%20branches/mloskot-style-refactoring/src%3A%20.%20plugins%20plugins/cmddialog%20plugins/filelist&In-Reply-To=%3C200511112205.jABM5xI5004756%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r232 - in branches/mloskot-style-refactoring/src: . plugins plugins/cmddialog plugins/filelist">mloskot at berlios.de
+       </A><BR>
+    <I>Fri Nov 11 23:05:59 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000012.html">[Openspace-svn] r231 - in branches/mloskot-style-refactoring: . src src/plugins/filelist
+</A></li>
+        <LI>Next message: <A HREF="000014.html">[Openspace-svn] r233 - in branches/mloskot-style-refactoring: . doc doc/dev icons icons/default src src/plugins src/plugins/cmddialog src/plugins/filelist templates
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#13">[ date ]</a>
+              <a href="thread.html#13">[ thread ]</a>
+              <a href="subject.html#13">[ subject ]</a>
+              <a href="author.html#13">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: mloskot
+Date: 2005-11-11 23:05:33 +0100 (Fri, 11 Nov 2005)
+New Revision: 232
+
+Modified:
+   branches/mloskot-style-refactoring/src/Makefile.am
+   branches/mloskot-style-refactoring/src/Makefile.in
+   branches/mloskot-style-refactoring/src/OSCMDDialogBox.cpp
+   branches/mloskot-style-refactoring/src/OSCMDDialogBox.h
+   branches/mloskot-style-refactoring/src/OSCommandTypeInfo.cpp
+   branches/mloskot-style-refactoring/src/OSCommandTypeInfo.h
+   branches/mloskot-style-refactoring/src/OSConfigure.cpp
+   branches/mloskot-style-refactoring/src/OSConfigure.h
+   branches/mloskot-style-refactoring/src/OSFile.h
+   branches/mloskot-style-refactoring/src/OSFileList.cpp
+   branches/mloskot-style-refactoring/src/OSFileList.h
+   branches/mloskot-style-refactoring/src/OSFileListItem.cpp
+   branches/mloskot-style-refactoring/src/OSFileListItem.h
+   branches/mloskot-style-refactoring/src/OSFileTypeInfo.cpp
+   branches/mloskot-style-refactoring/src/OSFileTypeInfo.h
+   branches/mloskot-style-refactoring/src/OSFileTypeSymbol.cpp
+   branches/mloskot-style-refactoring/src/OSFileTypeSymbol.h
+   branches/mloskot-style-refactoring/src/OSFirstRunDialogBox.cpp
+   branches/mloskot-style-refactoring/src/OSFirstRunDialogBox.h
+   branches/mloskot-style-refactoring/src/OSInfoPanel.cpp
+   branches/mloskot-style-refactoring/src/OSInfoPanel.h
+   branches/mloskot-style-refactoring/src/OSMainWindow.cpp
+   branches/mloskot-style-refactoring/src/OSMainWindow.h
+   branches/mloskot-style-refactoring/src/OSMimeApp.cpp
+   branches/mloskot-style-refactoring/src/OSMimeApp.h
+   branches/mloskot-style-refactoring/src/OSMimeType.cpp
+   branches/mloskot-style-refactoring/src/OSMimeType.h
+   branches/mloskot-style-refactoring/src/OSObjectManager.cpp
+   branches/mloskot-style-refactoring/src/OSObjectManager.h
+   branches/mloskot-style-refactoring/src/OSPathType.cpp
+   branches/mloskot-style-refactoring/src/OSPathType.h
+   branches/mloskot-style-refactoring/src/OSPreferences.cpp
+   branches/mloskot-style-refactoring/src/OSPreferences.h
+   branches/mloskot-style-refactoring/src/OSShutter.cpp
+   branches/mloskot-style-refactoring/src/OSShutter.h
+   branches/mloskot-style-refactoring/src/OSThreadExec.cpp
+   branches/mloskot-style-refactoring/src/OSThreadExec.h
+   branches/mloskot-style-refactoring/src/OSUtils.cpp
+   branches/mloskot-style-refactoring/src/OSUtils.h
+   branches/mloskot-style-refactoring/src/OSVirtualFileSystemBase.h
+   branches/mloskot-style-refactoring/src/OSVirtualFileSystemHeader.h
+   branches/mloskot-style-refactoring/src/OSVirtualFileSystemInfo.h
+   branches/mloskot-style-refactoring/src/config.h
+   branches/mloskot-style-refactoring/src/config.h.in
+   branches/mloskot-style-refactoring/src/main.cpp
+   branches/mloskot-style-refactoring/src/plugins/Makefile.am
+   branches/mloskot-style-refactoring/src/plugins/Makefile.in
+   branches/mloskot-style-refactoring/src/plugins/cmddialog/access.cpp
+   branches/mloskot-style-refactoring/src/plugins/cmddialog/clone.cpp
+   branches/mloskot-style-refactoring/src/plugins/cmddialog/compress.cpp
+   branches/mloskot-style-refactoring/src/plugins/cmddialog/editsymlink.cpp
+   branches/mloskot-style-refactoring/src/plugins/cmddialog/md5sum.cpp
+   branches/mloskot-style-refactoring/src/plugins/cmddialog/mkdir.cpp
+   branches/mloskot-style-refactoring/src/plugins/cmddialog/rename.cpp
+   branches/mloskot-style-refactoring/src/plugins/cmddialog/symlink.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSFXFile.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSFXFile.h
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.h
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_ftp.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_ftp.h
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_local.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_local.h
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_scp.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_scp.h
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_search.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_search.h
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_sftp.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_sftp.h
+   branches/mloskot-style-refactoring/src/plugins/filelist/pftp.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/pftp.h
+Log:
+Set svn:keywords Id property on source files
+
+
+Property changes on: branches/mloskot-style-refactoring/src/Makefile.am
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/Makefile.in
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSCMDDialogBox.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSCMDDialogBox.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSCommandTypeInfo.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSCommandTypeInfo.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSConfigure.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSConfigure.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSFile.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSFileList.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSFileList.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSFileListItem.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSFileListItem.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSFileTypeInfo.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSFileTypeInfo.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSFileTypeSymbol.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSFileTypeSymbol.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSFirstRunDialogBox.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSFirstRunDialogBox.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSInfoPanel.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSInfoPanel.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSMainWindow.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSMainWindow.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSMimeApp.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSMimeApp.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSMimeType.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSMimeType.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSObjectManager.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSObjectManager.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSPathType.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSPathType.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSPreferences.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSPreferences.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSShutter.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSShutter.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSThreadExec.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSThreadExec.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSUtils.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSUtils.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSVirtualFileSystemBase.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSVirtualFileSystemHeader.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/OSVirtualFileSystemInfo.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/config.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/config.h.in
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/main.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/Makefile.am
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/Makefile.in
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/cmddialog/access.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/cmddialog/clone.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/cmddialog/compress.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/cmddialog/editsymlink.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/cmddialog/md5sum.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/cmddialog/mkdir.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/cmddialog/rename.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/cmddialog/symlink.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/filelist/OSFXFile.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/filelist/OSFXFile.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_ftp.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_ftp.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_local.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_local.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_scp.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_scp.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_search.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_search.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_sftp.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_sftp.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/filelist/pftp.cpp
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+Property changes on: branches/mloskot-style-refactoring/src/plugins/filelist/pftp.h
+___________________________________________________________________
+Name: svn:keywords
+   + Id
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000012.html">[Openspace-svn] r231 - in branches/mloskot-style-refactoring: . src src/plugins/filelist
+</A></li>
+	<LI>Next message: <A HREF="000014.html">[Openspace-svn] r233 - in branches/mloskot-style-refactoring: . doc doc/dev icons icons/default src src/plugins src/plugins/cmddialog src/plugins/filelist templates
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#13">[ date ]</a>
+              <a href="thread.html#13">[ thread ]</a>
+              <a href="subject.html#13">[ subject ]</a>
+              <a href="author.html#13">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

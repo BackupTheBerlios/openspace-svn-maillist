@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r277 - trunk/src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r277%20-%20trunk/src&In-Reply-To=%3C200604071520.k37FK4pA012773%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000057.html">
+   <LINK REL="Next"  HREF="000059.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r277 - trunk/src</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r277%20-%20trunk/src&In-Reply-To=%3C200604071520.k37FK4pA012773%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r277 - trunk/src">compbatant at berlios.de
+       </A><BR>
+    <I>Fri Apr  7 17:20:04 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000057.html">[Openspace-svn] r276 - trunk/src
+</A></li>
+        <LI>Next message: <A HREF="000059.html">[Openspace-svn] r278 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#58">[ date ]</a>
+              <a href="thread.html#58">[ thread ]</a>
+              <a href="subject.html#58">[ subject ]</a>
+              <a href="author.html#58">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-07 17:20:02 +0200 (Fri, 07 Apr 2006)
+New Revision: 277
+
+Modified:
+   trunk/src/Makefile
+   trunk/src/Makefile.am
+   trunk/src/Makefile.in
+   trunk/src/OSConfigure.cpp
+   trunk/src/OSFileList.cpp
+   trunk/src/OSMimeApp.cpp
+Log:
+naprawiony blad przy instalacji w innej lokalizacji i nie podawaniu sysconfdir
+
+
+Modified: trunk/src/Makefile
+===================================================================
+--- trunk/src/Makefile	2006-04-07 14:23:03 UTC (rev 276)
++++ trunk/src/Makefile	2006-04-07 15:20:02 UTC (rev 277)
+@@ -201,11 +201,11 @@
+ mandir = ${prefix}/man
+ mkdir_p = mkdir -p -- .
+ oldincludedir = /usr/include
+-prefix = /usr
++prefix = /root/usr
+ program_transform_name = s,x,x,
+ sbindir = ${exec_prefix}/sbin
+ sharedstatedir = ${prefix}/com
+-sysconfdir = /etc
++sysconfdir = ${prefix}/etc
+ target_alias = 
+ openspace_SOURCES = main.cpp OSCMDDialogBox.cpp OSCMDDialogBox.h \
+ 	OSCommandTypeInfo.cpp OSCommandTypeInfo.h OSConfigure.cpp OSConfigure.h OSFile.h \
+@@ -221,7 +221,8 @@
+ SUBDIRS = plugins
+ INCLUDES = -I$(top_srcdir)/src `WANT_FOX=&quot;1.4&quot; fox-config --cflags`  `xml2-config  --cflags`  \
+ 	-DPATH_CFG=\&quot;$(sysconfdir)\&quot; \
+-	-DPATH_LIBDIR=\&quot;$(libdir)\&quot;
++	-DPATH_LIBDIR=\&quot;$(libdir)\&quot; \
++	-DPREFIX=\&quot;$(prefix)\&quot; 
+ 
+ openspace_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs`  `xml2-config  --libs`  
+ all: config.h
+
+Modified: trunk/src/Makefile.am
+===================================================================
+--- trunk/src/Makefile.am	2006-04-07 14:23:03 UTC (rev 276)
++++ trunk/src/Makefile.am	2006-04-07 15:20:02 UTC (rev 277)
+@@ -15,7 +15,8 @@
+ 
+ INCLUDES = -I$(top_srcdir)/src `WANT_FOX=&quot;1.4&quot; fox-config --cflags`  `xml2-config  --cflags`  \
+ 	-DPATH_CFG=\&quot;$(sysconfdir)\&quot; \
+-	-DPATH_LIBDIR=\&quot;$(libdir)\&quot;
++	-DPATH_LIBDIR=\&quot;$(libdir)\&quot; \
++	-DPREFIX=\&quot;$(prefix)\&quot; 
+ 
+ openspace_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs`  `xml2-config  --libs`  
+ 
+
+Modified: trunk/src/Makefile.in
+===================================================================
+--- trunk/src/Makefile.in	2006-04-07 14:23:03 UTC (rev 276)
++++ trunk/src/Makefile.in	2006-04-07 15:20:02 UTC (rev 277)
+@@ -221,7 +221,8 @@
+ SUBDIRS = plugins
+ INCLUDES = -I$(top_srcdir)/src `WANT_FOX=&quot;1.4&quot; fox-config --cflags`  `xml2-config  --cflags`  \
+ 	-DPATH_CFG=\&quot;$(sysconfdir)\&quot; \
+-	-DPATH_LIBDIR=\&quot;$(libdir)\&quot;
++	-DPATH_LIBDIR=\&quot;$(libdir)\&quot; \
++	-DPREFIX=\&quot;$(prefix)\&quot; 
+ 
+ openspace_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs`  `xml2-config  --libs`  
+ all: config.h
+
+Modified: trunk/src/OSConfigure.cpp
+===================================================================
+--- trunk/src/OSConfigure.cpp	2006-04-07 14:23:03 UTC (rev 276)
++++ trunk/src/OSConfigure.cpp	2006-04-07 15:20:02 UTC (rev 277)
+@@ -37,7 +37,7 @@
+ #endif
+ 
+ #ifndef PATH_CFG
+-#define PATH_CFG        &quot;/usr/local/etc&quot;
++#define PATH_CFG        &quot;PREFIX/etc&quot;
+ #endif
+ 
+ OSConfigure* conf;
+
+Modified: trunk/src/OSFileList.cpp
+===================================================================
+--- trunk/src/OSFileList.cpp	2006-04-07 14:23:03 UTC (rev 276)
++++ trunk/src/OSFileList.cpp	2006-04-07 15:20:02 UTC (rev 277)
+@@ -57,7 +57,7 @@
+ 
+ 
+ #ifndef PATH_LIBDIR
+-#define PATH_LIBDIR &quot;/usr/local/lib&quot;
++#define PATH_LIBDIR &quot;PREFIX/lib&quot;
+ #endif
+ 
+ FXDEFMAP (OSFileList) OSFileListMap[] =
+
+Modified: trunk/src/OSMimeApp.cpp
+===================================================================
+--- trunk/src/OSMimeApp.cpp	2006-04-07 14:23:03 UTC (rev 276)
++++ trunk/src/OSMimeApp.cpp	2006-04-07 15:20:02 UTC (rev 277)
+@@ -43,7 +43,7 @@
+ #endif
+ 
+ #ifndef PATH_CFG
+-#define PATH_CFG        &quot;/usr/local/etc/&quot;
++#define PATH_CFG        &quot;PREFIX/etc&quot;
+ #endif
+ 
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000057.html">[Openspace-svn] r276 - trunk/src
+</A></li>
+	<LI>Next message: <A HREF="000059.html">[Openspace-svn] r278 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#58">[ date ]</a>
+              <a href="thread.html#58">[ thread ]</a>
+              <a href="subject.html#58">[ subject ]</a>
+              <a href="author.html#58">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

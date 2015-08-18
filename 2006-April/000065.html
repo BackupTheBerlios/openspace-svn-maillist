@@ -1,0 +1,306 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r284 - in trunk: . src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r284%20-%20in%20trunk%3A%20.%20src&In-Reply-To=%3C200604160003.k3G03769006236%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000064.html">
+   <LINK REL="Next"  HREF="000066.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r284 - in trunk: . src</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r284%20-%20in%20trunk%3A%20.%20src&In-Reply-To=%3C200604160003.k3G03769006236%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r284 - in trunk: . src">compbatant at berlios.de
+       </A><BR>
+    <I>Sun Apr 16 02:03:07 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000064.html">[Openspace-svn] r283 - trunk/src/plugins/cmddialog
+</A></li>
+        <LI>Next message: <A HREF="000066.html">[Openspace-svn] r285 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#65">[ date ]</a>
+              <a href="thread.html#65">[ thread ]</a>
+              <a href="subject.html#65">[ subject ]</a>
+              <a href="author.html#65">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-16 02:02:26 +0200 (Sun, 16 Apr 2006)
+New Revision: 284
+
+Modified:
+   trunk/openspacerc.in
+   trunk/src/Makefile
+   trunk/src/Makefile.am
+   trunk/src/Makefile.in
+   trunk/src/OSFileList.cpp
+   trunk/src/OSFileList.h
+   trunk/src/OSPreferences.cpp
+   trunk/src/OSPreferences.h
+Log:
+dodanie rozpoznawanie typu pliku na podstawie zawartosci jako opcje
+
+
+Modified: trunk/openspacerc.in
+===================================================================
+--- trunk/openspacerc.in	2006-04-13 20:55:08 UTC (rev 283)
++++ trunk/openspacerc.in	2006-04-16 00:02:26 UTC (rev 284)
+@@ -7,6 +7,7 @@
+ 	&lt;position&gt;center&lt;/position&gt;
+ 	&lt;icon_size&gt;64&lt;/icon_size&gt;
+ 	&lt;show_hidden_files&gt;true&lt;/show_hidden_files&gt;
++	&lt;mime_magic&gt;false&lt;/mime_magic&gt;
+ 	  &lt;fonts&gt;
+ 	         &lt;normalfont&gt;arial,90,,,normal,iso8859-1,0&lt;/normalfont&gt;
+     		 &lt;captionfont1&gt;arial,90,bold,,normal,iso8859-1,0&lt;/captionfont1&gt;
+
+Modified: trunk/src/Makefile
+===================================================================
+--- trunk/src/Makefile	2006-04-13 20:55:08 UTC (rev 283)
++++ trunk/src/Makefile	2006-04-16 00:02:26 UTC (rev 284)
+@@ -224,7 +224,7 @@
+ 	-DPATH_LIBDIR=\&quot;$(libdir)\&quot; \
+ 	-DPREFIX=\&quot;$(prefix)\&quot; 
+ 
+-openspace_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs`  `xml2-config  --libs`  
++openspace_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs`  `xml2-config  --libs` -lmagic  
+ all: config.h
+ 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
+ 
+
+Modified: trunk/src/Makefile.am
+===================================================================
+--- trunk/src/Makefile.am	2006-04-13 20:55:08 UTC (rev 283)
++++ trunk/src/Makefile.am	2006-04-16 00:02:26 UTC (rev 284)
+@@ -18,6 +18,6 @@
+ 	-DPATH_LIBDIR=\&quot;$(libdir)\&quot; \
+ 	-DPREFIX=\&quot;$(prefix)\&quot; 
+ 
+-openspace_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs`  `xml2-config  --libs`  
++openspace_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs`  `xml2-config  --libs` -lmagic  
+ 
+ 
+
+Modified: trunk/src/Makefile.in
+===================================================================
+--- trunk/src/Makefile.in	2006-04-13 20:55:08 UTC (rev 283)
++++ trunk/src/Makefile.in	2006-04-16 00:02:26 UTC (rev 284)
+@@ -224,7 +224,7 @@
+ 	-DPATH_LIBDIR=\&quot;$(libdir)\&quot; \
+ 	-DPREFIX=\&quot;$(prefix)\&quot; 
+ 
+-openspace_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs`  `xml2-config  --libs`  
++openspace_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs`  `xml2-config  --libs` -lmagic  
+ all: config.h
+ 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
+ 
+
+Modified: trunk/src/OSFileList.cpp
+===================================================================
+--- trunk/src/OSFileList.cpp	2006-04-13 20:55:08 UTC (rev 283)
++++ trunk/src/OSFileList.cpp	2006-04-16 00:02:26 UTC (rev 284)
+@@ -91,8 +91,9 @@
+ FXIMPLEMENT (OSFileList, FXIconList, OSFileListMap, ARRAYNUMBER (OSFileListMap))
+      bool OSFileList::ascend = true;
+      bool OSFileList::strcase = false;
++     bool OSFileList::mime_magic = false;
++     magic_set* OSFileList::ms = NULL;
+ 
+-
+ //-----FILELIST----------------------------------------------------------------------------------------------------------------------------------------- 
+ 
+ 
+@@ -100,6 +101,24 @@
+ OSFileList::OSFileList (FXComposite * p, OSPathType pt,long id,OSFileListController* controller):
+ FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSELECT | ICONLIST_COLUMNS)
+ {
++
++if(ms==NULL)
++{
++//fxmessage(&quot;LOAD&quot;);
++ms = magic_open(MAGIC_MIME);
++    if (ms != NULL) 
++    {
++    	if(magic_load(ms, NULL) == -1) 
++    	{
++	magic_close(ms);
++	ms=NULL;
++	}
++	//else
++	//fxmessage(&quot;OK\n&quot;);
++
++    }
++}
++
+ objmanager=OSObjectManager::instance(getApp());
+  
+ FXScrollArea::vertical-&gt;setArrowColor(FXRGB(255, 255, 255));
+@@ -125,6 +144,12 @@
+     else
+     show_hidden_files=false;
+ 
++    if(conf-&gt;readonestring (&quot;/OpenspaceConfig/mime_magic&quot;)==&quot;true&quot;)
++    mime_magic=true;
++    else
++    mime_magic=false;
++
++
+     dropaction = DRAG_MOVE;   
+ 
+    
+@@ -345,6 +370,8 @@
+ OSFileList::~OSFileList ()
+ {
+ 
++ //magic_close(ms);
++ 
+     if (popupmenu)
+     {
+     delete popupmenu;
+@@ -439,10 +466,23 @@
+ 
+     //std::transform (name.begin (), name.end (), name.begin (), std::tolower);
+ 
+-    string r = OSMimeType::getMimeFromName (name);
++    string r;
++    
++    if(!mime_magic)
++    {
++      r = OSMimeType::getMimeFromName (name);      
++    }
++    else
++    {	
++      r = magic_file(ms, name.c_str());
++      string::size_type n;
++      if((n=r.find(&quot;;&quot;))!=string::npos)
++      {
++       r=r.substr(0,n);
++      }
++    } 
++   //printf(&quot;Name: '%s' MimeType: '%s'\n&quot;, name.c_str(), r.c_str());
+ 
+-    //printf(&quot;Name: '%s' MimeType: '%s'\n&quot;, name.c_str(), r.c_str());
+-
+     return r;
+ 
+ }
+
+Modified: trunk/src/OSFileList.h
+===================================================================
+--- trunk/src/OSFileList.h	2006-04-13 20:55:08 UTC (rev 283)
++++ trunk/src/OSFileList.h	2006-04-16 00:02:26 UTC (rev 284)
+@@ -31,6 +31,8 @@
+ #include &lt;string&gt;
+ #include &lt;map&gt;
+ 
++#include &lt;magic.h&gt;
++
+ #include &quot;OSVirtualFileSystemBase.h&quot;
+ #include &quot;OSPathType.h&quot;
+ #include &quot;OSThreadExec.h&quot;
+@@ -54,6 +56,8 @@
+     OSPathType *pt;
+     long id;
+     
++    static  magic_set *ms;
++    
+     OSFileListController *controller;  
+ 
+     FXWindow *notifyparent;
+@@ -84,6 +88,7 @@
+ 
+     static bool ascend;
+     static bool strcase;
++    static bool mime_magic;
+ 
+     bool processing;
+     bool maximize;
+
+Modified: trunk/src/OSPreferences.cpp
+===================================================================
+--- trunk/src/OSPreferences.cpp	2006-04-13 20:55:08 UTC (rev 283)
++++ trunk/src/OSPreferences.cpp	2006-04-16 00:02:26 UTC (rev 284)
+@@ -398,6 +398,19 @@
+     placement-&gt;setNumVisible( 2 );
+     placement-&gt;appendItem( &quot;centered&quot; );
+     placement-&gt;appendItem( &quot;cursor&quot; );
++    
++    if(conf-&gt;readonestring ( &quot;/OpenspaceConfig/position&quot;)==&quot;cursor&quot;)
++    placement-&gt;setCurrentItem(1);
++    
++    new FXLabel ( mainpane, &quot;determine file type&quot; );
++    mime_determine = new FXListBox ( mainpane );
++    mime_determine-&gt;setNumVisible( 2 );
++    mime_determine-&gt;appendItem( &quot;filename&quot; );
++    mime_determine-&gt;appendItem( &quot;file content&quot; );
++    
++    
++    if(conf-&gt;readonestring ( &quot;/OpenspaceConfig/mime_magic&quot;)==&quot;true&quot;)
++    mime_determine-&gt;setCurrentItem(1);
+ 
+     string iconsdir = conf-&gt;readonestring ( &quot;/OpenspaceConfig/path&quot; ) + &quot;/icons&quot;;
+     struct dirent *dp;
+@@ -1475,6 +1488,13 @@
+ 
+ 
+     conf-&gt;saveonestring ( &quot;/OpenspaceConfig/position&quot;, placement-&gt;getItem ( placement-&gt;getCurrentItem() ).text() );
++    
++    string mime_determine_s=mime_determine-&gt;getItem ( mime_determine-&gt;getCurrentItem() ).text();
++    if(mime_determine_s==&quot;filename&quot;)
++    conf-&gt;saveonestring ( &quot;/OpenspaceConfig/mime_magic&quot;,&quot;false&quot;  );
++    else
++    conf-&gt;saveonestring ( &quot;/OpenspaceConfig/mime_magic&quot;,&quot;true&quot;  );
++    
+ 
+ }
+ 
+
+Modified: trunk/src/OSPreferences.h
+===================================================================
+--- trunk/src/OSPreferences.h	2006-04-13 20:55:08 UTC (rev 283)
++++ trunk/src/OSPreferences.h	2006-04-16 00:02:26 UTC (rev 284)
+@@ -96,7 +96,7 @@
+     FXVerticalFrame *vfsPane;
+     FXListBox *vfsList;
+     FXList*headersList, *availableHeadersList;
+-    FXListBox *placement;
++    FXListBox *placement,*mime_determine;
+ 
+     FXList *additionalCommands, *additionalCommandsAvailable, *additionalCommandsAvailableForButtons;
+     FXList *shutterCommands;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000064.html">[Openspace-svn] r283 - trunk/src/plugins/cmddialog
+</A></li>
+	<LI>Next message: <A HREF="000066.html">[Openspace-svn] r285 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#65">[ date ]</a>
+              <a href="thread.html#65">[ thread ]</a>
+              <a href="subject.html#65">[ subject ]</a>
+              <a href="author.html#65">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

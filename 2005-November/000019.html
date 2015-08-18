@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r238 - branches/mloskot-style-refactoring/src/plugins/filelist
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2005-November/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r238%20-%20branches/mloskot-style-refactoring/src/plugins/filelist&In-Reply-To=%3C200511112249.jABMnvuD007534%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000018.html">
+   <LINK REL="Next"  HREF="000020.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r238 - branches/mloskot-style-refactoring/src/plugins/filelist</H1>
+    <B>mloskot at berlios.de</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r238%20-%20branches/mloskot-style-refactoring/src/plugins/filelist&In-Reply-To=%3C200511112249.jABMnvuD007534%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r238 - branches/mloskot-style-refactoring/src/plugins/filelist">mloskot at berlios.de
+       </A><BR>
+    <I>Fri Nov 11 23:49:57 CET 2005</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000018.html">[Openspace-svn] r237 - in branches/mloskot-style-refactoring: . doc doc/dev icons icons/default src src/plugins src/plugins/cmddialog src/plugins/filelist templates
+</A></li>
+        <LI>Next message: <A HREF="000020.html">[Openspace-svn] r239 - branches/mloskot-style-refactoring/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#19">[ date ]</a>
+              <a href="thread.html#19">[ thread ]</a>
+              <a href="subject.html#19">[ subject ]</a>
+              <a href="author.html#19">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: mloskot
+Date: 2005-11-11 23:49:55 +0100 (Fri, 11 Nov 2005)
+New Revision: 238
+
+Modified:
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.h
+Log:
+filelist_archive.h fixed; PLUGIN STILL DOES NOT COMPILE
+
+
+Modified: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.h
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.h	2005-11-11 22:35:29 UTC (rev 237)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.h	2005-11-11 22:49:55 UTC (rev 238)
+@@ -2,41 +2,58 @@
+ #define FILELIST_archive
+ 
+ #include &quot;../../OSVirtualFileSystemBase.h&quot;
++#include &quot;../../OSVirtualFileSystemInfo.h&quot;
++#include &quot;../../OSPathType.h&quot;
++#include &quot;../../OSFile.h&quot;
+ 
+-class filelist_archive:public filelist_base
++#include &lt;string&gt;
++#include &lt;vector&gt;
++
++// Forward declarations
++class OSThreadExec;
++class OSConfigure;
++
++/**
++ * Archive plugin of type of file list.
++ *
++ * @todo Why all filelist_* plugins redeclare the same interface?
++ */
++class filelist_archive : public OSVirtualFileSystemBase
+ {
+  
+ private:  
+-    string archive_filename;
++    std::string archive_filename;
+     FILE *pipe;
+     char readbuf[1024];
+-    vector &lt; string &gt; files;
+-    vector &lt; string &gt;::iterator iter;
+-    string dir;
+-    string type;
+- public:    
+-    int filelist_archive::osopendir (string dir);
+-    osfile filelist_archive::osreaddir (void);
+-    int filelist_archive::mkdir (string dir, int mode = 0);
+-    int filelist_archive::copy (thread_elem * te);
+-    int filelist_archive::move (thread_elem * te);
+-    int filelist_archive::remove (thread_elem * te);
+-    int filelist_archive::rename (string orgname, string newname);
+-    int filelist_archive::init (vector &lt; string &gt; *vector_name, pathtype pt, configure * conf);
+-    int filelist_archive::mode (string file);
+-    string filelist_archive::owner (string file);
+-    string filelist_archive::group (string file);
+-    bool filelist_archive::mode (string file, unsigned int, bool recursive);
+-    bool filelist_archive::owner (string file, string, bool recursive);
+-    bool filelist_archive::group (string file, string, bool recursive);
+-    string filelist_archive::info (void);
+-    void filelist_archive::totalsize (string path, unsigned long &amp;size);
+-    string filelist_archive::symlink (string path);
+-    bool filelist_archive::symlink (string src, string dst);
+-    bool filelist_archive::hardlink (string src, string dst);
+-    vfs filelist_archive::setup (void);
+-    int filelist_archive::quit (void);
++    std::vector&lt;std::string&gt; files;
++    std::vector&lt;std::string&gt;::iterator iter;
++    std::string dir;
++    std::string type;
+     
+-    int filelist_archive::filesoperation(string type,thread_elem * te);
++public:    
++
++    int osopendir (std::string dir);
++    OSFile osreaddir (void);
++    int mkdir (std::string dir, int mode = 0);
++    int copy (OSThreadExec* te);
++    int move (OSThreadExec* te);
++    int remove (OSThreadExec* te);
++    int rename (std::string orgname, std::string newname);
++    int init (std::vector&lt;std::string&gt;* vector_name, OSPathType pt, OSConfigure* conf);
++    int mode (std::string file);
++    std::string owner (std::string file);
++    std::string group (std::string file);
++    bool mode (std::string file, unsigned int, bool recursive);
++    bool owner (std::string file, std::string, bool recursive);
++    bool group (std::string file, std::string, bool recursive);
++    std::string info (void);
++    void totalsize (std::string path, unsigned long &amp;size);
++    std::string symlink (std::string path);
++    bool symlink (std::string src, std::string dst);
++    bool hardlink (std::string src, std::string dst);
++    OSVirtualFileSystemInfo setup (void);
++    int quit (void);
++    
++    int filesoperation(std::string type, OSThreadExec* te);
+ };
+ #endif
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000018.html">[Openspace-svn] r237 - in branches/mloskot-style-refactoring: . doc doc/dev icons icons/default src src/plugins src/plugins/cmddialog src/plugins/filelist templates
+</A></li>
+	<LI>Next message: <A HREF="000020.html">[Openspace-svn] r239 - branches/mloskot-style-refactoring/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#19">[ date ]</a>
+              <a href="thread.html#19">[ thread ]</a>
+              <a href="subject.html#19">[ subject ]</a>
+              <a href="author.html#19">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

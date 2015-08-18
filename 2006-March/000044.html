@@ -1,0 +1,509 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r263 - in trunk: . icons/default src src/plugins/cmddialog
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r263%20-%20in%20trunk%3A%20.%20icons/default%20src%20src/plugins/cmddialog&In-Reply-To=%3C200603152123.k2FLNlCp027229%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000043.html">
+   <LINK REL="Next"  HREF="000045.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r263 - in trunk: . icons/default src src/plugins/cmddialog</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r263%20-%20in%20trunk%3A%20.%20icons/default%20src%20src/plugins/cmddialog&In-Reply-To=%3C200603152123.k2FLNlCp027229%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r263 - in trunk: . icons/default src src/plugins/cmddialog">compbatant at berlios.de
+       </A><BR>
+    <I>Wed Mar 15 22:23:47 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000043.html">[Openspace-svn] r262 - in trunk: . icons/default
+</A></li>
+        <LI>Next message: <A HREF="000045.html">[Openspace-svn] r264 - in trunk: icons/big icons/mini src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#44">[ date ]</a>
+              <a href="thread.html#44">[ thread ]</a>
+              <a href="subject.html#44">[ subject ]</a>
+              <a href="author.html#44">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-03-15 22:23:45 +0100 (Wed, 15 Mar 2006)
+New Revision: 263
+
+Added:
+   trunk/icons/default/cancel.png
+   trunk/icons/default/command_plugins.png
+   trunk/icons/default/download.png
+   trunk/icons/default/file_types_settings.png
+   trunk/icons/default/menu_and_buttons.png
+   trunk/icons/default/mime-application-x-rpm.png
+   trunk/icons/default/mime-text-x-patch.png
+   trunk/icons/default/minus.png
+   trunk/icons/default/ok.png
+   trunk/icons/default/vfs_settings.png
+   trunk/icons/default/warning.png
+Modified:
+   trunk/openspacerc.in
+   trunk/src/OSCMDDialogBox.cpp
+   trunk/src/OSCMDDialogBox.h
+   trunk/src/OSInfoPanel.cpp
+   trunk/src/OSPreferences.cpp
+   trunk/src/plugins/cmddialog/Makefile.am
+   trunk/src/plugins/cmddialog/Makefile.in
+Log:
+ikonki i kolory oraz dodana obsluga kilku nowych typow plikow
+
+
+Added: trunk/icons/default/cancel.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/cancel.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/default/command_plugins.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/command_plugins.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/default/download.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/download.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/default/file_types_settings.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/file_types_settings.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/default/menu_and_buttons.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/menu_and_buttons.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/default/mime-application-x-rpm.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/mime-application-x-rpm.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/default/mime-text-x-patch.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/mime-text-x-patch.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/default/minus.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/minus.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/default/ok.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/ok.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/default/vfs_settings.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/vfs_settings.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/default/warning.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/warning.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Modified: trunk/openspacerc.in
+===================================================================
+--- trunk/openspacerc.in	2006-03-15 18:29:33 UTC (rev 262)
++++ trunk/openspacerc.in	2006-03-15 21:23:45 UTC (rev 263)
+@@ -45,7 +45,7 @@
+ 	&lt;/speed_delay&gt;
+ 	
+  	&lt;mainwindow&gt;
+-		&lt;width&gt;868&lt;/width&gt;
++		&lt;width&gt;898&lt;/width&gt;
+ 		&lt;height&gt;600&lt;/height&gt;
+ 	&lt;/mainwindow&gt;
+   
+@@ -336,6 +336,9 @@
+ 				&lt;x-java&gt;
+ 					&lt;icon&gt;mime-text-x-java&lt;/icon&gt;
+ 				&lt;/x-java&gt;
++				&lt;x-patch&gt;
++					&lt;icon&gt;mime-text-x-patch&lt;/icon&gt;
++				&lt;/x-patch&gt;
+ 			&lt;/types&gt;
+ 			&lt;icon&gt;mime-text&lt;/icon&gt;
+ 		&lt;/text&gt;
+@@ -431,9 +434,7 @@
+ 				&lt;postscript&gt;
+ 					&lt;icon&gt;mime-application-postscript&lt;/icon&gt;
+ 				&lt;/postscript&gt;
+-				&lt;x-rpm&gt;
+-					&lt;icon&gt;mime-application-x-compressed-tar&lt;/icon&gt;
+-				&lt;/x-rpm&gt;
++				
+ 				&lt;x-perl&gt;
+ 					&lt;icon&gt;mime-application-x-perl&lt;/icon&gt;
+ 				&lt;/x-perl&gt;
+@@ -450,8 +451,15 @@
+ 					&lt;icon&gt;mime-application-x-tex&lt;/icon&gt;
+ 				&lt;/x-tex&gt;
+ 				
++				&lt;x-deb&gt;
++					&lt;icon&gt;mime-application-x-rpm&lt;/icon&gt;
++				&lt;/x-deb&gt;
++				&lt;x-rpm&gt;
++					&lt;icon&gt;mime-application-x-rpm&lt;/icon&gt;
++				&lt;/x-rpm&gt;
+ 				
+ 				
++				
+ 							
+ 			&lt;/types&gt;	
+ 		&lt;/application&gt;	
+@@ -488,8 +496,8 @@
+ 			&lt;command&gt;dirup&lt;/command&gt;
+ 			&lt;command&gt;refresh&lt;/command&gt;
+ 			&lt;command&gt;SEPARATOR&lt;/command&gt;
+-			&lt;command&gt;change_view_mini_icons&lt;/command&gt;
+ 			&lt;command&gt;change_view_big_icons&lt;/command&gt;
++			&lt;command&gt;change_view_mini_icons&lt;/command&gt;			
+ 			&lt;command&gt;change_view_detailed&lt;/command&gt;
+ 			&lt;command&gt;SEPARATOR&lt;/command&gt;
+ 			&lt;command&gt;clipboard_copy&lt;/command&gt;
+
+Modified: trunk/src/OSCMDDialogBox.cpp
+===================================================================
+--- trunk/src/OSCMDDialogBox.cpp	2006-03-15 18:29:33 UTC (rev 262)
++++ trunk/src/OSCMDDialogBox.cpp	2006-03-15 21:23:45 UTC (rev 263)
+@@ -35,13 +35,14 @@
+ OSCMDDialogBox::OSCMDDialogBox( FXWindow* owner, OSVirtualFileSystemBase* fb, std::vector&lt;std::string&gt; src ) :
+         FXDialogBox( owner, &quot;command&quot;, DECOR_TITLE | DECOR_BORDER )
+ {
++
+     this-&gt;src = src;
+     this-&gt;fb = fb;
+     FXObject *tgt = ( FXObject* ) owner;
+     contents = new FXVerticalFrame( this, LAYOUT_SIDE_TOP | FRAME_NONE | LAYOUT_FILL_X | PACK_UNIFORM_WIDTH );
+ 
+     buttons = new FXHorizontalFrame( this, LAYOUT_SIDE_TOP | FRAME_NONE | LAYOUT_FILL_X | LAYOUT_FILL_Y | PACK_UNIFORM_WIDTH );
+-    ok = new FXButton( buttons, &quot;OK&quot;, NULL, owner, ID_COMMAND, BUTTON_INITIAL | FRAME_RAISED, 0, 0, 0, 0, 0, 0, 0, 0 );
++    ok = new FXButton( buttons, &quot;OK&quot;, NULL, tgt, ID_COMMAND, BUTTON_INITIAL | FRAME_RAISED, 0, 0, 0, 0, 0, 0, 0, 0 );
+     cancel = new FXButton( buttons, &quot;CANCEL&quot;, NULL, tgt, ID_CANCEL_COMMAND, FRAME_RAISED, 0, 0, 0, 0, 0, 0, 0, 0 );
+ }
+ 
+
+Modified: trunk/src/OSCMDDialogBox.h
+===================================================================
+--- trunk/src/OSCMDDialogBox.h	2006-03-15 18:29:33 UTC (rev 262)
++++ trunk/src/OSCMDDialogBox.h	2006-03-15 21:23:45 UTC (rev 263)
+@@ -32,6 +32,7 @@
+ #include &lt;string&gt;
+ 
+ #include &quot;OSVirtualFileSystemBase.h&quot;
++#include &quot;OSObjectManager.h&quot;
+ 
+ using namespace std;
+ 
+@@ -101,6 +102,7 @@
+      */
+     std::vector&lt;std::string&gt; src;
+ 
++
+ };
+ 
+ #endif // #ifndef __OSCMDDIALOGBOX_H__
+
+Modified: trunk/src/OSInfoPanel.cpp
+===================================================================
+--- trunk/src/OSInfoPanel.cpp	2006-03-15 18:29:33 UTC (rev 262)
++++ trunk/src/OSInfoPanel.cpp	2006-03-15 21:23:45 UTC (rev 263)
+@@ -28,6 +28,7 @@
+ #include &lt;fx.h&gt;
+ #include &lt;string&gt;
+ #include &quot;OSInfoPanel.h&quot;
++#include &quot;OSObjectManager.h&quot;
+ 
+ 
+ 
+@@ -35,6 +36,9 @@
+ 
+ OSInfoPanel::OSInfoPanel( FXComposite * p, std::string command )
+ {
++
++    OSObjectManager* objmanager=OSObjectManager::instance(p-&gt;getApp());
++
+     frame = new FXVerticalFrame( p, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0 );
+ 
+     lab0 = new FXLabel( frame, &quot;NONE&quot; );
+@@ -46,15 +50,19 @@
+         pbar = new FXProgressBar( frame, NULL, 0, LAYOUT_FILL_X | FRAME_THICK | PROGRESSBAR_PERCENTAGE );
+         pbar2 = new FXProgressBar( frame, NULL, 0, LAYOUT_FILL_X | FRAME_THICK | PROGRESSBAR_PERCENTAGE );
+         bu = new FXButton( frame, &quot;CANCEL&quot;, NULL, NULL, 999, BUTTON_TOOLBAR );
+-        bu-&gt;setBackColor( FXRGB ( 145, 134, 201 ) );
+-        pbar-&gt;setBarColor( FXRGB ( 145, 134, 201 ) );
+-        pbar2-&gt;setBarColor( FXRGB ( 145, 134, 201 ) );
++	
++	
++	
++        bu-&gt;setBackColor( objmanager-&gt;maincolor );
++        pbar-&gt;setBarColor( objmanager-&gt;maincolor  );
++        pbar2-&gt;setBarColor( objmanager-&gt;maincolor );
++	
+     }
+     else if ( command == &quot;remove&quot; )
+     {
+         lab1 = new FXLabel( frame, &quot;NONE&quot; );
+-        bu = new FXButton( frame, &quot;CANCEL&quot;, NULL, NULL, 999, BUTTON_TOOLBAR );
+-        bu-&gt;setBackColor( FXRGB ( 145, 134, 201 ) );
++        bu = new FXButton( frame, &quot;CANCEL&quot;, NULL, NULL, 999, FRAME_RAISED );
++
+     }
+     
+     frame-&gt;create();
+
+Modified: trunk/src/OSPreferences.cpp
+===================================================================
+--- trunk/src/OSPreferences.cpp	2006-03-15 18:29:33 UTC (rev 262)
++++ trunk/src/OSPreferences.cpp	2006-03-15 21:23:45 UTC (rev 263)
+@@ -346,8 +346,8 @@
+     new FXButton ( buttons, &quot;Main Settings&quot;, objmanager-&gt;osicons[&quot;main_settings&quot;], switcher, FXSwitcher::ID_OPEN_FIRST, FRAME_RAISED | ICON_ABOVE_TEXT | LAYOUT_FILL_Y );
+     new FXLabel ( mainpane, &quot;Let program to autoconfigure file type associacion settings&quot; );
+     FXHorizontalFrame *hoz1 = new FXHorizontalFrame ( mainpane, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+-    new FXButton ( hoz1, &quot;Semi-Auto configure&quot;, NULL, this, OSPreferences::ID_MIME_APP );
+-    new FXButton ( hoz1, &quot;Full-Auto configure&quot;, NULL, this, OSPreferences::ID_MIME_APP_AUTO );
++    new FXButton ( hoz1, &quot;Semi-Auto configure&quot;, NULL, this, OSPreferences::ID_MIME_APP,FRAME_RAISED );
++    new FXButton ( hoz1, &quot;Full-Auto configure&quot;, NULL, this, OSPreferences::ID_MIME_APP_AUTO,FRAME_RAISED );
+     new FXSeparator( mainpane );
+ 
+ 
+@@ -364,7 +364,7 @@
+     mainwindow_height-&gt;setIncrement( 1 );
+     mainwindow_height-&gt;setValue( atoi( conf-&gt;readonestring ( &quot;/OpenspaceConfig/mainwindow/height&quot; ).c_str () ) );
+ 
+-    new FXButton ( hoz2, &quot;get current openspace size&quot;, NULL, this, OSPreferences:: ID_UPDATE_WINDOW_SIZE );
++    new FXButton ( hoz2, &quot;get current openspace size&quot;, NULL, this, OSPreferences:: ID_UPDATE_WINDOW_SIZE,FRAME_RAISED );
+ 
+     new FXSeparator( mainpane );
+ 
+@@ -517,8 +517,8 @@
+ 
+     new FXSeparator( buttonsPane );
+     FXHorizontalFrame *hfr = new FXHorizontalFrame ( buttonsPane, LAYOUT_FILL_X | LAYOUT_FILL_Y );
+-    new FXButton ( hfr, &quot;Remove shutter&quot;, NULL, this, ID_REMOVE_SHUTTER, FRAME_RAISED | ICON_ABOVE_TEXT );
+-    new FXButton ( hfr, &quot;New shutter&quot;, NULL, this, ID_NEW_SHUTTER, FRAME_RAISED | ICON_ABOVE_TEXT );
++    new FXButton ( hfr, &quot;Remove shutter&quot;, objmanager-&gt;osicons[&quot;minus&quot;], this, ID_REMOVE_SHUTTER, FRAME_RAISED|ICON_BEFORE_TEXT  );
++    new FXButton ( hfr, &quot;New shutter&quot;, objmanager-&gt;osicons[&quot;plus&quot;], this, ID_NEW_SHUTTER, FRAME_RAISED|ICON_BEFORE_TEXT  );
+     newShutterEdit = new FXTextField ( hfr, 20 );
+ 
+ 
+@@ -566,7 +566,7 @@
+     hfr = new FXHorizontalFrame ( vv, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+     availableCommandPluginsList = new FXListBox ( hfr );
+     availableCommandPluginsList-&gt;setNumVisible( 30 );
+-    new FXButton ( hfr, &quot;Download and Install&quot;, NULL, this, ID_DOWNLOAD_INSTALL_CMD_PLUGIN, FRAME_RAISED | ICON_ABOVE_TEXT );
++    new FXButton ( hfr, &quot;Download and Install&quot;, objmanager-&gt;osicons[&quot;download&quot;], this, ID_DOWNLOAD_INSTALL_CMD_PLUGIN, FRAME_RAISED | ICON_ABOVE_TEXT );
+     new FXButton ( vv, &quot;Update available plugins list&quot;, NULL, this, ID_UPDATE_CMD_PLUGIN_LIST, FRAME_RAISED | ICON_ABOVE_TEXT );
+ 
+ 
+@@ -750,8 +750,8 @@
+ 
+         new FXSeparator( commandsPane );
+         FXHorizontalFrame *hfr = new FXHorizontalFrame ( commandsPane, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+-        removeCommandButton = new FXButton ( hfr, &quot;Remove&quot;, NULL, this, ID_REMOVE_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT );
+-        new FXButton ( hfr, &quot;New Command&quot;, NULL, this, ID_NEW_COMMAND, FRAME_RAISED | ICON_ABOVE_TEXT );
++        removeCommandButton = new FXButton ( hfr, &quot;Remove&quot;, objmanager-&gt;osicons[&quot;minus&quot;], this, ID_REMOVE_COMMAND, FRAME_RAISED|ICON_BEFORE_TEXT );
++        new FXButton ( hfr, &quot;New Command&quot;, objmanager-&gt;osicons[&quot;plus&quot;], this, ID_NEW_COMMAND, FRAME_RAISED|ICON_BEFORE_TEXT  );
+         newCommandEdit = new FXTextField ( hfr, 20 );
+ 
+         if ( ctlast-&gt;type == &quot;INTERNAL&quot; || ctlast-&gt;type == &quot;PLUGIN&quot; )
+@@ -823,7 +823,8 @@
+ 
+         allMime = new FXComboBox ( filetypeGroup, 60 );
+         allMime-&gt;setNumVisible( 30 );
+-        new FXButton ( filetypeGroup, &quot;Add&quot;, NULL, this, OSPreferences::ID_ADD_FILETYPE );
++        new FXButton ( filetypeGroup, &quot;Add&quot;, objmanager-&gt;osicons[&quot;plus&quot;], this,
++	OSPreferences::ID_ADD_FILETYPE,FRAME_RAISED|ICON_BEFORE_TEXT);
+ 
+         OSMimeType::_initialize();
+         map&lt;string, string&gt;::iterator iter0;
+@@ -1150,7 +1151,7 @@
+     hfr = new FXHorizontalFrame ( vv, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+     availableVfsPluginsList = new FXListBox ( hfr );
+     availableVfsPluginsList-&gt;setNumVisible( 30 );
+-    new FXButton ( hfr, &quot;Download and Install&quot;, NULL, this, ID_DOWNLOAD_INSTALL_VFS_PLUGIN, FRAME_RAISED | ICON_ABOVE_TEXT );
++    new FXButton ( hfr, &quot;Download and Install&quot;, objmanager-&gt;osicons[&quot;download&quot;], this, ID_DOWNLOAD_INSTALL_VFS_PLUGIN, FRAME_RAISED | ICON_ABOVE_TEXT );
+     new FXButton ( vv, &quot;Update available plugins list&quot;, NULL, this, ID_UPDATE_VFS_PLUGIN_LIST, FRAME_RAISED | ICON_ABOVE_TEXT );
+ 
+ 
+@@ -2027,7 +2028,7 @@
+     if ( saveconfiguration )
+         this-&gt;save();
+ 
+-    FXMessageBox about ( this, &quot;restart&quot;, &quot;restart openspace to apply changes&quot;, NULL, MBOX_OK | DECOR_ALL );
++    FXMessageBox about ( this, &quot;restart&quot;, &quot;restart openspace to apply changes&quot;, objmanager-&gt;osicons[&quot;warning&quot;], MBOX_OK | DECOR_ALL );
+     about.execute ();
+ 
+     FXDialogBox::onCmdAccept( sender, sel, ptr );
+
+Modified: trunk/src/plugins/cmddialog/Makefile.am
+===================================================================
+--- trunk/src/plugins/cmddialog/Makefile.am	2006-03-15 18:29:33 UTC (rev 262)
++++ trunk/src/plugins/cmddialog/Makefile.am	2006-03-15 21:23:45 UTC (rev 263)
+@@ -2,26 +2,26 @@
+ pkglibdir=$(libdir)/openspace/plugins/cmddialog
+ INCLUDES = `WANT_FOX=&quot;1.4&quot; fox-config --cflags` `xml2-config  --cflags` 
+ 
+-libOSMkdir_la_SOURCES =OSMkdir.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
++libOSMkdir_la_SOURCES =OSMkdir.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h 
+ libOSMkdir_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs` 
+ 
+-libOSAccess_la_SOURCES =OSAccess.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
++libOSAccess_la_SOURCES =OSAccess.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h 
+ libOSAccess_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs`  
+ 
+-libOSRename_la_SOURCES =OSRename.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
++libOSRename_la_SOURCES =OSRename.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h 
+ libOSRename_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs` 
+ 
+-libOSClone_la_SOURCES =OSClone.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
++libOSClone_la_SOURCES =OSClone.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h 
+ libOSClone_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs` 
+ 
+-libOSSymlink_la_SOURCES =OSSymlink.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
++libOSSymlink_la_SOURCES =OSSymlink.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h 
+ libOSSymlink_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs` 
+ 
+-libOSEditSymlink_la_SOURCES =OSEditSymlink.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
++libOSEditSymlink_la_SOURCES =OSEditSymlink.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h 
+ libOSEditSymlink_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs` 
+ 
+-libOSCompress_la_SOURCES =OSCompress.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
++libOSCompress_la_SOURCES =OSCompress.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h 
+ libOSCompress_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs` 
+ 
+-libOSMd5sum_la_SOURCES =OSMd5sum.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
++libOSMd5sum_la_SOURCES =OSMd5sum.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h 
+ libOSMd5sum_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs` 
+
+Modified: trunk/src/plugins/cmddialog/Makefile.in
+===================================================================
+--- trunk/src/plugins/cmddialog/Makefile.in	2006-03-15 18:29:33 UTC (rev 262)
++++ trunk/src/plugins/cmddialog/Makefile.in	2006-03-15 21:23:45 UTC (rev 263)
+@@ -216,21 +216,21 @@
+ target_alias = @target_alias@
+ pkglib_LTLIBRARIES = libOSMkdir.la libOSAccess.la libOSRename.la libOSClone.la libOSSymlink.la libOSEditSymlink.la libOSCompress.la libOSMd5sum.la
+ INCLUDES = `WANT_FOX=&quot;1.4&quot; fox-config --cflags` `xml2-config  --cflags` 
+-libOSMkdir_la_SOURCES = OSMkdir.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
++libOSMkdir_la_SOURCES = OSMkdir.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h 
+ libOSMkdir_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs` 
+-libOSAccess_la_SOURCES = OSAccess.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
++libOSAccess_la_SOURCES = OSAccess.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h 
+ libOSAccess_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs`  
+-libOSRename_la_SOURCES = OSRename.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
++libOSRename_la_SOURCES = OSRename.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h 
+ libOSRename_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs` 
+-libOSClone_la_SOURCES = OSClone.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
++libOSClone_la_SOURCES = OSClone.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h 
+ libOSClone_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs` 
+-libOSSymlink_la_SOURCES = OSSymlink.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
++libOSSymlink_la_SOURCES = OSSymlink.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h 
+ libOSSymlink_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs` 
+-libOSEditSymlink_la_SOURCES = OSEditSymlink.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
++libOSEditSymlink_la_SOURCES = OSEditSymlink.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h 
+ libOSEditSymlink_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs` 
+-libOSCompress_la_SOURCES = OSCompress.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
++libOSCompress_la_SOURCES = OSCompress.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h 
+ libOSCompress_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs` 
+-libOSMd5sum_la_SOURCES = OSMd5sum.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h
++libOSMd5sum_la_SOURCES = OSMd5sum.cpp  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSCMDDialogBox.cpp ../../OSCMDDialogBox.h 
+ libOSMd5sum_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs` 
+ all: all-am
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000043.html">[Openspace-svn] r262 - in trunk: . icons/default
+</A></li>
+	<LI>Next message: <A HREF="000045.html">[Openspace-svn] r264 - in trunk: icons/big icons/mini src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#44">[ date ]</a>
+              <a href="thread.html#44">[ thread ]</a>
+              <a href="subject.html#44">[ subject ]</a>
+              <a href="author.html#44">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

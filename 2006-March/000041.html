@@ -1,0 +1,1047 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r260 - in trunk: . icons icons/big icons/mini
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r260%20-%20in%20trunk%3A%20.%20icons%20icons/big%20icons/mini&In-Reply-To=%3C200603151453.k2FErbFQ011826%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000040.html">
+   <LINK REL="Next"  HREF="000042.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r260 - in trunk: . icons icons/big icons/mini</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r260%20-%20in%20trunk%3A%20.%20icons%20icons/big%20icons/mini&In-Reply-To=%3C200603151453.k2FErbFQ011826%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r260 - in trunk: . icons icons/big icons/mini">compbatant at berlios.de
+       </A><BR>
+    <I>Wed Mar 15 15:53:37 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000040.html">[Openspace-svn] r259 - in trunk: icons/default icons/mini src
+</A></li>
+        <LI>Next message: <A HREF="000042.html">[Openspace-svn] r261 - in trunk: . icons icons/big icons/mini src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#41">[ date ]</a>
+              <a href="thread.html#41">[ thread ]</a>
+              <a href="subject.html#41">[ subject ]</a>
+              <a href="author.html#41">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-03-15 15:53:32 +0100 (Wed, 15 Mar 2006)
+New Revision: 260
+
+Added:
+   trunk/icons/big/
+   trunk/icons/big/Makefile.am
+   trunk/icons/big/about.png
+   trunk/icons/big/bigicons.png
+   trunk/icons/big/close.png
+   trunk/icons/big/commands_settings.png
+   trunk/icons/big/configure.png
+   trunk/icons/big/copy.png
+   trunk/icons/big/cut.png
+   trunk/icons/big/details.png
+   trunk/icons/big/directory.png
+   trunk/icons/big/dirup.png
+   trunk/icons/big/executable.png
+   trunk/icons/big/execute.png
+   trunk/icons/big/foxbig.png
+   trunk/icons/big/getdir.png
+   trunk/icons/big/goto.png
+   trunk/icons/big/home.png
+   trunk/icons/big/left.png
+   trunk/icons/big/look_and_feel.png
+   trunk/icons/big/main_settings.png
+   trunk/icons/big/mime-application-pdf.png
+   trunk/icons/big/mime-application-vnd.ms-powerpoint.png
+   trunk/icons/big/mime-application-vnd.sun.xml.calc.png
+   trunk/icons/big/mime-application-vnd.sun.xml.writer.png
+   trunk/icons/big/mime-application-x-compressed-tar.png
+   trunk/icons/big/mime-application-x-sharedlib.png
+   trunk/icons/big/mime-application-x-shellscript.png
+   trunk/icons/big/mime-audio.png
+   trunk/icons/big/mime-image.png
+   trunk/icons/big/mime-text-html.png
+   trunk/icons/big/mime-text-x-c++hdr.png
+   trunk/icons/big/mime-text-x-c++src.png
+   trunk/icons/big/mime-text.png
+   trunk/icons/big/mime-video.png
+   trunk/icons/big/min.png
+   trunk/icons/big/network.png
+   trunk/icons/big/other.png
+   trunk/icons/big/password.png
+   trunk/icons/big/paste.png
+   trunk/icons/big/pattern.png
+   trunk/icons/big/plus.png
+   trunk/icons/big/reload.png
+   trunk/icons/big/right.png
+   trunk/icons/big/run_shell.png
+   trunk/icons/big/search.png
+   trunk/icons/big/smallicons.png
+   trunk/icons/big/speed_and_delays.png
+   trunk/icons/big/symlink.png
+   trunk/icons/big/unknown.png
+   trunk/icons/big/user.png
+   trunk/icons/mini/about.png
+   trunk/icons/mini/bigicons.png
+   trunk/icons/mini/commands_settings.png
+   trunk/icons/mini/configure.png
+   trunk/icons/mini/execute.png
+   trunk/icons/mini/folder.png
+   trunk/icons/mini/foxbig.png
+   trunk/icons/mini/getdir.png
+   trunk/icons/mini/goto.png
+   trunk/icons/mini/look_and_feel.png
+   trunk/icons/mini/main_settings.png
+   trunk/icons/mini/mime-application-pdf.png
+   trunk/icons/mini/mime-application-vnd.ms-powerpoint.png
+   trunk/icons/mini/mime-application-vnd.sun.xml.calc.png
+   trunk/icons/mini/mime-application-vnd.sun.xml.writer.png
+   trunk/icons/mini/mime-application-x-compressed-tar.png
+   trunk/icons/mini/mime-application-x-shellscript.png
+   trunk/icons/mini/mime-audio.png
+   trunk/icons/mini/mime-image.png
+   trunk/icons/mini/mime-text-html.png
+   trunk/icons/mini/mime-text-x-c++hdr.png
+   trunk/icons/mini/mime-text-x-c++src.png
+   trunk/icons/mini/mime-text.png
+   trunk/icons/mini/mime-video.png
+   trunk/icons/mini/mime_sound.png
+   trunk/icons/mini/other.png
+   trunk/icons/mini/password.png
+   trunk/icons/mini/search.png
+   trunk/icons/mini/speed_and_delays.png
+   trunk/icons/mini/user.png
+Modified:
+   trunk/configure
+   trunk/configure.ac
+   trunk/mimeapp
+   trunk/openspacerc.in
+Log:
+ikonki cd
+
+
+Modified: trunk/configure
+===================================================================
+--- trunk/configure	2006-03-08 22:20:31 UTC (rev 259)
++++ trunk/configure	2006-03-15 14:53:32 UTC (rev 260)
+@@ -875,13 +875,13 @@
+   	  /^X\(\/\).*/{ s//\1/; q; }
+   	  s/.*/./; q'`
+   srcdir=$ac_confdir
+-  if test ! -r $srcdir/$ac_unique_file; then
++  if test ! -r &quot;$srcdir/$ac_unique_file&quot;; then
+     srcdir=..
+   fi
+ else
+   ac_srcdir_defaulted=no
+ fi
+-if test ! -r $srcdir/$ac_unique_file; then
++if test ! -r &quot;$srcdir/$ac_unique_file&quot;; then
+   if test &quot;$ac_srcdir_defaulted&quot; = yes; then
+     { echo &quot;$as_me: error: cannot find sources ($ac_unique_file) in $ac_confdir or ..&quot; &gt;&amp;2
+    { (exit 1); exit 1; }; }
+@@ -890,7 +890,7 @@
+    { (exit 1); exit 1; }; }
+   fi
+ fi
+-(cd $srcdir &amp;&amp; test -r ./$ac_unique_file) 2&gt;/dev/null ||
++(cd $srcdir &amp;&amp; test -r &quot;./$ac_unique_file&quot;) 2&gt;/dev/null ||
+   { echo &quot;$as_me: error: sources are in $srcdir, but \`cd $srcdir' does not work&quot; &gt;&amp;2
+    { (exit 1); exit 1; }; }
+ srcdir=`echo &quot;$srcdir&quot; | sed 's%\([^\\/]\)[\\/]*$%\1%'`
+@@ -21372,7 +21372,7 @@
+         fi
+ 
+ 
+-                                                                                          ac_config_files=&quot;$ac_config_files openspacerc Makefile src/Makefile icons/Makefile icons/default/Makefile icons/mini/Makefile src/plugins/Makefile src/plugins/filelist/Makefile src/plugins/cmddialog/Makefile&quot;
++                                                                                                    ac_config_files=&quot;$ac_config_files openspacerc Makefile src/Makefile icons/Makefile icons/default/Makefile icons/mini/Makefile icons/big/Makefile src/plugins/Makefile src/plugins/filelist/Makefile src/plugins/cmddialog/Makefile&quot;
+ 
+ cat &gt;confcache &lt;&lt;\_ACEOF
+ # This file is a shell script that caches the results of configure
+@@ -21936,6 +21936,7 @@
+   &quot;icons/Makefile&quot; ) CONFIG_FILES=&quot;$CONFIG_FILES icons/Makefile&quot; ;;
+   &quot;icons/default/Makefile&quot; ) CONFIG_FILES=&quot;$CONFIG_FILES icons/default/Makefile&quot; ;;
+   &quot;icons/mini/Makefile&quot; ) CONFIG_FILES=&quot;$CONFIG_FILES icons/mini/Makefile&quot; ;;
++  &quot;icons/big/Makefile&quot; ) CONFIG_FILES=&quot;$CONFIG_FILES icons/big/Makefile&quot; ;;
+   &quot;src/plugins/Makefile&quot; ) CONFIG_FILES=&quot;$CONFIG_FILES src/plugins/Makefile&quot; ;;
+   &quot;src/plugins/filelist/Makefile&quot; ) CONFIG_FILES=&quot;$CONFIG_FILES src/plugins/filelist/Makefile&quot; ;;
+   &quot;src/plugins/cmddialog/Makefile&quot; ) CONFIG_FILES=&quot;$CONFIG_FILES src/plugins/cmddialog/Makefile&quot; ;;
+
+Modified: trunk/configure.ac
+===================================================================
+--- trunk/configure.ac	2006-03-08 22:20:31 UTC (rev 259)
++++ trunk/configure.ac	2006-03-15 14:53:32 UTC (rev 260)
+@@ -63,6 +63,7 @@
+ 		 icons/Makefile
+ 		 icons/default/Makefile
+ 		 icons/mini/Makefile
++		 icons/big/Makefile
+ 		 src/plugins/Makefile
+ 		 src/plugins/filelist/Makefile
+ 		 src/plugins/cmddialog/Makefile
+
+Added: trunk/icons/big/Makefile.am
+===================================================================
+--- trunk/icons/big/Makefile.am	2006-03-08 22:20:31 UTC (rev 259)
++++ trunk/icons/big/Makefile.am	2006-03-15 14:53:32 UTC (rev 260)
+@@ -0,0 +1,5 @@
++iconsdir=$(datadir)/openspace/icons/big
++EXTRA_DIST=*.png
++icons_DATA=*.png
++	
++	 
+
+Added: trunk/icons/big/about.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/about.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/bigicons.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/bigicons.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/close.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/close.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/commands_settings.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/commands_settings.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/configure.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/configure.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/copy.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/copy.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/cut.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/cut.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/details.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/details.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/directory.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/directory.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/dirup.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/dirup.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/executable.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/executable.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/execute.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/execute.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/foxbig.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/foxbig.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/getdir.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/getdir.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/goto.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/goto.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/home.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/home.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/left.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/left.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/look_and_feel.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/look_and_feel.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/main_settings.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/main_settings.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/mime-application-pdf.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/mime-application-pdf.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/mime-application-vnd.ms-powerpoint.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/mime-application-vnd.ms-powerpoint.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/mime-application-vnd.sun.xml.calc.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/mime-application-vnd.sun.xml.calc.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/mime-application-vnd.sun.xml.writer.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/mime-application-vnd.sun.xml.writer.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/mime-application-x-compressed-tar.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/mime-application-x-compressed-tar.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/mime-application-x-sharedlib.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/mime-application-x-sharedlib.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/mime-application-x-shellscript.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/mime-application-x-shellscript.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/mime-audio.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/mime-audio.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/mime-image.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/mime-image.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/mime-text-html.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/mime-text-html.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/mime-text-x-c++hdr.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/mime-text-x-c++hdr.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/mime-text-x-c++src.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/mime-text-x-c++src.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/mime-text.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/mime-text.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/mime-video.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/mime-video.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/min.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/min.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/network.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/network.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/other.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/other.png
+___________________________________________________________________
+Name: svn:executable
+   + *
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/password.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/password.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/paste.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/paste.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/pattern.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/pattern.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/plus.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/plus.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/reload.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/reload.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/right.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/right.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/run_shell.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/run_shell.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/search.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/search.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/smallicons.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/smallicons.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/speed_and_delays.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/speed_and_delays.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/symlink.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/symlink.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/unknown.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/unknown.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/big/user.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/big/user.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/about.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/about.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/bigicons.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/bigicons.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/commands_settings.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/commands_settings.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/configure.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/configure.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/execute.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/execute.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/folder.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/folder.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/foxbig.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/foxbig.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/getdir.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/getdir.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/goto.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/goto.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/look_and_feel.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/look_and_feel.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/main_settings.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/main_settings.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/mime-application-pdf.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/mime-application-pdf.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/mime-application-vnd.ms-powerpoint.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/mime-application-vnd.ms-powerpoint.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/mime-application-vnd.sun.xml.calc.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/mime-application-vnd.sun.xml.calc.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/mime-application-vnd.sun.xml.writer.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/mime-application-vnd.sun.xml.writer.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/mime-application-x-compressed-tar.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/mime-application-x-compressed-tar.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/mime-application-x-shellscript.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/mime-application-x-shellscript.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/mime-audio.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/mime-audio.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/mime-image.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/mime-image.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/mime-text-html.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/mime-text-html.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/mime-text-x-c++hdr.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/mime-text-x-c++hdr.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/mime-text-x-c++src.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/mime-text-x-c++src.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/mime-text.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/mime-text.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/mime-video.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/mime-video.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/mime_sound.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/mime_sound.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/other.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/other.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/password.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/password.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/search.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/search.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/speed_and_delays.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/speed_and_delays.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Added: trunk/icons/mini/user.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/mini/user.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Modified: trunk/mimeapp
+===================================================================
+--- trunk/mimeapp	2006-03-08 22:20:31 UTC (rev 259)
++++ trunk/mimeapp	2006-03-15 14:53:32 UTC (rev 260)
+@@ -7,6 +7,8 @@
+ application/vnd.ms-powerpoint:ooffice ooffice2
+ application/vnd.sun.xml.calc:ooffice ooffice2
+ application/vnd.sun.xml.writer:ooffice ooffice2
++application/vnd.oasis.opendocument.text:ooffice2 ooffice
++application/vnd.oasis.opendocument.spreadsheet:ooffice2 ooffice
+ application/vnd.ms-excel:ooffice ooffice2
+ application/msword:ooffice ooffice2
+ text/plain:nedit scite gvim kedit gedit xemacs
+
+Modified: trunk/openspacerc.in
+===================================================================
+--- trunk/openspacerc.in	2006-03-08 22:20:31 UTC (rev 259)
++++ trunk/openspacerc.in	2006-03-15 14:53:32 UTC (rev 260)
+@@ -350,7 +350,7 @@
+ 				&lt;/x-shellscript&gt;
+ 				&lt;x-bzip-compressed-tar&gt;
+ 					&lt;default&gt;vfs_archive&lt;/default&gt;
+-					&lt;icon&gt;compressed&lt;/icon&gt;
++					&lt;icon&gt;mime-application-x-compressed-tar&lt;/icon&gt;
+ 					&lt;commands&gt;
+ 							&lt;command&gt;extract_tar_bz2&lt;/command&gt;
+ 					&lt;/commands&gt;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000040.html">[Openspace-svn] r259 - in trunk: icons/default icons/mini src
+</A></li>
+	<LI>Next message: <A HREF="000042.html">[Openspace-svn] r261 - in trunk: . icons icons/big icons/mini src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#41">[ date ]</a>
+              <a href="thread.html#41">[ thread ]</a>
+              <a href="subject.html#41">[ subject ]</a>
+              <a href="author.html#41">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,936 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r308 - in trunk: . src src/plugins/cmddialog
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-September/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r308%20-%20in%20trunk%3A%20.%20src%20src/plugins/cmddialog&In-Reply-To=%3C200609141329.k8EDTpEh021693%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r308 - in trunk: . src src/plugins/cmddialog</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r308%20-%20in%20trunk%3A%20.%20src%20src/plugins/cmddialog&In-Reply-To=%3C200609141329.k8EDTpEh021693%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r308 - in trunk: . src src/plugins/cmddialog">compbatant at mail.berlios.de
+       </A><BR>
+    <I>Thu Sep 14 15:29:51 CEST 2006</I>
+    <P><UL>
+        
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#89">[ date ]</a>
+              <a href="thread.html#89">[ thread ]</a>
+              <a href="subject.html#89">[ subject ]</a>
+              <a href="author.html#89">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-09-14 15:29:50 +0200 (Thu, 14 Sep 2006)
+New Revision: 308
+
+Modified:
+   trunk/configure
+   trunk/configure.ac
+   trunk/src/Makefile
+   trunk/src/OSFileList.h
+   trunk/src/OSMainWindow.h
+   trunk/src/config.h
+   trunk/src/config.h.in
+   trunk/src/plugins/cmddialog/OSAccess.cpp
+   trunk/src/plugins/cmddialog/OSClone.cpp
+   trunk/src/plugins/cmddialog/OSCompress.cpp
+   trunk/src/plugins/cmddialog/OSEditSymlink.cpp
+   trunk/src/plugins/cmddialog/OSMd5sum.cpp
+   trunk/src/plugins/cmddialog/OSMkdir.cpp
+   trunk/src/plugins/cmddialog/OSRename.cpp
+   trunk/src/plugins/cmddialog/OSSymlink.cpp
+Log:
+gcc 4.1 patches
+
+
+Modified: trunk/configure
+===================================================================
+--- trunk/configure	2006-05-14 21:06:09 UTC (rev 307)
++++ trunk/configure	2006-09-14 13:29:50 UTC (rev 308)
+@@ -20879,416 +20879,17 @@
+ 
+ 
+ 
++#dnl Check for FOX
++#AC_CHECK_LIB(FOX-1.4,fxfindfox,,AC_MSG_ERROR(&quot;libFOX-1.4 not found&quot;))
+ 
+-echo &quot;$as_me:$LINENO: checking for fxfindfox in -lFOX-1.4&quot; &gt;&amp;5
+-echo $ECHO_N &quot;checking for fxfindfox in -lFOX-1.4... $ECHO_C&quot; &gt;&amp;6
+-if test &quot;${ac_cv_lib_FOX_1_4_fxfindfox+set}&quot; = set; then
+-  echo $ECHO_N &quot;(cached) $ECHO_C&quot; &gt;&amp;6
+-else
+-  ac_check_lib_save_LIBS=$LIBS
+-LIBS=&quot;-lFOX-1.4  $LIBS&quot;
+-cat &gt;conftest.$ac_ext &lt;&lt;_ACEOF
+-/* confdefs.h.  */
+-_ACEOF
+-cat confdefs.h &gt;&gt;conftest.$ac_ext
+-cat &gt;&gt;conftest.$ac_ext &lt;&lt;_ACEOF
+-/* end confdefs.h.  */
+ 
+-/* Override any gcc2 internal prototype to avoid an error.  */
+-#ifdef __cplusplus
+-extern &quot;C&quot;
+-#endif
+-/* We use char because int might match the return type of a gcc2
+-   builtin and then its argument prototype would still apply.  */
+-char fxfindfox ();
+-int
+-main ()
+-{
+-fxfindfox ();
+-  ;
+-  return 0;
+-}
+-_ACEOF
+-rm -f conftest.$ac_objext conftest$ac_exeext
+-if { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_link\&quot;&quot;) &gt;&amp;5
+-  (eval $ac_link) 2&gt;conftest.er1
+-  ac_status=$?
+-  grep -v '^ *+' conftest.er1 &gt;conftest.err
+-  rm -f conftest.er1
+-  cat conftest.err &gt;&amp;5
+-  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
+-  (exit $ac_status); } &amp;&amp;
+-	 { ac_try='test -z &quot;$ac_c_werror_flag&quot;
+-			 || test ! -s conftest.err'
+-  { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_try\&quot;&quot;) &gt;&amp;5
+-  (eval $ac_try) 2&gt;&amp;5
+-  ac_status=$?
+-  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
+-  (exit $ac_status); }; } &amp;&amp;
+-	 { ac_try='test -s conftest$ac_exeext'
+-  { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_try\&quot;&quot;) &gt;&amp;5
+-  (eval $ac_try) 2&gt;&amp;5
+-  ac_status=$?
+-  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
+-  (exit $ac_status); }; }; then
+-  ac_cv_lib_FOX_1_4_fxfindfox=yes
+-else
+-  echo &quot;$as_me: failed program was:&quot; &gt;&amp;5
+-sed 's/^/| /' conftest.$ac_ext &gt;&amp;5
++#dnl Checks for FOX 1.4 header files.
++#AC_HEADER_STDC
++#AC_LANG_CPLUSPLUS
++#AC_CHECK_HEADERS(fox-1.4/fx.h,,AC_MSG_ERROR(&quot;fox-1.4/fx.h not found&quot;))
+ 
+-ac_cv_lib_FOX_1_4_fxfindfox=no
+-fi
+-rm -f conftest.err conftest.$ac_objext \
+-      conftest$ac_exeext conftest.$ac_ext
+-LIBS=$ac_check_lib_save_LIBS
+-fi
+-echo &quot;$as_me:$LINENO: result: $ac_cv_lib_FOX_1_4_fxfindfox&quot; &gt;&amp;5
+-echo &quot;${ECHO_T}$ac_cv_lib_FOX_1_4_fxfindfox&quot; &gt;&amp;6
+-if test $ac_cv_lib_FOX_1_4_fxfindfox = yes; then
+-  cat &gt;&gt;confdefs.h &lt;&lt;_ACEOF
+-#define HAVE_LIBFOX_1_4 1
+-_ACEOF
+ 
+-  LIBS=&quot;-lFOX-1.4 $LIBS&quot;
+ 
+-else
+-  { { echo &quot;$as_me:$LINENO: error: \&quot;libFOX-1.4 not found\&quot;&quot; &gt;&amp;5
+-echo &quot;$as_me: error: \&quot;libFOX-1.4 not found\&quot;&quot; &gt;&amp;2;}
+-   { (exit 1); exit 1; }; }
+-fi
+-
+-
+-
+-echo &quot;$as_me:$LINENO: checking for ANSI C header files&quot; &gt;&amp;5
+-echo $ECHO_N &quot;checking for ANSI C header files... $ECHO_C&quot; &gt;&amp;6
+-if test &quot;${ac_cv_header_stdc+set}&quot; = set; then
+-  echo $ECHO_N &quot;(cached) $ECHO_C&quot; &gt;&amp;6
+-else
+-  cat &gt;conftest.$ac_ext &lt;&lt;_ACEOF
+-/* confdefs.h.  */
+-_ACEOF
+-cat confdefs.h &gt;&gt;conftest.$ac_ext
+-cat &gt;&gt;conftest.$ac_ext &lt;&lt;_ACEOF
+-/* end confdefs.h.  */
+-#include &lt;stdlib.h&gt;
+-#include &lt;stdarg.h&gt;
+-#include &lt;string.h&gt;
+-#include &lt;float.h&gt;
+-
+-int
+-main ()
+-{
+-
+-  ;
+-  return 0;
+-}
+-_ACEOF
+-rm -f conftest.$ac_objext
+-if { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_compile\&quot;&quot;) &gt;&amp;5
+-  (eval $ac_compile) 2&gt;conftest.er1
+-  ac_status=$?
+-  grep -v '^ *+' conftest.er1 &gt;conftest.err
+-  rm -f conftest.er1
+-  cat conftest.err &gt;&amp;5
+-  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
+-  (exit $ac_status); } &amp;&amp;
+-	 { ac_try='test -z &quot;$ac_c_werror_flag&quot;
+-			 || test ! -s conftest.err'
+-  { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_try\&quot;&quot;) &gt;&amp;5
+-  (eval $ac_try) 2&gt;&amp;5
+-  ac_status=$?
+-  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
+-  (exit $ac_status); }; } &amp;&amp;
+-	 { ac_try='test -s conftest.$ac_objext'
+-  { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_try\&quot;&quot;) &gt;&amp;5
+-  (eval $ac_try) 2&gt;&amp;5
+-  ac_status=$?
+-  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
+-  (exit $ac_status); }; }; then
+-  ac_cv_header_stdc=yes
+-else
+-  echo &quot;$as_me: failed program was:&quot; &gt;&amp;5
+-sed 's/^/| /' conftest.$ac_ext &gt;&amp;5
+-
+-ac_cv_header_stdc=no
+-fi
+-rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+-
+-if test $ac_cv_header_stdc = yes; then
+-  # SunOS 4.x string.h does not declare mem*, contrary to ANSI.
+-  cat &gt;conftest.$ac_ext &lt;&lt;_ACEOF
+-/* confdefs.h.  */
+-_ACEOF
+-cat confdefs.h &gt;&gt;conftest.$ac_ext
+-cat &gt;&gt;conftest.$ac_ext &lt;&lt;_ACEOF
+-/* end confdefs.h.  */
+-#include &lt;string.h&gt;
+-
+-_ACEOF
+-if (eval &quot;$ac_cpp conftest.$ac_ext&quot;) 2&gt;&amp;5 |
+-  $EGREP &quot;memchr&quot; &gt;/dev/null 2&gt;&amp;1; then
+-  :
+-else
+-  ac_cv_header_stdc=no
+-fi
+-rm -f conftest*
+-
+-fi
+-
+-if test $ac_cv_header_stdc = yes; then
+-  # ISC 2.0.2 stdlib.h does not declare free, contrary to ANSI.
+-  cat &gt;conftest.$ac_ext &lt;&lt;_ACEOF
+-/* confdefs.h.  */
+-_ACEOF
+-cat confdefs.h &gt;&gt;conftest.$ac_ext
+-cat &gt;&gt;conftest.$ac_ext &lt;&lt;_ACEOF
+-/* end confdefs.h.  */
+-#include &lt;stdlib.h&gt;
+-
+-_ACEOF
+-if (eval &quot;$ac_cpp conftest.$ac_ext&quot;) 2&gt;&amp;5 |
+-  $EGREP &quot;free&quot; &gt;/dev/null 2&gt;&amp;1; then
+-  :
+-else
+-  ac_cv_header_stdc=no
+-fi
+-rm -f conftest*
+-
+-fi
+-
+-if test $ac_cv_header_stdc = yes; then
+-  # /bin/cc in Irix-4.0.5 gets non-ANSI ctype macros unless using -ansi.
+-  if test &quot;$cross_compiling&quot; = yes; then
+-  :
+-else
+-  cat &gt;conftest.$ac_ext &lt;&lt;_ACEOF
+-/* confdefs.h.  */
+-_ACEOF
+-cat confdefs.h &gt;&gt;conftest.$ac_ext
+-cat &gt;&gt;conftest.$ac_ext &lt;&lt;_ACEOF
+-/* end confdefs.h.  */
+-#include &lt;ctype.h&gt;
+-#if ((' ' &amp; 0x0FF) == 0x020)
+-# define ISLOWER(c) ('a' &lt;= (c) &amp;&amp; (c) &lt;= 'z')
+-# define TOUPPER(c) (ISLOWER(c) ? 'A' + ((c) - 'a') : (c))
+-#else
+-# define ISLOWER(c) \
+-		   (('a' &lt;= (c) &amp;&amp; (c) &lt;= 'i') \
+-		     || ('j' &lt;= (c) &amp;&amp; (c) &lt;= 'r') \
+-		     || ('s' &lt;= (c) &amp;&amp; (c) &lt;= 'z'))
+-# define TOUPPER(c) (ISLOWER(c) ? ((c) | 0x40) : (c))
+-#endif
+-
+-#define XOR(e, f) (((e) &amp;&amp; !(f)) || (!(e) &amp;&amp; (f)))
+-int
+-main ()
+-{
+-  int i;
+-  for (i = 0; i &lt; 256; i++)
+-    if (XOR (islower (i), ISLOWER (i))
+-	|| toupper (i) != TOUPPER (i))
+-      exit(2);
+-  exit (0);
+-}
+-_ACEOF
+-rm -f conftest$ac_exeext
+-if { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_link\&quot;&quot;) &gt;&amp;5
+-  (eval $ac_link) 2&gt;&amp;5
+-  ac_status=$?
+-  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
+-  (exit $ac_status); } &amp;&amp; { ac_try='./conftest$ac_exeext'
+-  { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_try\&quot;&quot;) &gt;&amp;5
+-  (eval $ac_try) 2&gt;&amp;5
+-  ac_status=$?
+-  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
+-  (exit $ac_status); }; }; then
+-  :
+-else
+-  echo &quot;$as_me: program exited with status $ac_status&quot; &gt;&amp;5
+-echo &quot;$as_me: failed program was:&quot; &gt;&amp;5
+-sed 's/^/| /' conftest.$ac_ext &gt;&amp;5
+-
+-( exit $ac_status )
+-ac_cv_header_stdc=no
+-fi
+-rm -f core *.core gmon.out bb.out conftest$ac_exeext conftest.$ac_objext conftest.$ac_ext
+-fi
+-fi
+-fi
+-echo &quot;$as_me:$LINENO: result: $ac_cv_header_stdc&quot; &gt;&amp;5
+-echo &quot;${ECHO_T}$ac_cv_header_stdc&quot; &gt;&amp;6
+-if test $ac_cv_header_stdc = yes; then
+-
+-cat &gt;&gt;confdefs.h &lt;&lt;\_ACEOF
+-#define STDC_HEADERS 1
+-_ACEOF
+-
+-fi
+-
+-ac_ext=cc
+-ac_cpp='$CXXCPP $CPPFLAGS'
+-ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext &gt;&amp;5'
+-ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS &gt;&amp;5'
+-ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+-
+-
+-
+-for ac_header in fox-1.4/fx.h
+-do
+-as_ac_Header=`echo &quot;ac_cv_header_$ac_header&quot; | $as_tr_sh`
+-if eval &quot;test \&quot;\${$as_ac_Header+set}\&quot; = set&quot;; then
+-  echo &quot;$as_me:$LINENO: checking for $ac_header&quot; &gt;&amp;5
+-echo $ECHO_N &quot;checking for $ac_header... $ECHO_C&quot; &gt;&amp;6
+-if eval &quot;test \&quot;\${$as_ac_Header+set}\&quot; = set&quot;; then
+-  echo $ECHO_N &quot;(cached) $ECHO_C&quot; &gt;&amp;6
+-fi
+-echo &quot;$as_me:$LINENO: result: `eval echo '${'$as_ac_Header'}'`&quot; &gt;&amp;5
+-echo &quot;${ECHO_T}`eval echo '${'$as_ac_Header'}'`&quot; &gt;&amp;6
+-else
+-  # Is the header compilable?
+-echo &quot;$as_me:$LINENO: checking $ac_header usability&quot; &gt;&amp;5
+-echo $ECHO_N &quot;checking $ac_header usability... $ECHO_C&quot; &gt;&amp;6
+-cat &gt;conftest.$ac_ext &lt;&lt;_ACEOF
+-/* confdefs.h.  */
+-_ACEOF
+-cat confdefs.h &gt;&gt;conftest.$ac_ext
+-cat &gt;&gt;conftest.$ac_ext &lt;&lt;_ACEOF
+-/* end confdefs.h.  */
+-$ac_includes_default
+-#include &lt;$ac_header&gt;
+-_ACEOF
+-rm -f conftest.$ac_objext
+-if { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_compile\&quot;&quot;) &gt;&amp;5
+-  (eval $ac_compile) 2&gt;conftest.er1
+-  ac_status=$?
+-  grep -v '^ *+' conftest.er1 &gt;conftest.err
+-  rm -f conftest.er1
+-  cat conftest.err &gt;&amp;5
+-  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
+-  (exit $ac_status); } &amp;&amp;
+-	 { ac_try='test -z &quot;$ac_cxx_werror_flag&quot;
+-			 || test ! -s conftest.err'
+-  { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_try\&quot;&quot;) &gt;&amp;5
+-  (eval $ac_try) 2&gt;&amp;5
+-  ac_status=$?
+-  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
+-  (exit $ac_status); }; } &amp;&amp;
+-	 { ac_try='test -s conftest.$ac_objext'
+-  { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_try\&quot;&quot;) &gt;&amp;5
+-  (eval $ac_try) 2&gt;&amp;5
+-  ac_status=$?
+-  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
+-  (exit $ac_status); }; }; then
+-  ac_header_compiler=yes
+-else
+-  echo &quot;$as_me: failed program was:&quot; &gt;&amp;5
+-sed 's/^/| /' conftest.$ac_ext &gt;&amp;5
+-
+-ac_header_compiler=no
+-fi
+-rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
+-echo &quot;$as_me:$LINENO: result: $ac_header_compiler&quot; &gt;&amp;5
+-echo &quot;${ECHO_T}$ac_header_compiler&quot; &gt;&amp;6
+-
+-# Is the header present?
+-echo &quot;$as_me:$LINENO: checking $ac_header presence&quot; &gt;&amp;5
+-echo $ECHO_N &quot;checking $ac_header presence... $ECHO_C&quot; &gt;&amp;6
+-cat &gt;conftest.$ac_ext &lt;&lt;_ACEOF
+-/* confdefs.h.  */
+-_ACEOF
+-cat confdefs.h &gt;&gt;conftest.$ac_ext
+-cat &gt;&gt;conftest.$ac_ext &lt;&lt;_ACEOF
+-/* end confdefs.h.  */
+-#include &lt;$ac_header&gt;
+-_ACEOF
+-if { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_cpp conftest.$ac_ext\&quot;&quot;) &gt;&amp;5
+-  (eval $ac_cpp conftest.$ac_ext) 2&gt;conftest.er1
+-  ac_status=$?
+-  grep -v '^ *+' conftest.er1 &gt;conftest.err
+-  rm -f conftest.er1
+-  cat conftest.err &gt;&amp;5
+-  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
+-  (exit $ac_status); } &gt;/dev/null; then
+-  if test -s conftest.err; then
+-    ac_cpp_err=$ac_cxx_preproc_warn_flag
+-    ac_cpp_err=$ac_cpp_err$ac_cxx_werror_flag
+-  else
+-    ac_cpp_err=
+-  fi
+-else
+-  ac_cpp_err=yes
+-fi
+-if test -z &quot;$ac_cpp_err&quot;; then
+-  ac_header_preproc=yes
+-else
+-  echo &quot;$as_me: failed program was:&quot; &gt;&amp;5
+-sed 's/^/| /' conftest.$ac_ext &gt;&amp;5
+-
+-  ac_header_preproc=no
+-fi
+-rm -f conftest.err conftest.$ac_ext
+-echo &quot;$as_me:$LINENO: result: $ac_header_preproc&quot; &gt;&amp;5
+-echo &quot;${ECHO_T}$ac_header_preproc&quot; &gt;&amp;6
+-
+-# So?  What about this header?
+-case $ac_header_compiler:$ac_header_preproc:$ac_cxx_preproc_warn_flag in
+-  yes:no: )
+-    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!&quot; &gt;&amp;5
+-echo &quot;$as_me: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!&quot; &gt;&amp;2;}
+-    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: proceeding with the compiler's result&quot; &gt;&amp;5
+-echo &quot;$as_me: WARNING: $ac_header: proceeding with the compiler's result&quot; &gt;&amp;2;}
+-    ac_header_preproc=yes
+-    ;;
+-  no:yes:* )
+-    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: present but cannot be compiled&quot; &gt;&amp;5
+-echo &quot;$as_me: WARNING: $ac_header: present but cannot be compiled&quot; &gt;&amp;2;}
+-    { echo &quot;$as_me:$LINENO: WARNING: $ac_header:     check for missing prerequisite headers?&quot; &gt;&amp;5
+-echo &quot;$as_me: WARNING: $ac_header:     check for missing prerequisite headers?&quot; &gt;&amp;2;}
+-    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: see the Autoconf documentation&quot; &gt;&amp;5
+-echo &quot;$as_me: WARNING: $ac_header: see the Autoconf documentation&quot; &gt;&amp;2;}
+-    { echo &quot;$as_me:$LINENO: WARNING: $ac_header:     section \&quot;Present But Cannot Be Compiled\&quot;&quot; &gt;&amp;5
+-echo &quot;$as_me: WARNING: $ac_header:     section \&quot;Present But Cannot Be Compiled\&quot;&quot; &gt;&amp;2;}
+-    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: proceeding with the preprocessor's result&quot; &gt;&amp;5
+-echo &quot;$as_me: WARNING: $ac_header: proceeding with the preprocessor's result&quot; &gt;&amp;2;}
+-    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: in the future, the compiler will take precedence&quot; &gt;&amp;5
+-echo &quot;$as_me: WARNING: $ac_header: in the future, the compiler will take precedence&quot; &gt;&amp;2;}
+-    (
+-      cat &lt;&lt;\_ASBOX
+-## ---------------------------------- ##
+-## Report this to <A HREF="http://nao.linux.pl">http://nao.linux.pl</A> ##
+-## ---------------------------------- ##
+-_ASBOX
+-    ) |
+-      sed &quot;s/^/$as_me: WARNING:     /&quot; &gt;&amp;2
+-    ;;
+-esac
+-echo &quot;$as_me:$LINENO: checking for $ac_header&quot; &gt;&amp;5
+-echo $ECHO_N &quot;checking for $ac_header... $ECHO_C&quot; &gt;&amp;6
+-if eval &quot;test \&quot;\${$as_ac_Header+set}\&quot; = set&quot;; then
+-  echo $ECHO_N &quot;(cached) $ECHO_C&quot; &gt;&amp;6
+-else
+-  eval &quot;$as_ac_Header=\$ac_header_preproc&quot;
+-fi
+-echo &quot;$as_me:$LINENO: result: `eval echo '${'$as_ac_Header'}'`&quot; &gt;&amp;5
+-echo &quot;${ECHO_T}`eval echo '${'$as_ac_Header'}'`&quot; &gt;&amp;6
+-
+-fi
+-if test `eval echo '${'$as_ac_Header'}'` = yes; then
+-  cat &gt;&gt;confdefs.h &lt;&lt;_ACEOF
+-#define `echo &quot;HAVE_$ac_header&quot; | $as_tr_cpp` 1
+-_ACEOF
+-
+-else
+-  { { echo &quot;$as_me:$LINENO: error: \&quot;fox-1.4/fx.h not found\&quot;&quot; &gt;&amp;5
+-echo &quot;$as_me: error: \&quot;fox-1.4/fx.h not found\&quot;&quot; &gt;&amp;2;}
+-   { (exit 1); exit 1; }; }
+-fi
+-
+-done
+-
+-
+-
+-
+ for ac_header in libssh/sftp.h
+ do
+ as_ac_Header=`echo &quot;ac_cv_header_$ac_header&quot; | $as_tr_sh`
+@@ -21322,7 +20923,7 @@
+   cat conftest.err &gt;&amp;5
+   echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
+   (exit $ac_status); } &amp;&amp;
+-	 { ac_try='test -z &quot;$ac_cxx_werror_flag&quot;
++	 { ac_try='test -z &quot;$ac_c_werror_flag&quot;
+ 			 || test ! -s conftest.err'
+   { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_try\&quot;&quot;) &gt;&amp;5
+   (eval $ac_try) 2&gt;&amp;5
+@@ -21366,8 +20967,8 @@
+   echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
+   (exit $ac_status); } &gt;/dev/null; then
+   if test -s conftest.err; then
+-    ac_cpp_err=$ac_cxx_preproc_warn_flag
+-    ac_cpp_err=$ac_cpp_err$ac_cxx_werror_flag
++    ac_cpp_err=$ac_c_preproc_warn_flag
++    ac_cpp_err=$ac_cpp_err$ac_c_werror_flag
+   else
+     ac_cpp_err=
+   fi
+@@ -21387,7 +20988,7 @@
+ echo &quot;${ECHO_T}$ac_header_preproc&quot; &gt;&amp;6
+ 
+ # So?  What about this header?
+-case $ac_header_compiler:$ac_header_preproc:$ac_cxx_preproc_warn_flag in
++case $ac_header_compiler:$ac_header_preproc:$ac_c_preproc_warn_flag in
+   yes:no: )
+     { echo &quot;$as_me:$LINENO: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!&quot; &gt;&amp;5
+ echo &quot;$as_me: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!&quot; &gt;&amp;2;}
+@@ -21477,7 +21078,7 @@
+   cat conftest.err &gt;&amp;5
+   echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
+   (exit $ac_status); } &amp;&amp;
+-	 { ac_try='test -z &quot;$ac_cxx_werror_flag&quot;
++	 { ac_try='test -z &quot;$ac_c_werror_flag&quot;
+ 			 || test ! -s conftest.err'
+   { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_try\&quot;&quot;) &gt;&amp;5
+   (eval $ac_try) 2&gt;&amp;5
+@@ -21521,8 +21122,8 @@
+   echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
+   (exit $ac_status); } &gt;/dev/null; then
+   if test -s conftest.err; then
+-    ac_cpp_err=$ac_cxx_preproc_warn_flag
+-    ac_cpp_err=$ac_cpp_err$ac_cxx_werror_flag
++    ac_cpp_err=$ac_c_preproc_warn_flag
++    ac_cpp_err=$ac_cpp_err$ac_c_werror_flag
+   else
+     ac_cpp_err=
+   fi
+@@ -21542,7 +21143,7 @@
+ echo &quot;${ECHO_T}$ac_header_preproc&quot; &gt;&amp;6
+ 
+ # So?  What about this header?
+-case $ac_header_compiler:$ac_header_preproc:$ac_cxx_preproc_warn_flag in
++case $ac_header_compiler:$ac_header_preproc:$ac_c_preproc_warn_flag in
+   yes:no: )
+     { echo &quot;$as_me:$LINENO: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!&quot; &gt;&amp;5
+ echo &quot;$as_me: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!&quot; &gt;&amp;2;}
+
+Modified: trunk/configure.ac
+===================================================================
+--- trunk/configure.ac	2006-05-14 21:06:09 UTC (rev 307)
++++ trunk/configure.ac	2006-09-14 13:29:50 UTC (rev 308)
+@@ -36,14 +36,14 @@
+ AC_CHECK_FUNCS([dup2 endgrent endpwent mkdir mkfifo rmdir strtoul])
+ 
+ 
+-dnl Check for FOX
+-AC_CHECK_LIB(FOX-1.4,fxfindfox,,AC_MSG_ERROR(&quot;libFOX-1.4 not found&quot;))
++#dnl Check for FOX
++#AC_CHECK_LIB(FOX-1.4,fxfindfox,,AC_MSG_ERROR(&quot;libFOX-1.4 not found&quot;))
+ 
+ 
+-dnl Checks for FOX 1.4 header files.
+-AC_HEADER_STDC
+-AC_LANG_CPLUSPLUS
+-AC_CHECK_HEADERS(fox-1.4/fx.h,,AC_MSG_ERROR(&quot;fox-1.4/fx.h not found&quot;))
++#dnl Checks for FOX 1.4 header files.
++#AC_HEADER_STDC
++#AC_LANG_CPLUSPLUS
++#AC_CHECK_HEADERS(fox-1.4/fx.h,,AC_MSG_ERROR(&quot;fox-1.4/fx.h not found&quot;))
+ 
+ 
+ dnl Checks for libssh header files.
+
+Modified: trunk/src/Makefile
+===================================================================
+--- trunk/src/Makefile	2006-05-14 21:06:09 UTC (rev 307)
++++ trunk/src/Makefile	2006-09-14 13:29:50 UTC (rev 308)
+@@ -24,7 +24,7 @@
+ pkgincludedir = $(includedir)/nao
+ top_builddir = ..
+ am__cd = CDPATH=&quot;$${ZSH_VERSION+.}$(PATH_SEPARATOR)&quot; &amp;&amp; cd
+-INSTALL = /usr/bin/install -c
++INSTALL = /bin/install -c
+ install_sh_DATA = $(install_sh) -c -m 644
+ install_sh_PROGRAM = $(install_sh) -c
+ install_sh_SCRIPT = $(install_sh) -c
+@@ -111,14 +111,14 @@
+ CTAGS = ctags
+ DIST_SUBDIRS = $(SUBDIRS)
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+-ACLOCAL = ${SHELL} /root/nao/missing --run aclocal-1.8
++ACLOCAL = ${SHELL} /mnt/1/root/nao/missing --run aclocal-1.8
+ AMDEP_FALSE = #
+ AMDEP_TRUE = 
+-AMTAR = ${SHELL} /root/nao/missing --run tar
++AMTAR = ${SHELL} /mnt/1/root/nao/missing --run tar
+ AR = ar
+-AUTOCONF = ${SHELL} /root/nao/missing --run autoconf
+-AUTOHEADER = ${SHELL} /root/nao/missing --run autoheader
+-AUTOMAKE = ${SHELL} /root/nao/missing --run automake-1.8
++AUTOCONF = ${SHELL} /mnt/1/root/nao/missing --run autoconf
++AUTOHEADER = ${SHELL} /mnt/1/root/nao/missing --run autoheader
++AUTOMAKE = ${SHELL} /mnt/1/root/nao/missing --run automake-1.8
+ AWK = gawk
+ CC = gcc
+ CCDEPMODE = depmode=gcc3
+@@ -138,8 +138,8 @@
+ ECHO_T = 
+ EGREP = grep -E
+ EXEEXT = 
+-F77 = g77
+-FFLAGS = -g -O2
++F77 = 
++FFLAGS = 
+ FOX_CONFIG = yes
+ INSTALL_DATA = ${INSTALL} -m 644
+ INSTALL_PROGRAM = ${INSTALL}
+@@ -147,11 +147,11 @@
+ INSTALL_STRIP_PROGRAM = ${SHELL} $(install_sh) -c -s
+ LDFLAGS = 
+ LIBOBJS = 
+-LIBS = -lFOX-1.4 
++LIBS = 
+ LIBTOOL = $(SHELL) $(top_builddir)/libtool
+ LN_S = ln -s
+ LTLIBOBJS = 
+-MAKEINFO = ${SHELL} /root/nao/missing --run makeinfo
++MAKEINFO = ${SHELL} /mnt/1/root/nao/missing --run makeinfo
+ OBJEXT = o
+ PACKAGE = nao
+ PACKAGE_BUGREPORT = <A HREF="http://nao.linux.pl">http://nao.linux.pl</A>
+@@ -169,7 +169,7 @@
+ ac_ct_AR = ar
+ ac_ct_CC = gcc
+ ac_ct_CXX = g++
+-ac_ct_F77 = g77
++ac_ct_F77 = 
+ ac_ct_RANLIB = ranlib
+ ac_ct_STRIP = strip
+ am__fastdepCC_FALSE = #
+@@ -194,7 +194,7 @@
+ host_vendor = pc
+ includedir = ${prefix}/include
+ infodir = ${prefix}/info
+-install_sh = /root/nao/install-sh
++install_sh = /mnt/1/root/nao/install-sh
+ libdir = ${exec_prefix}/lib
+ libexecdir = ${exec_prefix}/libexec
+ localstatedir = ${prefix}/var
+
+Modified: trunk/src/OSFileList.h
+===================================================================
+--- trunk/src/OSFileList.h	2006-05-14 21:06:09 UTC (rev 307)
++++ trunk/src/OSFileList.h	2006-09-14 13:29:50 UTC (rev 308)
+@@ -150,24 +150,24 @@
+ 
+     virtual void create ();
+ 
+-    void OSFileList::refresh ( void );
+-    bool OSFileList::init ( void );
+-    bool OSFileList::openDir ( string dir );
+-    string OSFileList::getDir (  ){return path;}
++    void refresh ( void );
++    bool init ( void );
++    bool openDir ( string dir );
++    string getDir (  ){return path;}
+ 
+-    long OSFileList::setFocus ( FXObject * obj, FXSelector sel, void *ptr );
+-    long OSFileList::lostFocus ( FXObject * obj, FXSelector sel, void *ptr );
+-    long OSFileList::openfile ( FXObject *, FXSelector, void * );
+-    long OSFileList::gotoparentdir ( FXObject *, FXSelector, void * );
+-    long OSFileList::onPopup ( FXObject *, FXSelector, void * );
+-    long OSFileList::file_operation ( FXObject *, FXSelector, void * );
+-    long OSFileList::onCmdHeader ( FXObject *, FXSelector, void *ptr );
+-    long OSFileList::onCommand ( FXObject *, FXSelector, void *ptr );
+-    long OSFileList::onCommandCancel ( FXObject *, FXSelector, void *ptr );
+-    long OSFileList::click ( FXObject *, FXSelector, void *ptr );
+-    long OSFileList::onCmdResize( FXObject * sender, FXSelector, void * );
+-    long OSFileList::key_shortcut ( FXObject * obj, FXSelector sel, void *ptr );
+-    long OSFileList::texfield_run ( FXObject * obj, FXSelector sel, void *ptr );
++    long setFocus ( FXObject * obj, FXSelector sel, void *ptr );
++    long lostFocus ( FXObject * obj, FXSelector sel, void *ptr );
++    long openfile ( FXObject *, FXSelector, void * );
++    long gotoparentdir ( FXObject *, FXSelector, void * );
++    long onPopup ( FXObject *, FXSelector, void * );
++    long file_operation ( FXObject *, FXSelector, void * );
++    long onCmdHeader ( FXObject *, FXSelector, void *ptr );
++    long onCommand ( FXObject *, FXSelector, void *ptr );
++    long onCommandCancel ( FXObject *, FXSelector, void *ptr );
++    long click ( FXObject *, FXSelector, void *ptr );
++    long onCmdResize( FXObject * sender, FXSelector, void * );
++    long key_shortcut ( FXObject * obj, FXSelector sel, void *ptr );
++    long texfield_run ( FXObject * obj, FXSelector sel, void *ptr );
+ 
+     long onDNDEnter ( FXObject *, FXSelector, void * );
+     long onDNDLeave ( FXObject *, FXSelector, void * );
+
+Modified: trunk/src/OSMainWindow.h
+===================================================================
+--- trunk/src/OSMainWindow.h	2006-05-14 21:06:09 UTC (rev 307)
++++ trunk/src/OSMainWindow.h	2006-09-14 13:29:50 UTC (rev 308)
+@@ -47,24 +47,24 @@
+     virtual ~ OSMainWindow ();
+     virtual void create ();
+ 
+-    long OSMainWindow::onListDirs (FXObject * sender, FXSelector, void *);
+-    long OSMainWindow::onChangeDir (FXObject * sender, FXSelector, void *);
+-    long OSMainWindow::onChangeList (FXObject * sender, FXSelector, void *);
+-    long OSMainWindow::onNewFrame (FXObject * sender, FXSelector, void *);
+-    long OSMainWindow::onNewNetworkFrame (FXObject * sender, FXSelector, void *);
+-    long OSMainWindow::onNewSearchFrame (FXObject * sender, FXSelector, void *);
+-    long OSMainWindow::onNotify (FXObject * sender, FXSelector, void *);
+-    long OSMainWindow::onOpenDir (FXObject * sender, FXSelector, void *);
+-    long OSMainWindow::onTimer (FXObject *, FXSelector, void *);
+-    long OSMainWindow::cancel (FXObject * sender, FXSelector, void *);
+-    long OSMainWindow::update (FXObject * sender, FXSelector, void *);
+-    long OSMainWindow::commandsShow (FXObject * sender, FXSelector, void *);
+-    long OSMainWindow::onListNextDir (FXObject * sender, FXSelector, void *);
+-    long OSMainWindow::onOverwrite (FXObject * sender, FXSelector, void *);
+-    long OSMainWindow::onAbout (FXObject * sender, FXSelector sel, void *);
+-    long OSMainWindow::onOpenConfigure (FXObject * sender, FXSelector sel, void *);
+-    long OSMainWindow::onUpdate (FXObject * sender, FXSelector sel, void *);
+-    long OSMainWindow::onConfigure (FXObject * sender, FXSelector sel, void *);
++    long onListDirs (FXObject * sender, FXSelector, void *);
++    long onChangeDir (FXObject * sender, FXSelector, void *);
++    long onChangeList (FXObject * sender, FXSelector, void *);
++    long onNewFrame (FXObject * sender, FXSelector, void *);
++    long onNewNetworkFrame (FXObject * sender, FXSelector, void *);
++    long onNewSearchFrame (FXObject * sender, FXSelector, void *);
++    long onNotify (FXObject * sender, FXSelector, void *);
++    long onOpenDir (FXObject * sender, FXSelector, void *);
++    long onTimer (FXObject *, FXSelector, void *);
++    long cancel (FXObject * sender, FXSelector, void *);
++    long update (FXObject * sender, FXSelector, void *);
++    long commandsShow (FXObject * sender, FXSelector, void *);
++    long onListNextDir (FXObject * sender, FXSelector, void *);
++    long onOverwrite (FXObject * sender, FXSelector, void *);
++    long onAbout (FXObject * sender, FXSelector sel, void *);
++    long onOpenConfigure (FXObject * sender, FXSelector sel, void *);
++    long onUpdate (FXObject * sender, FXSelector sel, void *);
++    long onConfigure (FXObject * sender, FXSelector sel, void *);
+ 
+ 
+     void dirChange(long id);
+@@ -77,11 +77,11 @@
+     {
+     }
+     
+-    void OSMainWindow::loadicons (string dir);
+-    void OSMainWindow::loadSpecialIcon (string icondir, string type, int nr );
+-    int OSMainWindow::popupDir (OSFileList * current_filelist, string path, int x, int y);
+-    string OSMainWindow::parseDir (string dir);
+-    bool OSMainWindow::loadMimeSettings (string path, string type);
++    void loadicons (string dir);
++    void loadSpecialIcon (string icondir, string type, int nr );
++    int popupDir (OSFileList * current_filelist, string path, int x, int y);
++    string parseDir (string dir);
++    bool loadMimeSettings (string path, string type);
+     
+     FXVerticalFrame *leftframe;
+     FXVerticalFrame *rightframe;
+
+Modified: trunk/src/config.h
+===================================================================
+--- trunk/src/config.h	2006-05-14 21:06:09 UTC (rev 307)
++++ trunk/src/config.h	2006-09-14 13:29:50 UTC (rev 308)
+@@ -26,15 +26,9 @@
+ /* Define to 1 if you have the `fork' function. */
+ #define HAVE_FORK 1
+ 
+-/* Define to 1 if you have the &lt;fox-1.4/fx.h&gt; header file. */
+-#define HAVE_FOX_1_4_FX_H 1
+-
+ /* Define to 1 if you have the &lt;inttypes.h&gt; header file. */
+ #define HAVE_INTTYPES_H 1
+ 
+-/* Define to 1 if you have the `FOX-1.4' library (-lFOX-1.4). */
+-#define HAVE_LIBFOX_1_4 1
+-
+ /* Define to 1 if you have the &lt;libssh/sftp.h&gt; header file. */
+ #define HAVE_LIBSSH_SFTP_H 1
+ 
+
+Modified: trunk/src/config.h.in
+===================================================================
+--- trunk/src/config.h.in	2006-05-14 21:06:09 UTC (rev 307)
++++ trunk/src/config.h.in	2006-09-14 13:29:50 UTC (rev 308)
+@@ -25,15 +25,9 @@
+ /* Define to 1 if you have the `fork' function. */
+ #undef HAVE_FORK
+ 
+-/* Define to 1 if you have the &lt;fox-1.4/fx.h&gt; header file. */
+-#undef HAVE_FOX_1_4_FX_H
+-
+ /* Define to 1 if you have the &lt;inttypes.h&gt; header file. */
+ #undef HAVE_INTTYPES_H
+ 
+-/* Define to 1 if you have the `FOX-1.4' library (-lFOX-1.4). */
+-#undef HAVE_LIBFOX_1_4
+-
+ /* Define to 1 if you have the &lt;libssh/sftp.h&gt; header file. */
+ #undef HAVE_LIBSSH_SFTP_H
+ 
+
+Modified: trunk/src/plugins/cmddialog/OSAccess.cpp
+===================================================================
+--- trunk/src/plugins/cmddialog/OSAccess.cpp	2006-05-14 21:06:09 UTC (rev 307)
++++ trunk/src/plugins/cmddialog/OSAccess.cpp	2006-09-14 13:29:50 UTC (rev 308)
+@@ -119,7 +119,7 @@
+     }
+ 
+ 
+-    long OSAccess::press (FXObject * sender, FXSelector, void *);
++    long press (FXObject * sender, FXSelector, void *);
+ 
+ };
+ 
+
+Modified: trunk/src/plugins/cmddialog/OSClone.cpp
+===================================================================
+--- trunk/src/plugins/cmddialog/OSClone.cpp	2006-05-14 21:06:09 UTC (rev 307)
++++ trunk/src/plugins/cmddialog/OSClone.cpp	2006-09-14 13:29:50 UTC (rev 308)
+@@ -95,7 +95,7 @@
+     }
+ 
+ 
+-    long OSClone::press ( FXObject * sender, FXSelector, void * );
++    long press ( FXObject * sender, FXSelector, void * );
+ 
+ };
+ 
+
+Modified: trunk/src/plugins/cmddialog/OSCompress.cpp
+===================================================================
+--- trunk/src/plugins/cmddialog/OSCompress.cpp	2006-05-14 21:06:09 UTC (rev 307)
++++ trunk/src/plugins/cmddialog/OSCompress.cpp	2006-09-14 13:29:50 UTC (rev 308)
+@@ -74,7 +74,7 @@
+     }
+ 
+ 
+-    long OSCompress::press (FXObject * sender, FXSelector, void *);
++    long press (FXObject * sender, FXSelector, void *);
+ 
+ };
+ 
+
+Modified: trunk/src/plugins/cmddialog/OSEditSymlink.cpp
+===================================================================
+--- trunk/src/plugins/cmddialog/OSEditSymlink.cpp	2006-05-14 21:06:09 UTC (rev 307)
++++ trunk/src/plugins/cmddialog/OSEditSymlink.cpp	2006-09-14 13:29:50 UTC (rev 308)
+@@ -94,7 +94,7 @@
+ 
+ 
+ 
+-    long OSEditSymlink::press (FXObject * sender, FXSelector, void *);
++    long press (FXObject * sender, FXSelector, void *);
+ 
+ };
+ 
+
+Modified: trunk/src/plugins/cmddialog/OSMd5sum.cpp
+===================================================================
+--- trunk/src/plugins/cmddialog/OSMd5sum.cpp	2006-05-14 21:06:09 UTC (rev 307)
++++ trunk/src/plugins/cmddialog/OSMd5sum.cpp	2006-09-14 13:29:50 UTC (rev 308)
+@@ -51,7 +51,7 @@
+     }
+ 
+ 
+-    long OSMd5sum::press (FXObject * sender, FXSelector, void *);
++    long press (FXObject * sender, FXSelector, void *);
+ 
+ };
+ 
+
+Modified: trunk/src/plugins/cmddialog/OSMkdir.cpp
+===================================================================
+--- trunk/src/plugins/cmddialog/OSMkdir.cpp	2006-05-14 21:06:09 UTC (rev 307)
++++ trunk/src/plugins/cmddialog/OSMkdir.cpp	2006-09-14 13:29:50 UTC (rev 308)
+@@ -40,7 +40,7 @@
+     }
+ 
+ 
+-    long OSMkdir::press (FXObject * sender, FXSelector, void *);
++    long press (FXObject * sender, FXSelector, void *);
+ 
+ };
+ 
+
+Modified: trunk/src/plugins/cmddialog/OSRename.cpp
+===================================================================
+--- trunk/src/plugins/cmddialog/OSRename.cpp	2006-05-14 21:06:09 UTC (rev 307)
++++ trunk/src/plugins/cmddialog/OSRename.cpp	2006-09-14 13:29:50 UTC (rev 308)
+@@ -72,7 +72,7 @@
+     }
+ 
+ 
+-    long OSRename::press (FXObject * sender, FXSelector, void *);
++    long press (FXObject * sender, FXSelector, void *);
+ 
+ };
+ 
+
+Modified: trunk/src/plugins/cmddialog/OSSymlink.cpp
+===================================================================
+--- trunk/src/plugins/cmddialog/OSSymlink.cpp	2006-05-14 21:06:09 UTC (rev 307)
++++ trunk/src/plugins/cmddialog/OSSymlink.cpp	2006-09-14 13:29:50 UTC (rev 308)
+@@ -80,7 +80,7 @@
+     }
+ 
+ 
+-    long OSSymlink::press (FXObject * sender, FXSelector, void *);
++    long press (FXObject * sender, FXSelector, void *);
+ 
+ };
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#89">[ date ]</a>
+              <a href="thread.html#89">[ thread ]</a>
+              <a href="subject.html#89">[ subject ]</a>
+              <a href="author.html#89">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

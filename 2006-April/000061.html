@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r280 - in trunk: . src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r280%20-%20in%20trunk%3A%20.%20src&In-Reply-To=%3C200604072158.k37LwW6h024691%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000060.html">
+   <LINK REL="Next"  HREF="000062.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r280 - in trunk: . src</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r280%20-%20in%20trunk%3A%20.%20src&In-Reply-To=%3C200604072158.k37LwW6h024691%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r280 - in trunk: . src">compbatant at berlios.de
+       </A><BR>
+    <I>Fri Apr  7 23:58:32 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000060.html">[Openspace-svn] r279 - in trunk: icons/big icons/default src
+</A></li>
+        <LI>Next message: <A HREF="000062.html">[Openspace-svn] r281 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#61">[ date ]</a>
+              <a href="thread.html#61">[ thread ]</a>
+              <a href="subject.html#61">[ subject ]</a>
+              <a href="author.html#61">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-07 23:58:31 +0200 (Fri, 07 Apr 2006)
+New Revision: 280
+
+Modified:
+   trunk/openspacerc.in
+   trunk/src/Makefile
+   trunk/src/OSFileList.cpp
+Log:
+vfs pluginy nie zapisywaly rodzaju widoku: big icons,small,detailed
+
+
+Modified: trunk/openspacerc.in
+===================================================================
+--- trunk/openspacerc.in	2006-04-07 16:21:26 UTC (rev 279)
++++ trunk/openspacerc.in	2006-04-07 21:58:31 UTC (rev 280)
+@@ -595,6 +595,7 @@
+ 		
+ 		&lt;ftp&gt;
+ 			&lt;type&gt;network&lt;/type&gt;
++			&lt;style&gt;big icons&lt;/style&gt;
+ 			&lt;headers&gt;
+ 				&lt;header&gt;size&lt;/header&gt;
+ 				&lt;header&gt;owner&lt;/header&gt;
+@@ -624,6 +625,7 @@
+ 		&lt;/ftp&gt;
+ 		&lt;search&gt;
+ 			&lt;type&gt;search&lt;/type&gt;
++			&lt;style&gt;small icons&lt;/style&gt;
+ 			&lt;properties&gt;
+ 				&lt;name&gt;
+ 					&lt;width&gt;400&lt;/width&gt;					
+@@ -632,6 +634,7 @@
+ 		&lt;/search&gt;
+ 		&lt;archive&gt;
+ 			&lt;type&gt;vfs&lt;/type&gt;
++			&lt;style&gt;small icons&lt;/style&gt;
+ 			&lt;properties&gt;
+ 				&lt;name&gt;
+ 					&lt;width&gt;400&lt;/width&gt;					
+
+Modified: trunk/src/Makefile
+===================================================================
+--- trunk/src/Makefile	2006-04-07 16:21:26 UTC (rev 279)
++++ trunk/src/Makefile	2006-04-07 21:58:31 UTC (rev 280)
+@@ -128,7 +128,7 @@
+ CXX = g++
+ CXXCPP = g++ -E
+ CXXDEPMODE = depmode=gcc3
+-CXXFLAGS = -g -O2
++CXXFLAGS = -O0
+ CYGPATH_W = echo
+ DEFS = -DHAVE_CONFIG_H
+ DEPDIR = .deps
+
+Modified: trunk/src/OSFileList.cpp
+===================================================================
+--- trunk/src/OSFileList.cpp	2006-04-07 16:21:26 UTC (rev 279)
++++ trunk/src/OSFileList.cpp	2006-04-07 21:58:31 UTC (rev 280)
+@@ -154,7 +154,6 @@
+     else if (style == &quot;detailed&quot;)
+     this-&gt;setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_DETAILED | ICONLIST_COLUMNS);
+ 
+-
+     sort_nr = 0;
+ 
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000060.html">[Openspace-svn] r279 - in trunk: icons/big icons/default src
+</A></li>
+	<LI>Next message: <A HREF="000062.html">[Openspace-svn] r281 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#61">[ date ]</a>
+              <a href="thread.html#61">[ thread ]</a>
+              <a href="subject.html#61">[ subject ]</a>
+              <a href="author.html#61">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

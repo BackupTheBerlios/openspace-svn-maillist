@@ -1,0 +1,452 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r247 - trunk/src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r247%20-%20trunk/src&In-Reply-To=%3C200602121642.k1CGgnbD004769%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000027.html">
+   <LINK REL="Next"  HREF="000029.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r247 - trunk/src</H1>
+    <B>compbatant at berlios.de</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r247%20-%20trunk/src&In-Reply-To=%3C200602121642.k1CGgnbD004769%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r247 - trunk/src">compbatant at berlios.de
+       </A><BR>
+    <I>Sun Feb 12 17:42:49 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000027.html">[Openspace-svn] r246 - in trunk: . doc doc/dev icons icons/default src src/plugins src/plugins/cmddialog src/plugins/filelist templates
+</A></li>
+        <LI>Next message: <A HREF="000029.html">[Openspace-svn] r248 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#28">[ date ]</a>
+              <a href="thread.html#28">[ thread ]</a>
+              <a href="subject.html#28">[ subject ]</a>
+              <a href="author.html#28">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-02-12 17:42:45 +0100 (Sun, 12 Feb 2006)
+New Revision: 247
+
+Modified:
+   trunk/src/OSMainWindow.cpp
+   trunk/src/OSMainWindow.h
+Log:
+refactoring
+
+
+Modified: trunk/src/OSMainWindow.cpp
+===================================================================
+--- trunk/src/OSMainWindow.cpp	2006-02-12 15:36:06 UTC (rev 246)
++++ trunk/src/OSMainWindow.cpp	2006-02-12 16:42:45 UTC (rev 247)
+@@ -482,7 +482,7 @@
+     current_path.append ( mc-&gt;getText ().text () );
+     current_frame-&gt;f-&gt;path = current_path;
+     current_frame-&gt;f-&gt;opendir ( current_path );
+-    current_frame-&gt;generate_menu ( current_path, this );
++    current_frame-&gt;generateMenu ( current_path, this );
+     popupDir ( current_frame-&gt;f, current_path, x, y );
+ }
+ 
+@@ -501,28 +501,6 @@
+         }
+     }
+ 
+-    /*
+-     
+-        if(current_filelist-&gt;fb-&gt;osopendir(path)==-1)
+-        {
+-        return 0;
+-        }
+-     
+-     
+-     
+-     
+-     
+-        while(1)
+-        {
+-        osfile os_file=current_filelist-&gt;fb-&gt;osreaddir();
+-            if(os_file.name==&quot;&quot;)
+-            break;
+-        
+-            if(os_file.type&amp;FOLDER &amp;&amp; os_file.name!=&quot;.&quot; &amp;&amp; os_file.name!=&quot;..&quot;)
+-            vec.push_back (os_file.name);       
+-        }
+-     
+-    */
+     unsigned int indx;
+     if ( vec.size () &gt; 0 )
+     {
+@@ -587,7 +565,7 @@
+     FXButton * bt = ( FXButton * ) sender;
+     box *boxel = ( box * ) bt-&gt;getUserData ();
+     FXushort id = FXSELID ( sel );
+-    int pos = -1;
++
+     if ( id == ID_TOCLOSE )
+     {
+         bool canclose = true;
+@@ -603,80 +581,44 @@
+         }
+         if ( canclose )
+         {
+-
+-            boxel-&gt;fr-&gt;f-&gt;fb-&gt;quit ();
+-            delete boxel-&gt;fr-&gt;hf;
+-            delete boxel-&gt;fr-&gt;f-&gt;toolbar;
+-            delete boxel-&gt;fr-&gt;f-&gt;toolbar2;
+-            delete boxel-&gt;fr-&gt;frame;
++            delete boxel-&gt;fr;
+             sender = NULL;
+-
+         }
+         else
+         {
+             FXMessageBox about ( this, &quot;error&quot;, &quot;There are some processes connected with this filelist,\n finish them all and then you can close this filelist\n(this behavior will change in the next release of program)&quot;, NULL, MBOX_OK | DECOR_TITLE | DECOR_BORDER );
+             about.execute ();
+-
+         }
+-
+-        return 1;
+-
+     }
+-
+     else
+     {
+-        if ( id == ID_TORIGHT )
+-        {
+-            pos = 1;
+-        }
+-
+         if ( left_frame-&gt;f-&gt;getWidth() == 0 )
+-            pos = 1;
++            id = ID_TORIGHT;
+ 
+         if ( right_frame-&gt;f-&gt;getWidth() == 0 )
+-            pos = -1;
++            id = ID_TOLEFT;
++	    	    
++		if ( id == ID_TOLEFT )
++   		{
++        	boxel-&gt;fr-&gt;moveToFront( leftcontrolframe, leftframe );
++        	left_frame-&gt;moveToBack(controlframe);
++       	 	left_frame = boxel-&gt;fr;
++    		}	
++    		else
++    		{
++        	boxel-&gt;fr-&gt;moveToFront( rightcontrolframe, rightframe );
++        	right_frame-&gt;moveToBack(controlframe);
++        	right_frame = boxel-&gt;fr;
++   		}
++    
++    	left_frame-&gt;f-&gt;filelist_opposite = right_frame-&gt;f;
++    	right_frame-&gt;f-&gt;filelist_opposite = left_frame-&gt;f;
++    	boxel-&gt;fr-&gt;f-&gt;handle ( this, FXSEL ( SEL_FOCUSIN, OSFileList::ID_ICO ), NULL );
+ 
+-
++    	rightframe-&gt;recalc ();
++    	leftframe-&gt;recalc ();	    
+     }
+-    if ( pos == -1 )
+-    {
+-        boxel-&gt;fr-&gt;frame-&gt;reparent ( leftframe );
+-        boxel-&gt;fr-&gt;hf-&gt;reparent ( leftcontrolframe );
+-        left_frame-&gt;hf-&gt;reparent ( controlframe );
+-        left_frame-&gt;f-&gt;toolbar-&gt;hide();
+-        left_frame-&gt;f-&gt;toolbar2-&gt;hide();
+-        left_frame-&gt;toleft-&gt;show ();
+-        left_frame-&gt;toright-&gt;show ();
+-        left_frame-&gt;toclose-&gt;show ();
+-        left_frame-&gt;frame-&gt;hide ();
+-        left_frame = boxel-&gt;fr;
+-        left_frame-&gt;frame-&gt;show ();
+-
+-    }
+-
+-    else
+-    {
+-        boxel-&gt;fr-&gt;frame-&gt;reparent ( rightframe );
+-        boxel-&gt;fr-&gt;hf-&gt;reparent ( rightcontrolframe );
+-        right_frame-&gt;hf-&gt;reparent ( controlframe );
+-        right_frame-&gt;f-&gt;toolbar-&gt;hide();
+-        right_frame-&gt;f-&gt;toolbar2-&gt;hide();
+-        right_frame-&gt;toleft-&gt;show ();
+-        right_frame-&gt;toright-&gt;show ();
+-        right_frame-&gt;toclose-&gt;show ();
+-        right_frame-&gt;frame-&gt;hide ();
+-        right_frame = boxel-&gt;fr;
+-        right_frame-&gt;frame-&gt;show ();
+-    }
+-    left_frame-&gt;f-&gt;filelist_opposite = right_frame-&gt;f;
+-    right_frame-&gt;f-&gt;filelist_opposite = left_frame-&gt;f;
+-    boxel-&gt;fr-&gt;toleft-&gt;hide ();
+-    boxel-&gt;fr-&gt;toright-&gt;hide ();
+-    boxel-&gt;fr-&gt;toclose-&gt;hide ();
+-    boxel-&gt;fr-&gt;f-&gt;handle ( this, FXSEL ( SEL_FOCUSIN, OSFileList::ID_ICO ), NULL );
+-
+-    rightframe-&gt;recalc ();
+-    leftframe-&gt;recalc ();
++   
+ }
+ 
+ 
+@@ -703,31 +645,17 @@
+ 
+         else
+             fr = new Frame ( rightcontrolframe, rightframe, pt, this, -1 );
++	    
+         if ( left_frame-&gt;f-&gt;active )
+         {
+-            left_frame-&gt;hf-&gt;reparent ( controlframe );
+-            left_frame-&gt;toleft-&gt;show ();
+-            left_frame-&gt;toright-&gt;show ();
+-            left_frame-&gt;toclose-&gt;show ();
+-            left_frame-&gt;frame-&gt;hide ();
+-            left_frame-&gt;f-&gt;toolbar-&gt;hide();
+-            left_frame-&gt;f-&gt;toolbar2-&gt;hide();
++ 	    left_frame-&gt;moveToBack(controlframe);
+             left_frame = fr;
+-
+         }
+ 
+         else
+         {
+-            right_frame-&gt;hf-&gt;reparent ( controlframe );
+-            right_frame-&gt;toleft-&gt;show ();
+-            right_frame-&gt;toright-&gt;show ();
+-            right_frame-&gt;toclose-&gt;show ();
+-            right_frame-&gt;frame-&gt;hide ();
+-            right_frame-&gt;f-&gt;toolbar-&gt;hide();
+-            right_frame-&gt;f-&gt;toolbar2-&gt;hide();
++            right_frame-&gt;moveToBack(controlframe);
+             right_frame = fr;
+-
+-
+         }
+         controlframe-&gt;recalc ();
+         fr-&gt;frame-&gt;create ();
+@@ -751,10 +679,10 @@
+     else if ( id == 666 )       //directory change, for example user clicked double on direcotry, or clicked with 3rd button to go to parent dir
+     {
+         if ( left_frame-&gt;f-&gt;active )
+-            left_frame-&gt;generate_menu ( left_frame-&gt;f-&gt;path, this );
++            left_frame-&gt;generateMenu( left_frame-&gt;f-&gt;path, this );
+ 
+         else
+-            right_frame-&gt;generate_menu ( right_frame-&gt;f-&gt;path, this );
++            right_frame-&gt;generateMenu ( right_frame-&gt;f-&gt;path, this );
+     }
+ 
+     else if ( id == 668 )
+@@ -801,7 +729,7 @@
+         path = &quot;/&quot;;
+     boxbackup-&gt;fr-&gt;f-&gt;path = path;
+     boxbackup-&gt;fr-&gt;f-&gt;opendir ( path );
+-    boxbackup-&gt;fr-&gt;generate_menu ( path, this );
++    boxbackup-&gt;fr-&gt;generateMenu( path, this );
+ }
+ 
+ 
+@@ -952,9 +880,9 @@
+                     if ( fil-&gt;init () != false )
+                     {
+                         if ( left_frame-&gt;f-&gt;active )
+-                            left_frame-&gt;generate_menu ( fil-&gt;path, this );
++                            left_frame-&gt;generateMenu( fil-&gt;path, this );
+                         else
+-                            right_frame-&gt;generate_menu ( fil-&gt;path, this );
++                            right_frame-&gt;generateMenu( fil-&gt;path, this );
+                     }
+                     else
+                     {
+@@ -1051,7 +979,6 @@
+     te-&gt;mutex.unlock ();
+ }
+ 
+-
+ //NEED TO CHANGE THIS
+ long OSMainWindow::onConfigure ( FXObject * sender, FXSelector sel, void *ptr )
+ {
+@@ -1071,7 +998,6 @@
+     float r = right-&gt;getWidth ();
+     float w = getWidth ();
+     ratio = ( float ) l / ( float ) w;
+-
+ }
+ 
+ //telem is canceled
+@@ -1085,15 +1011,11 @@
+ }
+ 
+ 
+-
+-
+ //load icon from file and put in the array
+ void OSMainWindow::loadicons ( string icondir )
+ {
+-
+     objmanager = OSObjectManager::instance( getApp() );
+ 
+-
+     FXIconSource *source = new FXIconSource ( getApp () );
+     FXString fil = icondir.c_str();
+     FXString name = fil + conf-&gt;readonestring ( &quot;/OpenspaceConfig/file_types/COMMON/types/dir/icon&quot; ).c_str() + &quot;.png&quot;;
+@@ -1121,7 +1043,6 @@
+     if ( objmanager-&gt;specialicons[ 5 ] )
+         objmanager-&gt;specialicons[ 5 ] -&gt;create();
+ 
+-
+     struct stat status;
+     struct dirent *dp;
+     DIR *dirp;
+@@ -1138,26 +1059,18 @@
+ 
+                 //if (name.length () &gt;= 3 &amp;&amp; (name.substr (name.length () - 3, 3) == &quot;gif&quot; || name.substr (name.length () - 3, 3) == &quot;png&quot;))
+                 {
+-
+                     string file = icondir;
+                     file.append ( name );
+                     string shortname = name.substr ( 0, name.length () - 4 );
+-
+                     FXString fil_name = file.c_str();
+-
+                     objmanager-&gt;osicons[ shortname ] = source-&gt;loadIcon ( fil_name );
+-
+                     objmanager-&gt;osicons[ shortname ] -&gt;create ();
+-
+-
+                 }
+ 
+             }
+         }
+ 
+     closedir ( dirp );
+-
+-
+ }
+ 
+ 
+@@ -1204,9 +1117,6 @@
+ 
+ }
+ 
+-
+-
+-
+ //-----FRAME---------------------------------------------------------------------------------------------------------------------------
+ Frame::Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt, int position = 0 )
+ {
+@@ -1242,7 +1152,7 @@
+         toright-&gt;hide ();
+     }
+    
+-    generate_menu(pathdir,tgt);
++    generateMenu(pathdir,tgt);
+ 
+     frame = new FXVerticalFrame ( p, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_SUNKEN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+     f = new OSFileList ( frame, pt );
+@@ -1254,7 +1164,7 @@
+ 
+ 
+ //generate buttons path for given path
+-void Frame::generate_menu ( string path, FXObject * tgt )
++void Frame::generateMenu ( string path, FXObject * tgt )
+ {
+ 
+     OSObjectManager * objmanager = OSObjectManager::instance( hf-&gt;getApp() );
+@@ -1315,3 +1225,35 @@
+         prebutton = bt;
+     }
+ }
++
++
++Frame::~Frame ()
++{
++	    f-&gt;fb-&gt;quit ();
++    	    delete hf;
++            delete f-&gt;toolbar;
++            delete f-&gt;toolbar2;
++            delete frame;
++}
++
++
++void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer)
++{
++	hf-&gt;reparent ( controlframeContainer );
++	frame-&gt;reparent ( frameContainer );
++	toleft-&gt;hide ();
++        toright-&gt;hide ();
++        toclose-&gt;hide ();
++	frame-&gt;show ();
++        
++}
++void Frame::moveToBack(FXComposite * controlframeContainer)
++{
++	hf-&gt;reparent ( controlframeContainer );
++        f-&gt;toolbar-&gt;hide();
++        f-&gt;toolbar2-&gt;hide();
++        toleft-&gt;show ();
++        toright-&gt;show ();
++        toclose-&gt;show ();
++        frame-&gt;hide ();
++}
+
+Modified: trunk/src/OSMainWindow.h
+===================================================================
+--- trunk/src/OSMainWindow.h	2006-02-12 15:36:06 UTC (rev 246)
++++ trunk/src/OSMainWindow.h	2006-02-12 16:42:45 UTC (rev 247)
+@@ -181,14 +181,11 @@
+     FXHorizontalFrame *hf;
+ 
+     Frame (FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt, int position);
+-    void generate_menu (string path, FXObject * tgt);
++    void generateMenu (string path, FXObject * tgt);
++    void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer);
++    void Frame::moveToBack(FXComposite * controlframeContainer);
++    ~Frame ();
+ 
+-    ~Frame ()
+-    {
+-	delete hf;
+-	delete f;
+-	delete frame;
+-    }
+ 
+ 
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000027.html">[Openspace-svn] r246 - in trunk: . doc doc/dev icons icons/default src src/plugins src/plugins/cmddialog src/plugins/filelist templates
+</A></li>
+	<LI>Next message: <A HREF="000029.html">[Openspace-svn] r248 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#28">[ date ]</a>
+              <a href="thread.html#28">[ thread ]</a>
+              <a href="subject.html#28">[ subject ]</a>
+              <a href="author.html#28">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

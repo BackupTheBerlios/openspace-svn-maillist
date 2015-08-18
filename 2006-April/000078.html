@@ -1,0 +1,551 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r297 - in trunk: . src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r297%20-%20in%20trunk%3A%20.%20src&In-Reply-To=%3C200604301623.k3UGN3EZ003019%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000077.html">
+   <LINK REL="Next"  HREF="000079.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r297 - in trunk: . src</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r297%20-%20in%20trunk%3A%20.%20src&In-Reply-To=%3C200604301623.k3UGN3EZ003019%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r297 - in trunk: . src">compbatant at berlios.de
+       </A><BR>
+    <I>Sun Apr 30 18:23:03 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000077.html">[Openspace-svn] r296 - trunk/src/plugins/filelist
+</A></li>
+        <LI>Next message: <A HREF="000079.html">[Openspace-svn] r298 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#78">[ date ]</a>
+              <a href="thread.html#78">[ thread ]</a>
+              <a href="subject.html#78">[ subject ]</a>
+              <a href="author.html#78">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-30 18:23:02 +0200 (Sun, 30 Apr 2006)
+New Revision: 297
+
+Modified:
+   trunk/configure
+   trunk/configure.ac
+   trunk/src/OSFileList.cpp
+   trunk/src/OSFileList.h
+   trunk/src/config.h
+   trunk/src/config.h.in
+Log:
+dodanie sprawdzania w configure libmagic libssh, koretka przy wykrywaniu typu plikow na podstawie zawartosci dla pewnych typow
+
+
+Modified: trunk/configure
+===================================================================
+--- trunk/configure	2006-04-30 15:27:29 UTC (rev 296)
++++ trunk/configure	2006-04-30 16:23:02 UTC (rev 297)
+@@ -20958,6 +20958,7 @@
+ fi
+ 
+ 
++
+ echo &quot;$as_me:$LINENO: checking for ANSI C header files&quot; &gt;&amp;5
+ echo $ECHO_N &quot;checking for ANSI C header files... $ECHO_C&quot; &gt;&amp;6
+ if test &quot;${ac_cv_header_stdc+set}&quot; = set; then
+@@ -21286,6 +21287,320 @@
+ done
+ 
+ 
++
++
++for ac_header in libssh/sftp.h
++do
++as_ac_Header=`echo &quot;ac_cv_header_$ac_header&quot; | $as_tr_sh`
++if eval &quot;test \&quot;\${$as_ac_Header+set}\&quot; = set&quot;; then
++  echo &quot;$as_me:$LINENO: checking for $ac_header&quot; &gt;&amp;5
++echo $ECHO_N &quot;checking for $ac_header... $ECHO_C&quot; &gt;&amp;6
++if eval &quot;test \&quot;\${$as_ac_Header+set}\&quot; = set&quot;; then
++  echo $ECHO_N &quot;(cached) $ECHO_C&quot; &gt;&amp;6
++fi
++echo &quot;$as_me:$LINENO: result: `eval echo '${'$as_ac_Header'}'`&quot; &gt;&amp;5
++echo &quot;${ECHO_T}`eval echo '${'$as_ac_Header'}'`&quot; &gt;&amp;6
++else
++  # Is the header compilable?
++echo &quot;$as_me:$LINENO: checking $ac_header usability&quot; &gt;&amp;5
++echo $ECHO_N &quot;checking $ac_header usability... $ECHO_C&quot; &gt;&amp;6
++cat &gt;conftest.$ac_ext &lt;&lt;_ACEOF
++/* confdefs.h.  */
++_ACEOF
++cat confdefs.h &gt;&gt;conftest.$ac_ext
++cat &gt;&gt;conftest.$ac_ext &lt;&lt;_ACEOF
++/* end confdefs.h.  */
++$ac_includes_default
++#include &lt;$ac_header&gt;
++_ACEOF
++rm -f conftest.$ac_objext
++if { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_compile\&quot;&quot;) &gt;&amp;5
++  (eval $ac_compile) 2&gt;conftest.er1
++  ac_status=$?
++  grep -v '^ *+' conftest.er1 &gt;conftest.err
++  rm -f conftest.er1
++  cat conftest.err &gt;&amp;5
++  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
++  (exit $ac_status); } &amp;&amp;
++	 { ac_try='test -z &quot;$ac_cxx_werror_flag&quot;
++			 || test ! -s conftest.err'
++  { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_try\&quot;&quot;) &gt;&amp;5
++  (eval $ac_try) 2&gt;&amp;5
++  ac_status=$?
++  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
++  (exit $ac_status); }; } &amp;&amp;
++	 { ac_try='test -s conftest.$ac_objext'
++  { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_try\&quot;&quot;) &gt;&amp;5
++  (eval $ac_try) 2&gt;&amp;5
++  ac_status=$?
++  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
++  (exit $ac_status); }; }; then
++  ac_header_compiler=yes
++else
++  echo &quot;$as_me: failed program was:&quot; &gt;&amp;5
++sed 's/^/| /' conftest.$ac_ext &gt;&amp;5
++
++ac_header_compiler=no
++fi
++rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
++echo &quot;$as_me:$LINENO: result: $ac_header_compiler&quot; &gt;&amp;5
++echo &quot;${ECHO_T}$ac_header_compiler&quot; &gt;&amp;6
++
++# Is the header present?
++echo &quot;$as_me:$LINENO: checking $ac_header presence&quot; &gt;&amp;5
++echo $ECHO_N &quot;checking $ac_header presence... $ECHO_C&quot; &gt;&amp;6
++cat &gt;conftest.$ac_ext &lt;&lt;_ACEOF
++/* confdefs.h.  */
++_ACEOF
++cat confdefs.h &gt;&gt;conftest.$ac_ext
++cat &gt;&gt;conftest.$ac_ext &lt;&lt;_ACEOF
++/* end confdefs.h.  */
++#include &lt;$ac_header&gt;
++_ACEOF
++if { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_cpp conftest.$ac_ext\&quot;&quot;) &gt;&amp;5
++  (eval $ac_cpp conftest.$ac_ext) 2&gt;conftest.er1
++  ac_status=$?
++  grep -v '^ *+' conftest.er1 &gt;conftest.err
++  rm -f conftest.er1
++  cat conftest.err &gt;&amp;5
++  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
++  (exit $ac_status); } &gt;/dev/null; then
++  if test -s conftest.err; then
++    ac_cpp_err=$ac_cxx_preproc_warn_flag
++    ac_cpp_err=$ac_cpp_err$ac_cxx_werror_flag
++  else
++    ac_cpp_err=
++  fi
++else
++  ac_cpp_err=yes
++fi
++if test -z &quot;$ac_cpp_err&quot;; then
++  ac_header_preproc=yes
++else
++  echo &quot;$as_me: failed program was:&quot; &gt;&amp;5
++sed 's/^/| /' conftest.$ac_ext &gt;&amp;5
++
++  ac_header_preproc=no
++fi
++rm -f conftest.err conftest.$ac_ext
++echo &quot;$as_me:$LINENO: result: $ac_header_preproc&quot; &gt;&amp;5
++echo &quot;${ECHO_T}$ac_header_preproc&quot; &gt;&amp;6
++
++# So?  What about this header?
++case $ac_header_compiler:$ac_header_preproc:$ac_cxx_preproc_warn_flag in
++  yes:no: )
++    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!&quot; &gt;&amp;5
++echo &quot;$as_me: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!&quot; &gt;&amp;2;}
++    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: proceeding with the compiler's result&quot; &gt;&amp;5
++echo &quot;$as_me: WARNING: $ac_header: proceeding with the compiler's result&quot; &gt;&amp;2;}
++    ac_header_preproc=yes
++    ;;
++  no:yes:* )
++    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: present but cannot be compiled&quot; &gt;&amp;5
++echo &quot;$as_me: WARNING: $ac_header: present but cannot be compiled&quot; &gt;&amp;2;}
++    { echo &quot;$as_me:$LINENO: WARNING: $ac_header:     check for missing prerequisite headers?&quot; &gt;&amp;5
++echo &quot;$as_me: WARNING: $ac_header:     check for missing prerequisite headers?&quot; &gt;&amp;2;}
++    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: see the Autoconf documentation&quot; &gt;&amp;5
++echo &quot;$as_me: WARNING: $ac_header: see the Autoconf documentation&quot; &gt;&amp;2;}
++    { echo &quot;$as_me:$LINENO: WARNING: $ac_header:     section \&quot;Present But Cannot Be Compiled\&quot;&quot; &gt;&amp;5
++echo &quot;$as_me: WARNING: $ac_header:     section \&quot;Present But Cannot Be Compiled\&quot;&quot; &gt;&amp;2;}
++    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: proceeding with the preprocessor's result&quot; &gt;&amp;5
++echo &quot;$as_me: WARNING: $ac_header: proceeding with the preprocessor's result&quot; &gt;&amp;2;}
++    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: in the future, the compiler will take precedence&quot; &gt;&amp;5
++echo &quot;$as_me: WARNING: $ac_header: in the future, the compiler will take precedence&quot; &gt;&amp;2;}
++    (
++      cat &lt;&lt;\_ASBOX
++## ---------------------------------------- ##
++## Report this to <A HREF="http://openspace.linux.pl">http://openspace.linux.pl</A> ##
++## ---------------------------------------- ##
++_ASBOX
++    ) |
++      sed &quot;s/^/$as_me: WARNING:     /&quot; &gt;&amp;2
++    ;;
++esac
++echo &quot;$as_me:$LINENO: checking for $ac_header&quot; &gt;&amp;5
++echo $ECHO_N &quot;checking for $ac_header... $ECHO_C&quot; &gt;&amp;6
++if eval &quot;test \&quot;\${$as_ac_Header+set}\&quot; = set&quot;; then
++  echo $ECHO_N &quot;(cached) $ECHO_C&quot; &gt;&amp;6
++else
++  eval &quot;$as_ac_Header=\$ac_header_preproc&quot;
++fi
++echo &quot;$as_me:$LINENO: result: `eval echo '${'$as_ac_Header'}'`&quot; &gt;&amp;5
++echo &quot;${ECHO_T}`eval echo '${'$as_ac_Header'}'`&quot; &gt;&amp;6
++
++fi
++if test `eval echo '${'$as_ac_Header'}'` = yes; then
++  cat &gt;&gt;confdefs.h &lt;&lt;_ACEOF
++#define `echo &quot;HAVE_$ac_header&quot; | $as_tr_cpp` 1
++_ACEOF
++
++else
++  { { echo &quot;$as_me:$LINENO: error: \&quot;libssh/sftp.h not found\&quot;&quot; &gt;&amp;5
++echo &quot;$as_me: error: \&quot;libssh/sftp.h not found\&quot;&quot; &gt;&amp;2;}
++   { (exit 1); exit 1; }; }
++fi
++
++done
++
++
++
++for ac_header in magic.h
++do
++as_ac_Header=`echo &quot;ac_cv_header_$ac_header&quot; | $as_tr_sh`
++if eval &quot;test \&quot;\${$as_ac_Header+set}\&quot; = set&quot;; then
++  echo &quot;$as_me:$LINENO: checking for $ac_header&quot; &gt;&amp;5
++echo $ECHO_N &quot;checking for $ac_header... $ECHO_C&quot; &gt;&amp;6
++if eval &quot;test \&quot;\${$as_ac_Header+set}\&quot; = set&quot;; then
++  echo $ECHO_N &quot;(cached) $ECHO_C&quot; &gt;&amp;6
++fi
++echo &quot;$as_me:$LINENO: result: `eval echo '${'$as_ac_Header'}'`&quot; &gt;&amp;5
++echo &quot;${ECHO_T}`eval echo '${'$as_ac_Header'}'`&quot; &gt;&amp;6
++else
++  # Is the header compilable?
++echo &quot;$as_me:$LINENO: checking $ac_header usability&quot; &gt;&amp;5
++echo $ECHO_N &quot;checking $ac_header usability... $ECHO_C&quot; &gt;&amp;6
++cat &gt;conftest.$ac_ext &lt;&lt;_ACEOF
++/* confdefs.h.  */
++_ACEOF
++cat confdefs.h &gt;&gt;conftest.$ac_ext
++cat &gt;&gt;conftest.$ac_ext &lt;&lt;_ACEOF
++/* end confdefs.h.  */
++$ac_includes_default
++#include &lt;$ac_header&gt;
++_ACEOF
++rm -f conftest.$ac_objext
++if { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_compile\&quot;&quot;) &gt;&amp;5
++  (eval $ac_compile) 2&gt;conftest.er1
++  ac_status=$?
++  grep -v '^ *+' conftest.er1 &gt;conftest.err
++  rm -f conftest.er1
++  cat conftest.err &gt;&amp;5
++  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
++  (exit $ac_status); } &amp;&amp;
++	 { ac_try='test -z &quot;$ac_cxx_werror_flag&quot;
++			 || test ! -s conftest.err'
++  { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_try\&quot;&quot;) &gt;&amp;5
++  (eval $ac_try) 2&gt;&amp;5
++  ac_status=$?
++  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
++  (exit $ac_status); }; } &amp;&amp;
++	 { ac_try='test -s conftest.$ac_objext'
++  { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_try\&quot;&quot;) &gt;&amp;5
++  (eval $ac_try) 2&gt;&amp;5
++  ac_status=$?
++  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
++  (exit $ac_status); }; }; then
++  ac_header_compiler=yes
++else
++  echo &quot;$as_me: failed program was:&quot; &gt;&amp;5
++sed 's/^/| /' conftest.$ac_ext &gt;&amp;5
++
++ac_header_compiler=no
++fi
++rm -f conftest.err conftest.$ac_objext conftest.$ac_ext
++echo &quot;$as_me:$LINENO: result: $ac_header_compiler&quot; &gt;&amp;5
++echo &quot;${ECHO_T}$ac_header_compiler&quot; &gt;&amp;6
++
++# Is the header present?
++echo &quot;$as_me:$LINENO: checking $ac_header presence&quot; &gt;&amp;5
++echo $ECHO_N &quot;checking $ac_header presence... $ECHO_C&quot; &gt;&amp;6
++cat &gt;conftest.$ac_ext &lt;&lt;_ACEOF
++/* confdefs.h.  */
++_ACEOF
++cat confdefs.h &gt;&gt;conftest.$ac_ext
++cat &gt;&gt;conftest.$ac_ext &lt;&lt;_ACEOF
++/* end confdefs.h.  */
++#include &lt;$ac_header&gt;
++_ACEOF
++if { (eval echo &quot;$as_me:$LINENO: \&quot;$ac_cpp conftest.$ac_ext\&quot;&quot;) &gt;&amp;5
++  (eval $ac_cpp conftest.$ac_ext) 2&gt;conftest.er1
++  ac_status=$?
++  grep -v '^ *+' conftest.er1 &gt;conftest.err
++  rm -f conftest.er1
++  cat conftest.err &gt;&amp;5
++  echo &quot;$as_me:$LINENO: \$? = $ac_status&quot; &gt;&amp;5
++  (exit $ac_status); } &gt;/dev/null; then
++  if test -s conftest.err; then
++    ac_cpp_err=$ac_cxx_preproc_warn_flag
++    ac_cpp_err=$ac_cpp_err$ac_cxx_werror_flag
++  else
++    ac_cpp_err=
++  fi
++else
++  ac_cpp_err=yes
++fi
++if test -z &quot;$ac_cpp_err&quot;; then
++  ac_header_preproc=yes
++else
++  echo &quot;$as_me: failed program was:&quot; &gt;&amp;5
++sed 's/^/| /' conftest.$ac_ext &gt;&amp;5
++
++  ac_header_preproc=no
++fi
++rm -f conftest.err conftest.$ac_ext
++echo &quot;$as_me:$LINENO: result: $ac_header_preproc&quot; &gt;&amp;5
++echo &quot;${ECHO_T}$ac_header_preproc&quot; &gt;&amp;6
++
++# So?  What about this header?
++case $ac_header_compiler:$ac_header_preproc:$ac_cxx_preproc_warn_flag in
++  yes:no: )
++    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!&quot; &gt;&amp;5
++echo &quot;$as_me: WARNING: $ac_header: accepted by the compiler, rejected by the preprocessor!&quot; &gt;&amp;2;}
++    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: proceeding with the compiler's result&quot; &gt;&amp;5
++echo &quot;$as_me: WARNING: $ac_header: proceeding with the compiler's result&quot; &gt;&amp;2;}
++    ac_header_preproc=yes
++    ;;
++  no:yes:* )
++    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: present but cannot be compiled&quot; &gt;&amp;5
++echo &quot;$as_me: WARNING: $ac_header: present but cannot be compiled&quot; &gt;&amp;2;}
++    { echo &quot;$as_me:$LINENO: WARNING: $ac_header:     check for missing prerequisite headers?&quot; &gt;&amp;5
++echo &quot;$as_me: WARNING: $ac_header:     check for missing prerequisite headers?&quot; &gt;&amp;2;}
++    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: see the Autoconf documentation&quot; &gt;&amp;5
++echo &quot;$as_me: WARNING: $ac_header: see the Autoconf documentation&quot; &gt;&amp;2;}
++    { echo &quot;$as_me:$LINENO: WARNING: $ac_header:     section \&quot;Present But Cannot Be Compiled\&quot;&quot; &gt;&amp;5
++echo &quot;$as_me: WARNING: $ac_header:     section \&quot;Present But Cannot Be Compiled\&quot;&quot; &gt;&amp;2;}
++    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: proceeding with the preprocessor's result&quot; &gt;&amp;5
++echo &quot;$as_me: WARNING: $ac_header: proceeding with the preprocessor's result&quot; &gt;&amp;2;}
++    { echo &quot;$as_me:$LINENO: WARNING: $ac_header: in the future, the compiler will take precedence&quot; &gt;&amp;5
++echo &quot;$as_me: WARNING: $ac_header: in the future, the compiler will take precedence&quot; &gt;&amp;2;}
++    (
++      cat &lt;&lt;\_ASBOX
++## ---------------------------------------- ##
++## Report this to <A HREF="http://openspace.linux.pl">http://openspace.linux.pl</A> ##
++## ---------------------------------------- ##
++_ASBOX
++    ) |
++      sed &quot;s/^/$as_me: WARNING:     /&quot; &gt;&amp;2
++    ;;
++esac
++echo &quot;$as_me:$LINENO: checking for $ac_header&quot; &gt;&amp;5
++echo $ECHO_N &quot;checking for $ac_header... $ECHO_C&quot; &gt;&amp;6
++if eval &quot;test \&quot;\${$as_ac_Header+set}\&quot; = set&quot;; then
++  echo $ECHO_N &quot;(cached) $ECHO_C&quot; &gt;&amp;6
++else
++  eval &quot;$as_ac_Header=\$ac_header_preproc&quot;
++fi
++echo &quot;$as_me:$LINENO: result: `eval echo '${'$as_ac_Header'}'`&quot; &gt;&amp;5
++echo &quot;${ECHO_T}`eval echo '${'$as_ac_Header'}'`&quot; &gt;&amp;6
++
++fi
++if test `eval echo '${'$as_ac_Header'}'` = yes; then
++  cat &gt;&gt;confdefs.h &lt;&lt;_ACEOF
++#define `echo &quot;HAVE_$ac_header&quot; | $as_tr_cpp` 1
++_ACEOF
++
++else
++  { { echo &quot;$as_me:$LINENO: error: \&quot;magic.h not found\&quot;&quot; &gt;&amp;5
++echo &quot;$as_me: error: \&quot;magic.h not found\&quot;&quot; &gt;&amp;2;}
++   { (exit 1); exit 1; }; }
++fi
++
++done
++
++
++
++
++
+ # Extract the first word of &quot;fox-config&quot;, so it can be a program name with args.
+ set dummy fox-config; ac_word=$2
+ echo &quot;$as_me:$LINENO: checking for $ac_word&quot; &gt;&amp;5
+@@ -21372,6 +21687,8 @@
+         fi
+ 
+ 
++
++
+                                                                                                     ac_config_files=&quot;$ac_config_files openspacerc Makefile src/Makefile icons/Makefile icons/default/Makefile icons/mini/Makefile icons/big/Makefile src/plugins/Makefile src/plugins/filelist/Makefile src/plugins/cmddialog/Makefile&quot;
+ 
+ cat &gt;confcache &lt;&lt;\_ACEOF
+
+Modified: trunk/configure.ac
+===================================================================
+--- trunk/configure.ac	2006-04-30 15:27:29 UTC (rev 296)
++++ trunk/configure.ac	2006-04-30 16:23:02 UTC (rev 297)
+@@ -39,11 +39,22 @@
+ dnl Check for FOX
+ AC_CHECK_LIB(FOX-1.4,fxfindfox,,AC_MSG_ERROR(&quot;libFOX-1.4 not found&quot;))
+ 
++
+ dnl Checks for FOX 1.4 header files.
+ AC_HEADER_STDC
+ AC_LANG_CPLUSPLUS
+ AC_CHECK_HEADERS(fox-1.4/fx.h,,AC_MSG_ERROR(&quot;fox-1.4/fx.h not found&quot;))
+ 
++
++dnl Checks for libssh header files.
++AC_CHECK_HEADERS(libssh/sftp.h,,AC_MSG_ERROR(&quot;libssh/sftp.h not found&quot;))
++
++dnl Checks for libmagic header files.
++AC_CHECK_HEADERS(magic.h,,AC_MSG_ERROR(&quot;magic.h not found&quot;))
++
++
++
++
+ AC_CHECK_PROG(FOX_CONFIG, fox-config,yes,no )
+         if test &quot;$FOX_CONFIG&quot; = &quot;no&quot;
+         then     
+@@ -56,6 +67,8 @@
+         fi
+ 
+ 
++
++
+ AC_CONFIG_FILES([
+ 		 openspacerc
+ 		 Makefile
+
+Modified: trunk/src/OSFileList.cpp
+===================================================================
+--- trunk/src/OSFileList.cpp	2006-04-30 15:27:29 UTC (rev 296)
++++ trunk/src/OSFileList.cpp	2006-04-30 16:23:02 UTC (rev 297)
+@@ -492,7 +492,7 @@
+ 
+     string r;
+     
+-    if(!mime_magic)
++    if(!mime_magic || type!=&quot;local&quot; || type!=&quot;search&quot;)
+     {
+       r = OSMimeType::getMimeFromName (name);      
+     }
+@@ -505,7 +505,8 @@
+        r=r.substr(0,n);
+       }
+       
+-      if(r==&quot;&quot;)
++      if(r==&quot;&quot; || r==&quot;video/unknown&quot; || r==&quot;application/octet-stream&quot; || r==&quot;audio/X-HX-AAC-ADTS&quot;) // .serverauth.9710: video/unknown
++
+       r = OSMimeType::getMimeFromName (name);
+       
+     } 
+@@ -1825,10 +1826,10 @@
+     }
+     else if (fl-&gt;sort_nr == -1) //extension sorting
+     {
+-    string exta = OSFileList::getfiletype (a-&gt;getText ().text ());
++    string exta = fl-&gt;getfiletype (a-&gt;getText ().text ());
+     if (exta == &quot;&quot;)
+         exta = &quot;zzzzz&quot;;
+-    string extb = OSFileList::getfiletype (b-&gt;getText ().text ());
++    string extb = fl-&gt;getfiletype (b-&gt;getText ().text ());
+     if (exta == &quot;&quot;)
+         extb = &quot;zzzzz&quot;;
+ 
+
+Modified: trunk/src/OSFileList.h
+===================================================================
+--- trunk/src/OSFileList.h	2006-04-30 15:27:29 UTC (rev 296)
++++ trunk/src/OSFileList.h	2006-04-30 16:23:02 UTC (rev 297)
+@@ -116,7 +116,7 @@
+     string getdefaultcommand ( string name );
+     string resolvecommand( string command, string name );
+     int runCommand( string name );
+-    static string getfiletype ( string name );
++    string getfiletype ( string name);
+     static string getfiledescription ( string name );
+     long setKeys ( void );
+ 
+
+Modified: trunk/src/config.h
+===================================================================
+--- trunk/src/config.h	2006-04-30 15:27:29 UTC (rev 296)
++++ trunk/src/config.h	2006-04-30 16:23:02 UTC (rev 297)
+@@ -35,10 +35,16 @@
+ /* Define to 1 if you have the `FOX-1.4' library (-lFOX-1.4). */
+ #define HAVE_LIBFOX_1_4 1
+ 
++/* Define to 1 if you have the &lt;libssh/sftp.h&gt; header file. */
++#define HAVE_LIBSSH_SFTP_H 1
++
+ /* Define to 1 if `lstat' has the bug that it succeeds when given the
+    zero-length file name argument. */
+ /* #undef HAVE_LSTAT_EMPTY_STRING_BUG */
+ 
++/* Define to 1 if you have the &lt;magic.h&gt; header file. */
++#define HAVE_MAGIC_H 1
++
+ /* Define to 1 if you have the &lt;memory.h&gt; header file. */
+ #define HAVE_MEMORY_H 1
+ 
+
+Modified: trunk/src/config.h.in
+===================================================================
+--- trunk/src/config.h.in	2006-04-30 15:27:29 UTC (rev 296)
++++ trunk/src/config.h.in	2006-04-30 16:23:02 UTC (rev 297)
+@@ -34,10 +34,16 @@
+ /* Define to 1 if you have the `FOX-1.4' library (-lFOX-1.4). */
+ #undef HAVE_LIBFOX_1_4
+ 
++/* Define to 1 if you have the &lt;libssh/sftp.h&gt; header file. */
++#undef HAVE_LIBSSH_SFTP_H
++
+ /* Define to 1 if `lstat' has the bug that it succeeds when given the
+    zero-length file name argument. */
+ #undef HAVE_LSTAT_EMPTY_STRING_BUG
+ 
++/* Define to 1 if you have the &lt;magic.h&gt; header file. */
++#undef HAVE_MAGIC_H
++
+ /* Define to 1 if you have the &lt;memory.h&gt; header file. */
+ #undef HAVE_MEMORY_H
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000077.html">[Openspace-svn] r296 - trunk/src/plugins/filelist
+</A></li>
+	<LI>Next message: <A HREF="000079.html">[Openspace-svn] r298 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#78">[ date ]</a>
+              <a href="thread.html#78">[ thread ]</a>
+              <a href="subject.html#78">[ subject ]</a>
+              <a href="author.html#78">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

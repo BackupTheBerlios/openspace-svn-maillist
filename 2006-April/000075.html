@@ -1,0 +1,118 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r294 - trunk/src/plugins/filelist
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r294%20-%20trunk/src/plugins/filelist&In-Reply-To=%3C200604291814.k3TIExRT017338%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000074.html">
+   <LINK REL="Next"  HREF="000076.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r294 - trunk/src/plugins/filelist</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r294%20-%20trunk/src/plugins/filelist&In-Reply-To=%3C200604291814.k3TIExRT017338%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r294 - trunk/src/plugins/filelist">compbatant at berlios.de
+       </A><BR>
+    <I>Sat Apr 29 20:14:59 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000074.html">[Openspace-svn] r293 - in trunk: . src/plugins/filelist
+</A></li>
+        <LI>Next message: <A HREF="000076.html">[Openspace-svn] r295 - trunk/src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#75">[ date ]</a>
+              <a href="thread.html#75">[ thread ]</a>
+              <a href="subject.html#75">[ subject ]</a>
+              <a href="author.html#75">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-29 20:14:50 +0200 (Sat, 29 Apr 2006)
+New Revision: 294
+
+Modified:
+   trunk/src/plugins/filelist/OSVfsSftp.cpp
+Log:
+sftp-pobieranie i zmiana praw do plikow zrobiona
+
+
+Modified: trunk/src/plugins/filelist/OSVfsSftp.cpp
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-29 14:22:21 UTC (rev 293)
++++ trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-29 18:14:50 UTC (rev 294)
+@@ -548,14 +548,28 @@
+ 
+ int OSVfsSftp::mode (std::string file)
+ {
+-    
++  
++  SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)file.c_str ());
++        if(attr) 
++	{
++	return attr-&gt;permissions;
++	}  
+ 
+     
+ }
+ 
+ bool OSVfsSftp::mode (std::string file, unsigned int mod, bool recursive)
+ {
+-   
++
++	SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)file.c_str ());
++        if(attr) 
++	{
++	attr-&gt;permissions=mod;
++	sftp_setstat(sftp,(char*)file.c_str (),attr);
++	sftp_attributes_free(attr);
++	}
++
++    
+ }
+ 
+ std::string OSVfsSftp::owner (std::string file)
+@@ -564,9 +578,7 @@
+ 	SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)file.c_str ());
+         if(attr) 
+ 	{
+-	string owner=&quot;&quot;;
+-	//owner+=attr-&gt;owner;
+-	//fxmessage(attr-&gt;uid);
++	string owner=ntos(attr-&gt;uid);
+ 	sftp_attributes_free(attr);	
+ 	return owner;
+ 	}
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000074.html">[Openspace-svn] r293 - in trunk: . src/plugins/filelist
+</A></li>
+	<LI>Next message: <A HREF="000076.html">[Openspace-svn] r295 - trunk/src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#75">[ date ]</a>
+              <a href="thread.html#75">[ thread ]</a>
+              <a href="subject.html#75">[ subject ]</a>
+              <a href="author.html#75">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

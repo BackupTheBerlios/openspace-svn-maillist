@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r307 - in trunk/src: . plugins/filelist
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-May/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r307%20-%20in%20trunk/src%3A%20.%20plugins/filelist&In-Reply-To=%3C200605142106.k4EL6BH9031792%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000087.html">
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r307 - in trunk/src: . plugins/filelist</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r307%20-%20in%20trunk/src%3A%20.%20plugins/filelist&In-Reply-To=%3C200605142106.k4EL6BH9031792%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r307 - in trunk/src: . plugins/filelist">compbatant at berlios.de
+       </A><BR>
+    <I>Sun May 14 23:06:11 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000087.html">[Openspace-svn] r306 - in trunk: . src
+</A></li>
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#88">[ date ]</a>
+              <a href="thread.html#88">[ thread ]</a>
+              <a href="subject.html#88">[ subject ]</a>
+              <a href="author.html#88">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-05-14 23:06:09 +0200 (Sun, 14 May 2006)
+New Revision: 307
+
+Modified:
+   trunk/src/OSFileList.cpp
+   trunk/src/OSMainWindow.cpp
+   trunk/src/plugins/filelist/OSVfsSftp.cpp
+Log:
+przy uploadzie plikow edytowanych po 2 kliku nie pyta o potwierdzenie nadpisania
+
+
+Modified: trunk/src/OSFileList.cpp
+===================================================================
+--- trunk/src/OSFileList.cpp	2006-05-13 11:38:08 UTC (rev 306)
++++ trunk/src/OSFileList.cpp	2006-05-14 21:06:09 UTC (rev 307)
+@@ -954,6 +954,8 @@
+                 tmpfile=destdir+&quot;/&quot;+name;
+             
+                 OSThreadExec *el2 = new OSThreadExec (fb, &quot;copy&quot;, &quot;upload&quot;, *iter,destdir);
++		el2-&gt;all=true;
++		el2-&gt;overwrite=true;
+                 fb-&gt;copy (el2);
+                 delete el2;
+                 }
+@@ -969,6 +971,8 @@
+                     if(t1!=t2)
+                     {
+                     OSThreadExec *el2 = new OSThreadExec (fb, &quot;copy&quot;, &quot;download&quot;, tmpfile,fbdir);
++		    el2-&gt;all=true;
++		    el2-&gt;overwrite=true;
+                     fb-&gt;copy (el2);
+                     delete el2;
+                     }
+@@ -1012,6 +1016,8 @@
+                 if(copysrc.size()&gt;0)
+                 {
+                 OSThreadExec *el2 = new OSThreadExec (fb, &quot;copy&quot;, &quot;download&quot;,copysrc,fbdir);
++		el2-&gt;all=true;
++		el2-&gt;overwrite=true;
+                 fb-&gt;copy (el2);
+                 delete el2;
+                 
+
+Modified: trunk/src/OSMainWindow.cpp
+===================================================================
+--- trunk/src/OSMainWindow.cpp	2006-05-13 11:38:08 UTC (rev 306)
++++ trunk/src/OSMainWindow.cpp	2006-05-14 21:06:09 UTC (rev 307)
+@@ -40,7 +40,7 @@
+ 
+ 
+ //-----MAIN WINDOW---------------------------------------------------------------------------------------------------------------------------
+-OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, &quot;nao file manager&quot;, NULL, NULL, DECOR_ALL | LAYOUT_FIX_WIDTH, 0, 0, 600, 400, 0, 0, 0, 0, 0, 0)
++OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, &quot;nao&quot;, NULL, NULL, DECOR_ALL | LAYOUT_FIX_WIDTH, 0, 0, 600, 400, 0, 0, 0, 0, 0, 0)
+ {
+     conf = new OSConfigure ();
+ 
+@@ -676,6 +676,7 @@
+             //popup with question about skipping or overwriting file
+             if ( telem-&gt;question == true )
+             {
++	    
+                 telem-&gt;question = false;
+                 telem-&gt;pane = new FXMenuPane ( this );
+                 FXButton *but = new FXButton ( telem-&gt;pane, &quot;overwrite&quot;, NULL, this,
+
+Modified: trunk/src/plugins/filelist/OSVfsSftp.cpp
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-05-13 11:38:08 UTC (rev 306)
++++ trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-05-14 21:06:09 UTC (rev 307)
+@@ -410,14 +410,14 @@
+ te-&gt;file_size=FXFile::size(from.c_str());
+ 
+ 
+-fxmessage(&quot;TO=%s\n&quot;,to.c_str());
++//fxmessage(&quot;FROM=%s TO=%s\n&quot;,from.c_str(),to.c_str());
+ 
+ SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)to.c_str ());
+ 
+ 	if (attr)
+ 	{
+ 	sftp_attributes_free(attr);
+-	
++
+ 	    if (te-&gt;all == false)
+ 	    {
+ 
+@@ -425,15 +425,13 @@
+ 		while (te-&gt;answer != true)
+ 		    usleep (5000);
+ 		te-&gt;answer = false;
+-
+ 	    }
+ 	    if (!te-&gt;overwrite)
+-		return -1;	
++		{return -1;}	
+ 	    if (this-&gt;removeRecursive( to, te )==-1)
+-		return -1;
++		{return -1;}
+ 	}
+ 	
+-
+ 	
+ 
+ 
+@@ -536,7 +534,7 @@
+ 
+ std::vector &lt; std::string &gt;::iterator iter;
+ 
+-fxmessage(te-&gt;options.c_str());
++//fxmessage(te-&gt;options.c_str());
+ 
+ std::string::size_type pos = te-&gt;options.find ( &quot;upload&quot; );
+     if ( pos == std::string::npos )
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000087.html">[Openspace-svn] r306 - in trunk: . src
+</A></li>
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#88">[ date ]</a>
+              <a href="thread.html#88">[ thread ]</a>
+              <a href="subject.html#88">[ subject ]</a>
+              <a href="author.html#88">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

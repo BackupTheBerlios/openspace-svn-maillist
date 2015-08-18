@@ -1,0 +1,2670 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r241 - in branches/mloskot-style-refactoring/src/plugins: cmddialog filelist
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r241%20-%20in%20branches/mloskot-style-refactoring/src/plugins%3A%20cmddialog%20filelist&In-Reply-To=%3C200602112153.k1BLrNaR020801%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000021.html">
+   <LINK REL="Next"  HREF="000023.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r241 - in branches/mloskot-style-refactoring/src/plugins: cmddialog filelist</H1>
+    <B>compbatant at berlios.de</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r241%20-%20in%20branches/mloskot-style-refactoring/src/plugins%3A%20cmddialog%20filelist&In-Reply-To=%3C200602112153.k1BLrNaR020801%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r241 - in branches/mloskot-style-refactoring/src/plugins: cmddialog filelist">compbatant at berlios.de
+       </A><BR>
+    <I>Sat Feb 11 22:53:23 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000021.html">[Openspace-svn] r240 - in branches/mloskot-style-refactoring: . src src/plugins/cmddialog src/plugins/filelist
+</A></li>
+        <LI>Next message: <A HREF="000023.html">[Openspace-svn] r242 - in branches/mloskot-style-refactoring/src: . plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#22">[ date ]</a>
+              <a href="thread.html#22">[ thread ]</a>
+              <a href="subject.html#22">[ subject ]</a>
+              <a href="author.html#22">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-02-11 22:53:06 +0100 (Sat, 11 Feb 2006)
+New Revision: 241
+
+Added:
+   branches/mloskot-style-refactoring/src/plugins/cmddialog/OSMd5sum.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsArchive.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsArchive.h
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsFtp.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsFtp.h
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsLocal.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsLocal.h
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsSearch.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsSearch.h
+Removed:
+   branches/mloskot-style-refactoring/src/plugins/cmddialog/OSMd5sum
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.h
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_ftp.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_ftp.h
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_local.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_local.h
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_search.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/filelist_search.h
+Modified:
+   branches/mloskot-style-refactoring/src/plugins/cmddialog/OSClone.cpp
+   branches/mloskot-style-refactoring/src/plugins/cmddialog/OSEditSymlink.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/Makefile.am
+Log:
+changing name convencion for VFS plugins
+
+
+Modified: branches/mloskot-style-refactoring/src/plugins/cmddialog/OSClone.cpp
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/cmddialog/OSClone.cpp	2006-02-11 21:32:58 UTC (rev 240)
++++ branches/mloskot-style-refactoring/src/plugins/cmddialog/OSClone.cpp	2006-02-11 21:53:06 UTC (rev 241)
+@@ -1,5 +1,6 @@
+ #include &lt;fx.h&gt;
+ #include &quot;../../OSCMDDialogBox.h&quot;
++#include &quot;../../OSThreadExec.h&quot;
+ 
+ #include &lt;string&gt;
+ using namespace std;
+@@ -45,7 +46,7 @@
+     virtual int OSClone::exec ( void )
+     {
+         int error = 0;
+-    /*
++    
+         
+         vector &lt; string &gt;::iterator iter;
+         int i = 0;
+@@ -58,7 +59,7 @@
+             string filename = FXFile::name( iter-&gt;c_str() ).text();
+             string dirname = FXFile::directory( iter-&gt;c_str() ).text();
+ 
+-            thread_elem *el2 = new OSThreadExec ( fb, &quot;copy&quot;, &quot;upload&quot;, *iter, destdir );
++            OSThreadExec *el2 = new OSThreadExec ( fb, &quot;copy&quot;, &quot;upload&quot;, *iter, destdir );
+             fb-&gt;copy ( el2 );
+             delete el2;
+ 
+@@ -88,7 +89,7 @@
+             i++;
+         }
+ 
+-    */
++    
+         return error;
+ 
+     }
+
+Modified: branches/mloskot-style-refactoring/src/plugins/cmddialog/OSEditSymlink.cpp
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/cmddialog/OSEditSymlink.cpp	2006-02-11 21:32:58 UTC (rev 240)
++++ branches/mloskot-style-refactoring/src/plugins/cmddialog/OSEditSymlink.cpp	2006-02-11 21:53:06 UTC (rev 241)
+@@ -1,5 +1,6 @@
+ #include &lt;fx.h&gt;
+ #include &quot;../../OSCMDDialogBox.h&quot;
++#include &quot;../../OSThreadExec.h&quot;
+ 
+ #include &lt;string&gt;
+ using namespace std;
+@@ -49,7 +50,7 @@
+     {
+     
+         int error = 0;
+-    /*
++    
+ 	
+ 	vector &lt; string &gt;::iterator iter;
+ 	int i=0;
+@@ -67,7 +68,7 @@
+ 	int error = 0;
+ 	    vector&lt;string&gt; srcfile;
+ 	    srcfile.push_back(*iter);
+-	    thread_elem *el = new thread_elem (fb, &quot;remove&quot;, &quot;&quot;,srcfile);
++	    OSThreadExec *el = new OSThreadExec (fb, &quot;remove&quot;, &quot;&quot;,srcfile);
+ 	    fb-&gt;remove(el);
+ 	
+            bool ret=fb-&gt;symlink ( newname,*iter);	
+@@ -86,7 +87,7 @@
+ 	
+ 	}
+ 
+-    */	
++    	
+ 	return error;
+ 	
+     }
+
+Deleted: branches/mloskot-style-refactoring/src/plugins/cmddialog/OSMd5sum
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/cmddialog/OSMd5sum	2006-02-11 21:32:58 UTC (rev 240)
++++ branches/mloskot-style-refactoring/src/plugins/cmddialog/OSMd5sum	2006-02-11 21:53:06 UTC (rev 241)
+@@ -1,112 +0,0 @@
+-#include &lt;fx.h&gt;
+-#include &quot;../../OSCMDDialogBox.h&quot;
+-
+-#include &lt;string&gt;
+-#include &lt;fstream&gt;
+-#include &lt;sstream&gt;
+-using namespace std;
+-
+-#ifdef WIN32
+-#define EXPORTFUNCTION extern &quot;C&quot; __declspec(dllexport)
+-#else
+-#define EXPORTFUNCTION extern &quot;C&quot;
+-#endif
+-
+-
+-#ifdef WIN32
+-#define SEPARATOR &quot;\\&quot;
+-#else
+-#include &lt;dlfcn.h&gt;
+-#define SEPARATOR &quot;/&quot;
+-#endif
+-
+-class OSMd5sum:public OSCMDDialogBox
+-{
+-  FXDECLARE (OSMd5sum) protected:
+-
+-    OSMd5sum (const OSMd5sum &amp;)
+-    {
+-    }
+-    
+-  private:
+-
+- 
+-
+-  public:
+-
+-    enum
+-    {
+-	ID_ENTER = OSCMDDialogBox::ID_LAST,
+-    };
+-
+-    OSMd5sum ()
+-    {
+-    }
+-    OSMd5sum (FXWindow * w, OSVirtualFileSystemBase * fb, vector &lt; string &gt; src);
+-
+-
+-    virtual int OSMd5sum::exec (void)
+-    {
+-	
+-    }
+-
+-
+-    long OSMd5sum::press (FXObject * sender, FXSelector, void *);
+-
+-};
+-
+-FXDEFMAP (OSMd5sum) OSMd5sumMap[] =
+-{
+-FXMAPFUNC (SEL_COMMAND, OSMd5sum::ID_ENTER, OSMd5sum::press),};
+-FXIMPLEMENT (OSMd5sum, OSCMDDialogBox, OSMd5sumMap, ARRAYNUMBER (OSMd5sumMap)) 
+-
+-OSMd5sum::OSMd5sum (FXWindow * w, OSVirtualFileSystemBase * fb, vector &lt; string &gt; src):
+-OSCMDDialogBox (w, fb, src)
+-{
+-FILE *pipe;
+-char readbuf[1024];
+-
+-    vector &lt; string &gt;::iterator iter;
+-FXPacker *vv = new FXGroupBox (contents, &quot;info&quot;, LAYOUT_SIDE_TOP | FRAME_GROOVE | LAYOUT_FILL_X, 0, 0, 0, 0); 
+-new FXLabel(vv,&quot;MD5SUM additional plugin - Mateusz Dworak - GPL &quot;);
+-new FXSeparator(contents);
+-    for (iter = src.begin (); iter != src.end(); iter++)
+-    {
+-  
+-	string cmd=&quot;md5sum &quot;+*iter;
+-	pipe = popen (cmd.c_str(), &quot;r&quot;);
+-
+-    	if (pipe != NULL)
+-   	{
+-		string line;
+-		while (fgets (readbuf, sizeof (readbuf), pipe) != NULL)
+-		{
+-		std::stringstream parser (readbuf);
+-		string md5;	
+-		parser &gt;&gt; md5;
+-		
+-		new FXLabel(contents,iter-&gt;c_str());
+-		FXTextField*textfield = new FXTextField (contents, 31);
+-		textfield-&gt;setText(md5.c_str());
+-		}
+-	}
+-
+-    }
+-
+-
+-
+-}
+-
+-long OSMd5sum::press (FXObject * sender, FXSelector, void *)
+-{
+-
+- 
+-
+-}
+-
+-
+-
+-EXPORTFUNCTION OSCMDDialogBox *get_cmddialog (FXWindow * w, OSVirtualFileSystemBase * fb, vector &lt; string &gt; src)
+-{
+-    return new OSMd5sum (w, fb, src);
+-}
+
+Copied: branches/mloskot-style-refactoring/src/plugins/cmddialog/OSMd5sum.cpp (from rev 240, branches/mloskot-style-refactoring/src/plugins/cmddialog/OSMd5sum)
+
+Modified: branches/mloskot-style-refactoring/src/plugins/filelist/Makefile.am
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/Makefile.am	2006-02-11 21:32:58 UTC (rev 240)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/Makefile.am	2006-02-11 21:53:06 UTC (rev 241)
+@@ -1,16 +1,18 @@
+-pkglib_LTLIBRARIES= libfilelistlocal.la  
+-#libfilelistsearch.la  libfilelistarchive.la libfilelistftp.la libfilelistsftp.la
++pkglib_LTLIBRARIES= libOSVfsLocal.la libOSVfsSearch.la libOSVfsArchive.la libOSVfsFtp.la   
+ pkglibdir=$(libdir)/openspace/plugins/filelist
+ INCLUDES = `WANT_FOX=&quot;1.4&quot; fox-config --cflags` `xml2-config  --cflags` 
+ 
+-libfilelistlocal_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs`  
+-libfilelistlocal_la_SOURCES =filelist_local.cpp filelist_local.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h ../../OSUtils.cpp ../../OSUtils.h 
++libOSVfsLocal_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs`  
++libOSVfsLocal_la_SOURCES =OSVfsLocal.cpp OSVfsLocal.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h ../../OSUtils.cpp ../../OSUtils.h 
+ 
+-#libfilelistsearch_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+-#libfilelistsearch_la_SOURCES =filelist_search.cpp filelist_search.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
+-#libfilelistarchive_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+-#libfilelistarchive_la_SOURCES =filelist_archive.cpp filelist_archive.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
++libOSVfsSearch_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
++libOSVfsSearch_la_SOURCES =OSVfsSearch.cpp OSVfsSearch.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
++libOSVfsArchive_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
++libOSVfsArchive_la_SOURCES =OSVfsArchive.cpp OSVfsArchive.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
++libOSVfsFtp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
++libOSVfsFtp_la_SOURCES =OSVfsFtp.cpp OSVfsFtp.h  pftp.cpp pftp.h  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSConfigure.h 
++
++
+ #libfilelistsftp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+ #libfilelistsftp_la_SOURCES =filelist_sftp.cpp filelist_sftp.h  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
+-#libfilelistftp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+-#libfilelistftp_la_SOURCES =filelist_ftp.cpp filelist_ftp.h  pftp.cpp pftp.h  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSConfigure.h 
++
+
+Copied: branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsArchive.cpp (from rev 239, branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.cpp)
+
+Copied: branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsArchive.h (from rev 239, branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.h)
+
+Copied: branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsFtp.cpp (from rev 239, branches/mloskot-style-refactoring/src/plugins/filelist/filelist_ftp.cpp)
+
+Copied: branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsFtp.h (from rev 239, branches/mloskot-style-refactoring/src/plugins/filelist/filelist_ftp.h)
+
+Copied: branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsLocal.cpp (from rev 239, branches/mloskot-style-refactoring/src/plugins/filelist/filelist_local.cpp)
+
+Copied: branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsLocal.h (from rev 239, branches/mloskot-style-refactoring/src/plugins/filelist/filelist_local.h)
+
+Copied: branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsSearch.cpp (from rev 239, branches/mloskot-style-refactoring/src/plugins/filelist/filelist_search.cpp)
+
+Copied: branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsSearch.h (from rev 239, branches/mloskot-style-refactoring/src/plugins/filelist/filelist_search.h)
+
+Deleted: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.cpp
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.cpp	2006-02-11 21:32:58 UTC (rev 240)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.cpp	2006-02-11 21:53:06 UTC (rev 241)
+@@ -1,395 +0,0 @@
+-#ifdef WIN32
+-#define EXPORTFUNCTION extern &quot;C&quot; __declspec(dllexport)
+-#else
+-#define EXPORTFUNCTION extern &quot;C&quot;
+-#endif
+-#include &quot;filelist_archive.h&quot;
+-
+-
+-vfs filelist_archive::setup (void)
+-{
+-	vfs v;
+-	
+-	v.vfsheaders.push_back(vfsheader_container(&quot;name&quot;));
+-	v.information=&quot;tar.bz2 and tar.gz archive - default plugin&quot;;
+-	v.version=&quot;1&quot;;
+-	v.type=&quot;vfs&quot;;
+-return v;	
+-	
+-}
+-
+-
+-int filelist_archive::osopendir (string dir)
+-{
+-
+-this-&gt;dir=dir;
+-iter=files.begin();
+-}
+-osfile filelist_archive::osreaddir (void)
+-{
+-
+-osfile os_file;
+-
+-while(iter!=files.end())
+-{
+-os_file.name=*iter;
+-	string modfile=os_file.name.substr(0,os_file.name.length () - 1);
+-	
+-	string::size_type pos=modfile.rfind(&quot;/&quot;);
+-	if (pos != string::npos)
+-	{
+-		string dirf=&quot;/&quot;+os_file.name.substr(0,pos);
+-		
+-		
+-		if(dirf!=dir)
+-		{
+-		iter++;
+-		continue;
+-		}
+-		else
+-		os_file.name=os_file.name.substr(pos+1);
+-		
+-		
+-		
+-	}
+-	else if(dir!=&quot;/&quot;)
+-	{
+-	iter++;
+-	continue;
+-	}
+-
+-	    os_file.type = 0;
+-	    os_file.size = 300;
+-	  
+-	    
+-	    string s = os_file.name.substr (os_file.name.length () - 1, 1);
+-
+-	    if (s == &quot;/&quot;)
+-	    {
+-	        os_file.name = os_file.name.substr (0,os_file.name.length () - 1);
+-		os_file.type = FOLDER;
+-	    }
+-	    else
+-		os_file.type = 0;
+-	    
+-	    iter++;
+-	  
+-	    return os_file;
+-}		    
+-
+-
+-    
+-    os_file.name = &quot;&quot;;
+-    return os_file;
+-
+-}
+-int filelist_archive::mkdir (string dir, int mode)
+-{
+-}
+-int filelist_archive::copy (thread_elem * te)
+-{
+-filesoperation(&quot;copy&quot;,te);
+-}
+-
+-int filelist_archive::move (thread_elem * te)
+-{
+-filesoperation(&quot;move&quot;,te);
+-}
+-int filelist_archive::remove (thread_elem * te)
+-{
+-filesoperation(&quot;remove&quot;,te);
+-}
+-
+-int filelist_archive::filesoperation(string typeoperation,thread_elem * te)
+-{
+-
+- vector &lt; string &gt;::iterator iter;
+- 
+-	string::size_type pos = te-&gt;options.find (&quot;upload&quot;);
+-	if (pos != string::npos &amp;&amp; typeoperation!=&quot;remove&quot;)
+-	{
+-		
+-		string file_list;
+-		vector &lt;string&gt; file_list_vec;
+-   		 for (iter = te-&gt;src.begin (); iter != te-&gt;src.end(); iter++)
+-   		 {
+-			string sr = (*iter);
+-			file_list_vec.push_back(sr);
+-			sr=sr.substr(1,sr.length()-1);
+-			file_list+=&quot; \&quot;&quot; +  sr + &quot;\&quot;&quot;;
+-			
+-			
+-		 }	
+-			if(dir==&quot;/&quot;)
+-			{
+-			string command=&quot;cd &quot; +te-&gt;dst +&quot; &amp;&amp; tar xf&quot; + type + &quot; &quot; + archive_filename + &quot; &quot; + file_list;
+-			system(command.c_str());
+-			
+-			}
+-			else
+-			{
+-			
+-			string tmpdir;
+-			string destdir;
+-			tmpdir=FXFile::time (&quot;%S%H%M%d%m%y&quot;, FXFile::now()).text ();
+-			destdir=string(&quot;/tmp/openspace/tmp&quot;) + tmpdir;
+-			FXFile::createDirectory(destdir.c_str(),0);
+-			
+-			
+-			string command=&quot;cd &quot; +destdir +&quot; &amp;&amp; tar xf&quot; + type + &quot; &quot; + archive_filename + &quot; &quot; + file_list;
+-			system(command.c_str());
+-			
+-				for (iter = te-&gt;src.begin (); iter != te-&gt;src.end(); iter++)
+-   				{	
+-				string sr = (*iter);
+-				sr=sr.substr(1,sr.length()-1);
+-				string tmpfile=destdir+&quot;/&quot;+sr;
+-				string d=te-&gt;dst.c_str() + string(&quot;/&quot;)+FXFile::name(iter-&gt;c_str()).text();
+-				FXFile::move(tmpfile.c_str(),d.c_str());				
+-				}	
+-			FXFile::remove(destdir.c_str());	
+-			}
+-		
+-		if(typeoperation==&quot;move&quot;)
+-		{
+-		
+-		thread_elem *el2 = new thread_elem (this, &quot;remove&quot;, &quot;&quot;, file_list_vec);
+-		this-&gt;remove(el2);
+-		delete el2;
+-		
+-		}
+-		
+-		
+-	}
+-	else //download
+-	{
+-		string decompress,compress,archive_filename_decompressed;
+-		if(type==&quot;z&quot;)
+-		{
+-			decompress=&quot;gunzip&quot;;
+-			compress=&quot;gzip&quot;;
+-			archive_filename_decompressed=archive_filename.substr(0,archive_filename.length()-3);
+-		}
+-		else //bzip2
+-		{
+-			decompress=&quot;bunzip2&quot;;
+-			compress=&quot;bzip2&quot;;
+-			archive_filename_decompressed=archive_filename.substr(0,archive_filename.length()-4);
+-		}
+-		
+-		string command=decompress + &quot; &quot; + archive_filename;
+-		system(command.c_str());
+-		
+-		if(typeoperation==&quot;remove&quot;)
+-		{
+-			string file_list;
+-		
+-   			 for (iter = te-&gt;src.begin (); iter != te-&gt;src.end(); iter++)
+-   			 {
+-			string sr = (*iter);
+-			sr=sr.substr(1,sr.length()-1);
+-			file_list+=&quot; \&quot;&quot; +  sr + &quot;\&quot;&quot;;	
+-			
+-			vector &lt;string&gt;::iterator searchit=find(files.begin(), files.end(), sr);
+-				if (files.end()!=searchit)// Search the list.
+-					{
+-					files.erase(searchit);	
+-					}
+-					
+-			 }	
+-			command=&quot;tar --delete -f &quot; + archive_filename_decompressed + &quot; &quot; +file_list;
+-		
+-			system(command.c_str());
+-		
+-		}
+-		else
+-		{
+-		
+-			 for (iter = te-&gt;src.begin (); iter != te-&gt;src.end(); iter++)
+-   			 {
+-			 string file;
+-			 string sr = (*iter);
+-			 string dir=FXFile::directory(sr.c_str()).text();
+-			 
+-
+-			 
+-			 
+-				if(this-&gt;dir==&quot;/&quot;)
+-				{
+-				file=FXFile::name(sr.c_str()).text();
+-				
+-					if (files.end()==find(files.begin(), files.end(), file))// Search the list.
+-					{
+-					string dirtest=dir+&quot;/&quot;+FXFile::name(file.c_str()).text();
+-					
+-					
+-						
+-						if(FXFile::isDirectory(dirtest.c_str()))						
+-						files.push_back(file+&quot;/&quot;);
+-						else
+-						files.push_back(file);	
+-					}
+-					else	
+-					{
+-					command=&quot;cd &quot; +dir + &quot; &amp;&amp; tar --delete -f &quot; + archive_filename_decompressed + &quot; &quot; +file;
+-					
+-					system(command.c_str());
+-					}
+-				
+-				command=&quot;cd &quot; +dir + &quot; &amp;&amp; tar rf &quot; + archive_filename_decompressed + &quot; &quot; +file;
+-				system(command.c_str());
+-				
+-				}
+-				else
+-				{
+-			 			
+-				string reldir=this-&gt;dir.substr(1,this-&gt;dir.length()-1);
+-				file=reldir +&quot;/&quot;+ FXFile::name(sr.c_str()).text();	
+-				
+-				string tmpdir;
+-				string destdir;
+-				tmpdir=FXFile::time (&quot;%S%H%M%d%m%y&quot;, FXFile::now()).text ();
+-				destdir=string(&quot;/tmp/openspace/tmp&quot;) + tmpdir;
+-			
+-				FXFile::createDirectory(destdir.c_str(),0);
+-				command=&quot;cd &quot;+destdir + &quot; &amp;&amp; mkdir -p &quot; + reldir;
+-				system(command.c_str());
+-				string d=destdir+&quot;/&quot; + reldir + &quot;/&quot; + FXFile::name(sr.c_str()).text();
+-				
+-				if(typeoperation==&quot;copy&quot;)
+-				FXFile::copy(sr.c_str(),d.c_str());
+-				else if(typeoperation==&quot;move&quot;)
+-				{
+-				
+-				FXFile::move(sr.c_str(),d.c_str());
+-				}
+-
+-				
+-				
+-					if (files.end()==find(files.begin(), files.end(), file))// Search the list.
+-					{
+-					string dirtest=dir+&quot;/&quot;+FXFile::name(file.c_str()).text();
+-					
+-					
+-						
+-						if(FXFile::isDirectory(dirtest.c_str()))						
+-						files.push_back(file+&quot;/&quot;);
+-						else
+-						files.push_back(file);	
+-					}
+-					else
+-					{	
+-					command=&quot;cd &quot; +destdir + &quot; &amp;&amp; tar --delete -f &quot; + archive_filename_decompressed + &quot; &quot; +file;
+-					
+-					system(command.c_str());
+-					}
+-				
+-				command=&quot;cd &quot; + destdir + &quot; &amp;&amp; tar rf &quot; + archive_filename_decompressed + &quot; &quot; +file;
+-				system(command.c_str());
+-				
+-				
+-	
+-				FXFile::remove(destdir.c_str());
+-				
+-				}
+-				
+-							
+-		 	}
+-		}	
+-		command=compress + &quot; &quot; + archive_filename_decompressed;
+-		system(command.c_str());
+-		
+-			
+-	}
+-	
+-te-&gt;end=true;
+-
+-
+-}
+-
+-
+-int filelist_archive::rename (string orgname, string newname)
+-{
+-}
+-int filelist_archive::init (vector &lt; string &gt; *vector_name, pathtype pt, configure * conf)
+-{
+-archive_filename = pt.server;
+-
+-
+-string  command;
+-
+-if ((archive_filename.length () &gt;= 6 &amp;&amp; archive_filename.substr (archive_filename.length () - 6, 6) == &quot;tar.gz&quot;) ||(archive_filename.length () &gt;= 3 &amp;&amp; archive_filename.substr (archive_filename.length () - 3, 3) == &quot;tgz&quot;))
+-type=&quot;z&quot;;
+-else
+-type=&quot;j&quot;;
+-
+-command=&quot;tar tf&quot; + type + &quot; &quot; + archive_filename;
+-
+-
+-pipe = popen(command.c_str(), &quot;r&quot;);
+-
+-if (pipe != NULL)
+-    {
+-	string line;
+-	while (fgets (readbuf, sizeof (readbuf), pipe) != NULL)
+-	{
+-
+-
+-	    string path = readbuf;
+-	    path = path.substr (0, path.length () - 1);
+-	    files.push_back(path);
+-	   
+-	}
+-
+-	pclose (pipe);
+-    }
+-    
+-iter=files.begin();
+-
+-}
+-int filelist_archive::mode (string file)
+-{
+-}
+-string filelist_archive::owner (string file)
+-{
+-return &quot;&quot;;
+-}
+-string filelist_archive::group (string file)
+-{
+-return &quot;&quot;;
+-}
+-bool filelist_archive::mode (string file, unsigned int, bool recursive)
+-{
+-}
+-bool filelist_archive::owner (string file, string, bool recursive)
+-{
+-}
+-bool filelist_archive::group (string file, string, bool recursive)
+-{
+-}
+-string filelist_archive::info (void)
+-{
+-return &quot;&quot;;
+-}
+-void filelist_archive::totalsize (string path, unsigned long &amp;size)
+-{
+-}
+-string filelist_archive::symlink (string path)
+-{
+-return &quot;&quot;;
+-}
+-bool filelist_archive::symlink (string src, string dst)
+-{
+-}
+-bool filelist_archive::hardlink (string src, string dst)
+-{
+-}
+-
+-int filelist_archive::quit (void)
+-{
+-}
+-EXPORTFUNCTION filelist_base *get_filelist (void)
+-{
+-    FXTRACE ((5, &quot;PLUGIN LOAD\n&quot;));
+-    return new filelist_archive ();
+-}
+
+Deleted: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.h
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.h	2006-02-11 21:32:58 UTC (rev 240)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/filelist_archive.h	2006-02-11 21:53:06 UTC (rev 241)
+@@ -1,59 +0,0 @@
+-#ifndef FILELIST_archive
+-#define FILELIST_archive
+-
+-#include &quot;../../OSVirtualFileSystemBase.h&quot;
+-#include &quot;../../OSVirtualFileSystemInfo.h&quot;
+-#include &quot;../../OSPathType.h&quot;
+-#include &quot;../../OSFile.h&quot;
+-
+-#include &lt;string&gt;
+-#include &lt;vector&gt;
+-
+-// Forward declarations
+-class OSThreadExec;
+-class OSConfigure;
+-
+-/**
+- * Archive plugin of type of file list.
+- *
+- * @todo Why all filelist_* plugins redeclare the same interface?
+- */
+-class filelist_archive : public OSVirtualFileSystemBase
+-{
+- 
+-private:  
+-    std::string archive_filename;
+-    FILE *pipe;
+-    char readbuf[1024];
+-    std::vector&lt;std::string&gt; files;
+-    std::vector&lt;std::string&gt;::iterator iter;
+-    std::string dir;
+-    std::string type;
+-    
+-public:    
+-
+-    int osopendir (std::string dir);
+-    OSFile osreaddir (void);
+-    int mkdir (std::string dir, int mode = 0);
+-    int copy (OSThreadExec* te);
+-    int move (OSThreadExec* te);
+-    int remove (OSThreadExec* te);
+-    int rename (std::string orgname, std::string newname);
+-    int init (std::vector&lt;std::string&gt;* vector_name, OSPathType pt, OSConfigure* conf);
+-    int mode (std::string file);
+-    std::string owner (std::string file);
+-    std::string group (std::string file);
+-    bool mode (std::string file, unsigned int, bool recursive);
+-    bool owner (std::string file, std::string, bool recursive);
+-    bool group (std::string file, std::string, bool recursive);
+-    std::string info (void);
+-    void totalsize (std::string path, unsigned long &amp;size);
+-    std::string symlink (std::string path);
+-    bool symlink (std::string src, std::string dst);
+-    bool hardlink (std::string src, std::string dst);
+-    OSVirtualFileSystemInfo setup (void);
+-    int quit (void);
+-    
+-    int filesoperation(std::string type, OSThreadExec* te);
+-};
+-#endif
+
+Deleted: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_ftp.cpp
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/filelist_ftp.cpp	2006-02-11 21:32:58 UTC (rev 240)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/filelist_ftp.cpp	2006-02-11 21:53:06 UTC (rev 241)
+@@ -1,762 +0,0 @@
+-// $Id$
+-/////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
+-//
+-// OpenSpace is free software; you can redistribute it and/or modify
+-// it under the terms of the GNU General Public License as published by
+-// the Free Software Foundation; either version 2 of the License, or
+-// (at your option) any later version.
+-//
+-// OpenSpace is distributed in the hope that it will be useful,
+-// but WITHOUT ANY WARRANTY; without even the implied warranty of
+-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-// GNU General Public License for more details.
+-//
+-// You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
+-// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+-/////////////////////////////////////////////////////////////////////////////
+-//
+-// C++ Implementation: $MODULE$
+-//
+-// Author: Mateusz Dworak &lt;<A HREF="http://openspace.linux.pl">http://openspace.linux.pl</A>&gt;, (C) 2005
+-//
+-// Description:
+-//  FTP plugin derived from OpenSpace file list VFS plugin.
+-//
+-/////////////////////////////////////////////////////////////////////////////
+-
+-
+-#ifdef WIN32
+-#define EXPORTFUNCTION extern &quot;C&quot; __declspec(dllexport)
+-#else
+-#define EXPORTFUNCTION extern &quot;C&quot;
+-#endif
+-
+-#include &quot;filelist_ftp.h&quot;
+-#include &quot;../../OSVirtualFileSystemBase.h&quot;
+-
+-#include &lt;sstream&gt;
+-#include &lt;sys/types.h&gt;
+-#include &lt;sys/stat.h&gt;
+-#include &lt;unistd.h&gt;
+-#include &lt;sys/types.h&gt;
+-#include &lt;dirent.h&gt;
+-
+-#include &lt;string&gt;
+-#include &lt;vector&gt;
+-#include &lt;map&gt;
+-
+-SimpleLogger::SimpleLogger()
+-{
+-    te = NULL;
+-}
+-
+-void SimpleLogger::start( uint32_t bytes, const FXString &amp; name, uint32_t size )
+-{
+-    if ( te != NULL &amp;&amp; name != &quot;&quot; )
+-    {
+-        te-&gt;act_file_size = 0;
+-        te-&gt;act_file_name = name.text ();
+-        if ( size != 0 )
+-            te-&gt;file_size = size;
+-    }
+-}
+-bool SimpleLogger::update( uint32_t bytes, const FXString &amp; s )
+-{
+-    if ( te != NULL )
+-    {
+-        te-&gt;act_file_size += bytes;
+-        te-&gt;act_total_size += bytes;
+-
+-        if ( te-&gt;cancel == true )
+-            return false;
+-    }
+-    return true;
+-}
+-void SimpleLogger::end( uint32_t bytes, const FXString &amp; )
+-{}
+-
+-void SimpleLogger::choke()
+-{}
+-
+-void SimpleLogger::error( int error )
+-{}
+-
+-void SimpleLogger::logLine( FXString &amp; line )
+-{
+-    fxmessage( &quot;LOG=%s\n&quot;, line.text() );
+-}
+-void SimpleLogger::error( FXString &amp; error )
+-{
+-    fxmessage( &quot;ERROR=%s\n&quot;, error.text() );
+-}
+-
+-vfs filelist_ftp::setup ( void )
+-{
+-    OSVirtualFileSystemBase v;
+-
+-    v.vfsheaders.push_back( vfsheader_container( &quot;name&quot; ) );
+-    v.vfsheaders.push_back( vfsheader_container( &quot;size&quot;, &quot;size&quot; ) );
+-    v.vfsheaders.push_back( vfsheader_container( &quot;owner&quot; ) );
+-    v.vfsheaders.push_back( vfsheader_container( &quot;group&quot; ) );
+-    v.information = &quot;FTP - default plugin&quot;;
+-    v.version = &quot;1&quot;;
+-    v.type = &quot;network&quot;;
+-    return v;
+-
+-}
+-
+-
+-int filelist_ftp::priv_osopendir ( std::string dir, std::string prefix, std::map &lt;std::string, osfile&gt; &amp; filesMap, std::map &lt;std::string, osfile&gt;::iterator &amp; iter )
+-{
+-
+-    filesMap.clear();
+-
+-
+-    FXString di = dir.c_str();
+-    pftp-&gt;setDir( di );
+-    FXString di2;
+-    pftp-&gt;pwd( di2 );
+-
+-    if ( FXFile::name( di ) != FXFile::name( di2 ) || di2 == &quot;&quot; )
+-        return -1;
+-
+-
+-
+-    FXMemoryStream str;
+-    str.open( FXStreamSave, NULL );
+-
+-
+-    pftp-&gt;list( str );
+-
+-    // nil terminate the buffer
+-    FXuchar nil = 0;
+-    str.save( &amp;nil, 1 );
+-
+-    // and get it
+-    FXuchar* buffer;
+-    unsigned long sp;
+-    str.takeBuffer( buffer, sp );
+-
+-    char * ptr = reinterpret_cast&lt;char *&gt;( buffer );
+-    char * next = strchr( ptr, '\n' );
+-    char * start = ptr;
+-
+-
+-    //get attributes # user group size date =(3 or 4? fields) name
+-    while ( next &amp;&amp; ( ptr - start &lt; ( int ) sp ) )
+-    {
+-
+-        next[ 0 ] = 0;
+-        if ( next[ -1 ] == '\r' )
+-            next[ -1 ] = 0;
+-
+-        // Some FTP servers send other lines than raw directory
+-        if ( ptr[ 0 ] != 'd' &amp;&amp; ptr[ 0 ] != '-' )
+-        {
+-            ptr = next + 1;
+-            next = strchr( ptr, '\n' );
+-            continue;
+-        }
+-
+-
+-
+-        osfile os_file;
+-        os_file.type = 0;
+-        if ( ptr[ 0 ] == 'd' )
+-            os_file.type = os_file.type | FOLDER;
+-        else
+-            os_file.type = 0;
+-
+-        std::stringstream parser ( ptr );
+-        std::std::string field;
+-
+-        std::string user;
+-        std::string group;
+-        std::string size;
+-        std::string date;
+-        std::string attrib;
+-        std::string name;
+-
+-        parser &gt;&gt; attrib;
+-
+-        attrib = attrib.substr( 1, attrib.length() - 1 );
+-
+-        parser &gt;&gt; field;
+-        parser &gt;&gt; user;
+-        parser &gt;&gt; group;
+-        parser &gt;&gt; size;
+-        os_file.size = atoi( size.c_str() );
+-
+-
+-        parser &gt;&gt; date;
+-        parser &gt;&gt; date;
+-        parser &gt;&gt; date;
+-
+-
+-        os_file.user = user;
+-        os_file.group = group;
+-        os_file.mode = attrib;
+-
+-
+-
+-        std::string n;
+-        while ( parser &gt;&gt; n )
+-        {
+-            if ( name != &quot;&quot; )
+-                name = name + &quot; &quot; + n;
+-            else
+-                name = n;
+-        }
+-
+-        os_file.name = prefix + name;
+-
+-
+-        if ( prefix == &quot;&quot; )
+-        {
+-
+-
+-            for ( int i = 0; i &lt; fieldsnum - 1; i++ )
+-            {
+-
+-                if ( fields[ i + 1 ] == &quot;size&quot; )
+-                    os_file.attrib.push_back( size );
+-                else if ( fields[ i + 1 ] == &quot;owner&quot; )
+-                    os_file.attrib.push_back( user );
+-                else if ( fields[ i + 1 ] == &quot;group&quot; )
+-                    os_file.attrib.push_back( group );
+-                else if ( fields[ i + 1 ] == &quot;mode&quot; )
+-                    os_file.attrib.push_back( attrib );
+-
+-
+-            }
+-
+-        }
+-        filesMap[ os_file.name ] = os_file;
+-
+-
+-
+-        if ( prefix != &quot;&quot; )
+-        {
+-            filesMapGlobal[ os_file.name ] = os_file;
+-        }
+-        ptr = next + 1;
+-        next = strchr( ptr, '\n' );
+-    }
+-    FXFREE( &amp;buffer );
+-
+-    iter = filesMap.begin();
+-
+-}
+-
+-
+-
+-int filelist_ftp::osopendir ( std::string dir )
+-{
+-
+-
+-    this-&gt;dir = dir;
+-
+-    return priv_osopendir( dir, &quot;&quot;, filesMap, iter );
+-
+-
+-
+-}
+-
+-osfile filelist_ftp::priv_osreaddir ( std::map &lt;std::string, osfile&gt; &amp; filesMap, std::map &lt;std::string, osfile&gt;::iterator &amp; iter )
+-{
+-    osfile os_file;
+-
+-    if ( iter != filesMap.end() )
+-    {
+-        os_file = iter-&gt;second;
+-
+-        iter++;
+-        return os_file;
+-    }
+-
+-
+-
+-    os_file.name = &quot;&quot;;
+-    return os_file;
+-
+-}
+-
+-
+-osfile filelist_ftp::osreaddir ( void )
+-{
+-
+-    return priv_osreaddir( filesMap, iter );
+-}
+-int filelist_ftp::mkdir ( std::string dir, int mode )
+-{
+-    pftp-&gt;mkDir( dir.c_str() );
+-}
+-
+-
+-static const int BUCKETSIZE = 128;
+-struct Bucket
+-{
+-    uint8_t bucket[ BUCKETSIZE ];
+-};
+-
+-
+-
+-
+-
+-
+-
+-
+-void filelist_ftp::local_totalsize ( std::string path, unsigned long &amp;size )
+-{
+-
+-    if ( FXFile::isDirectory ( path.c_str () ) )
+-    {
+-        struct stat status;
+-        struct dirent *dp;
+-        DIR *dirp;
+-
+-
+-        dirp = opendir ( path.c_str () );
+-
+-        while ( ( dp = readdir ( dirp ) ) != NULL )
+-        {
+-            if ( dp-&gt;d_name[ 0 ] != '.' || ( dp-&gt;d_name[ 1 ] != '\0' &amp;&amp; ( dp-&gt;d_name[ 1 ] != '.' || dp-&gt;d_name[ 2 ] != '\0' ) ) )
+-            {
+-
+-                std::string file = path;
+-                file.append ( dp-&gt;d_name );
+-#ifndef WIN32
+-                lstat ( file.c_str (), &amp;status );
+-#else
+-                stat ( file.c_str (), &amp;status );
+-#endif
+-                if ( S_ISDIR ( status.st_mode ) )
+-                {
+-                    size = size + ( unsigned int ) status.st_size;
+-                    file.append ( &quot;/&quot; );
+-                    totalsize ( file, size );
+-
+-                }
+-                else
+-                {
+-                    size = size + status.st_size;
+-                }
+-            }
+-        }
+-
+-        closedir ( dirp );
+-    }
+-    else
+-    {
+-        size += FXFile::size ( path.c_str () );
+-
+-    }
+-
+-}
+-
+-
+-
+-
+-
+-
+-
+-int filelist_ftp::copy ( thread_elem * te )
+-{
+-    log-&gt;te = te;
+-    unsigned long size = 0;
+-
+-    std::string::size_type pos = te-&gt;options.find ( &quot;upload&quot; );
+-    if ( pos == std::string::npos )
+-    {
+-
+-        std::string dir_copy = this-&gt;dir;
+-
+-        std::vector &lt; std::string &gt;::iterator iter;
+-
+-        for ( iter = te-&gt;src.begin (); iter != te-&gt;src.end(); iter++ )
+-        {
+-            std::string sr = ( *iter );
+-            if ( FXFile::isDirectory ( sr.c_str () ) )
+-                sr.append ( &quot;/&quot; );
+-            local_totalsize ( sr, size );
+-        }
+-
+-        te-&gt;total_size = size;
+-
+-        for ( iter = te-&gt;src.begin (); iter != te-&gt;src.end(); iter++ )
+-        {
+-
+-            FXString file = iter-&gt;c_str();
+-            goLocalRecursive( file.text(), &quot;&quot;, te );
+-            pftp-&gt;setDir( dir_copy.c_str() );
+-
+-        }
+-        this-&gt;dir = dir_copy;
+-
+-    }
+-    else
+-    {
+-
+-
+-
+-        getRecursiveFiles( te-&gt;src, size );
+-
+-        te-&gt;total_size = size;
+-        for ( iterGlobal = --filesMapGlobal.end();; iterGlobal-- )
+-        {
+-            if ( te-&gt;cancel == true )
+-                break;
+-
+-            if ( iterGlobal-&gt;second.type &amp; FOLDER )
+-            {
+-
+-                std::string filename = te-&gt;dst + &quot;/&quot; + iterGlobal-&gt;first;
+-                FXFile::createDirectory( filename.c_str(), str_mode_int( iterGlobal-&gt;second.mode ) );
+-
+-            }
+-            else
+-            {
+-                std::string filename = te-&gt;dst + &quot;/&quot; + iterGlobal-&gt;first;
+-                FXFile::createDirectory( FXFile::directory( filename.c_str() ), str_mode_int( iterGlobal-&gt;second.mode ) );
+-                te-&gt;file_size = iterGlobal-&gt;second.size;
+-
+-                pftp-&gt;download( iterGlobal-&gt;first.c_str(), filename.c_str(), false );
+-
+-                FXFile::mode( filename.c_str(), str_mode_int( iterGlobal-&gt;second.mode ) );
+-            }
+-            te-&gt;act_file_name = iterGlobal-&gt;first;
+-            if ( iterGlobal == filesMapGlobal.begin() ) break;
+-
+-        }
+-
+-
+-
+-
+-
+-    }
+-    log-&gt;te = NULL;
+-}
+-
+-
+-void filelist_ftp::goLocalRecursive ( std::string path, std::string prefix, thread_elem *te )
+-{
+-
+-    if ( te-&gt;cancel == true )
+-        return ;
+-
+-    if ( FXFile::isDirectory ( path.c_str () ) )
+-    {
+-        struct stat status;
+-        struct dirent *dp;
+-        DIR *dirp;
+-
+-        prefix = prefix + FXFile::name( path.c_str() ).text();
+-        std::string fulldir = this-&gt;dir + &quot;/&quot; + prefix;
+-
+-        pftp-&gt;mkDir( fulldir.c_str() );
+-        this-&gt;mode ( fulldir, FXFile::mode( path.c_str() ), false );
+-        pftp-&gt;setDir( fulldir.c_str() );
+-
+-        dirp = opendir ( path.c_str () );
+-
+-        while ( ( dp = readdir ( dirp ) ) != NULL )
+-        {
+-            if ( dp-&gt;d_name[ 0 ] != '.' || ( dp-&gt;d_name[ 1 ] != '\0' &amp;&amp; ( dp-&gt;d_name[ 1 ] != '.' || dp-&gt;d_name[ 2 ] != '\0' ) ) )
+-            {
+-
+-                std::string file = path + &quot;/&quot;;
+-                file.append ( dp-&gt;d_name );
+-                goLocalRecursive( file, prefix + &quot;/&quot;, te );
+-            }
+-        }
+-
+-        closedir ( dirp );
+-    }
+-    else
+-    {
+-        std::string pre = this-&gt;dir + &quot;/&quot; + prefix.substr( 0, prefix.length() - 1 );
+-        if ( this-&gt;dir != pre )
+-        {
+-            pftp-&gt;setDir( pre.c_str() );
+-            this-&gt;dir = pre;
+-        }
+-
+-        FXString fil = path.c_str();
+-        pftp-&gt;upload( fil, 0, false );
+-        this-&gt;mode ( path, FXFile::mode( fil ), false );
+-
+-
+-    }
+-
+-}
+-
+-
+-
+-
+-
+-
+-
+-
+-int filelist_ftp::move ( thread_elem * te )
+-{}
+-
+-
+-void filelist_ftp::gorecursive( std::string file, unsigned long &amp;size )
+-{
+-
+-
+-    std::map &lt;std::string, osfile&gt; filesMap;
+-    std::map &lt;std::string, osfile&gt;::iterator iter;
+-
+-    if ( priv_osopendir( file, file + &quot;/&quot;, filesMap, iter ) != -1 )
+-    {
+-
+-        while ( 1 )
+-        {
+-            osfile os_file = priv_osreaddir ( filesMap, iter );
+-            if ( os_file.name == &quot;&quot; )
+-                break;
+-
+-            if ( os_file.type &amp; FOLDER )
+-            {
+-                gorecursive( os_file.name, size );
+-            }
+-            else
+-                size = size + os_file.size;
+-        }
+-
+-    }
+-
+-
+-}
+-
+-void filelist_ftp::getRecursiveFiles( std::vector &lt; std::string &gt;src, unsigned long &amp;size )
+-{
+-
+-    filesMapGlobal.clear();
+-
+-
+-    std::vector &lt; std::string &gt;::iterator iter_files;
+-
+-    for ( iter_files = src.begin (); iter_files != src.end(); iter_files++ )
+-    {
+-
+-        std::string name = FXFile::name( iter_files-&gt;c_str() ).text();
+-        osfile os_file;
+-        os_file.name = name;
+-        os_file.type = filesMap[ name ].type;
+-        os_file.size = filesMap[ name ].size;
+-        os_file.mode = filesMap[ name ].mode;
+-        os_file.group = filesMap[ name ].user;
+-        os_file.user = filesMap[ name ].group;
+-        filesMapGlobal[ name ] = os_file;
+-
+-    }
+-
+-
+-    for ( iterGlobal = filesMapGlobal.begin();iterGlobal != filesMapGlobal.end(); iterGlobal++ )
+-    {
+-
+-
+-        if ( iterGlobal-&gt;second.type &amp; FOLDER )
+-        {
+-            gorecursive( iterGlobal-&gt;first, size );
+-            FXString di = this-&gt;dir.c_str();
+-            pftp-&gt;setDir( di );
+-        }
+-        else
+-            size = size + iterGlobal-&gt;second.size;
+-
+-    }
+-}
+-
+-int filelist_ftp::remove ( thread_elem * te )
+-{
+-    unsigned long size;
+-    getRecursiveFiles( te-&gt;src, size );
+-
+-    for ( iterGlobal = --filesMapGlobal.end();; iterGlobal-- )
+-    {
+-
+-
+-        if ( iterGlobal-&gt;second.type &amp; FOLDER )
+-            pftp-&gt;rmDir( iterGlobal-&gt;first.c_str() );
+-        else
+-            pftp-&gt;del( iterGlobal-&gt;first.c_str() );
+-
+-        te-&gt;act_file_name = iterGlobal-&gt;first;
+-        if ( iterGlobal == filesMapGlobal.begin() ) break;
+-
+-    }
+-
+-
+-
+-}
+-int filelist_ftp::rename ( std::string orgname, std::string newname )
+-{
+-
+-    FXString tmp;
+-    pftp-&gt;sendCmd( &quot;RNFR &quot;, FXFile::name( orgname.c_str() ), tmp );
+-    pftp-&gt;sendCmd( &quot;RNTO &quot;, FXFile::name( newname.c_str() ), tmp );
+-
+-}
+-int filelist_ftp::init ( std::vector &lt; std::string &gt; *vector_name, pathtype pt, configure * conf )
+-{
+-
+-    fieldsnum = vector_name-&gt;size ();
+-    fields = ( *vector_name );
+-
+-    log = new SimpleLogger;
+-    pftp = new PFTP( pt.server.c_str(), pt.user.c_str(), pt.password.c_str(), &quot;&quot;, log );
+-
+-    if ( pftp-&gt;isConnected() &amp;&amp; getinitialdir() != &quot;&quot; )
+-    {}
+-    else return -1;
+-}
+-
+-int filelist_ftp::str_mode_int( std::string per )
+-{
+-    unsigned int mode = 0;
+-    if ( per[ 0 ] == 'r' )
+-        mode = mode | S_IRUSR;
+-    if ( per[ 1 ] == 'w' )
+-        mode = mode | S_IWUSR;
+-    if ( per[ 2 ] == 'x' )
+-        mode = mode | S_IXUSR;
+-    if ( per[ 3 ] == 'r' )
+-        mode = mode | S_IRGRP;
+-    if ( per[ 4 ] == 'w' )
+-        mode = mode | S_IWGRP;
+-    if ( per[ 5 ] == 'x' )
+-        mode = mode | S_IXGRP;
+-    if ( per[ 6 ] == 'r' )
+-        mode = mode | S_IROTH;
+-    if ( per[ 7 ] == 'w' )
+-        mode = mode | S_IWOTH;
+-    if ( per[ 8 ] == 'x' )
+-        mode = mode | S_IXOTH;
+-    return mode;
+-}
+-
+-int filelist_ftp::mode ( std::string file )
+-{
+-
+-    std::string per = filesMap[ FXFile::name( file.c_str() ).text() ].mode;
+-
+-    return str_mode_int( per );
+-
+-}
+-std::string filelist_ftp::owner ( std::string file )
+-{
+-    return filesMap[ FXFile::name( file.c_str() ).text() ].user;
+-}
+-std::string filelist_ftp::group ( std::string file )
+-{
+-    return filesMap[ FXFile::name( file.c_str() ).text() ].group;
+-}
+-bool filelist_ftp::mode ( std::string file, unsigned int per, bool recursive )
+-{
+-
+-    unsigned int mode = per;
+-
+-    int x = ( ( mode &amp; S_IRUSR ) | ( mode &amp; S_IWUSR ) | ( mode &amp; S_IXUSR ) ) / 64;
+-    int y = ( ( mode &amp; S_IRGRP ) | ( mode &amp; S_IWGRP ) | ( mode &amp; S_IXGRP ) ) / 8;
+-    int z = ( ( mode &amp; S_IROTH ) | ( mode &amp; S_IWOTH ) | ( mode &amp; S_IXOTH ) );
+-
+-    file = FXFile::name( file.c_str() ).text();
+-
+-    FXString tmp;
+-    char chstr[ 20 ];
+-    sprintf ( chstr, &quot;%d%d%d&quot;, x, y, z );
+-
+-    if ( recursive == false )
+-    {
+-        std::string cmd = &quot;CHMOD &quot; + std::string( chstr ) + &quot; &quot; + file;
+-        pftp-&gt;sendCmd( &quot;SITE &quot;, cmd.c_str(), tmp );
+-    }
+-    else
+-    {
+-        unsigned long size;
+-        std::vector &lt; std::string &gt;src;
+-        src.push_back( file );
+-        getRecursiveFiles( src, size );
+-
+-        for ( iterGlobal = --filesMapGlobal.end();; iterGlobal-- )
+-        {
+-
+-
+-            std::string cmd = &quot;CHMOD &quot; + std::string( chstr ) + &quot; &quot; + iterGlobal-&gt;first;
+-            pftp-&gt;sendCmd( &quot;SITE &quot;, cmd.c_str(), tmp );
+-
+-
+-            if ( iterGlobal == filesMapGlobal.begin() ) break;
+-
+-        }
+-
+-
+-    }
+-
+-
+-
+-}
+-bool filelist_ftp::owner ( std::string file, std::string, bool recursive )
+-{}
+-bool filelist_ftp::group ( std::string file, std::string, bool recursive )
+-{}
+-std::string filelist_ftp::info ( void )
+-{
+-    return &quot;&quot;;
+-}
+-void filelist_ftp::totalsize ( std::string path, unsigned long &amp;size )
+-{
+-    size = 0;
+-
+-    std::string file = FXFile::name( path.c_str() ).text();
+-    if ( file == &quot;&quot; )
+-        file = FXFile::name( path.substr( 0, path.length() - 1 ).c_str() ).text();
+-
+-
+-
+-    if ( filesMap[ file ].type &amp; FOLDER )
+-    {
+-        std::vector &lt; std::string &gt;src;
+-        src.push_back( file );
+-        getRecursiveFiles( src, size );
+-    }
+-    else
+-        size = filesMap[ file ].size;
+-
+-
+-
+-}
+-std::string filelist_ftp::symlink ( std::string path )
+-{
+-    return &quot;&quot;;
+-}
+-bool filelist_ftp::symlink ( std::string src, std::string dst )
+-{}
+-bool filelist_ftp::hardlink ( std::string src, std::string dst )
+-{}
+-
+-int filelist_ftp::quit ( void )
+-{
+-    pftp-&gt;logout();
+-}
+-
+-std::string filelist_ftp::getinitialdir( void )
+-{
+-    FXString base;
+-    pftp-&gt;pwd( base );
+-
+-    return base.text();
+-}
+-
+-
+-
+-EXPORTFUNCTION filelist_base *get_filelist ( void )
+-{
+-    FXTRACE ( ( 5, &quot;PLUGIN LOAD\n&quot; ) );
+-    return new filelist_ftp ();
+-}
+
+Deleted: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_ftp.h
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/filelist_ftp.h	2006-02-11 21:32:58 UTC (rev 240)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/filelist_ftp.h	2006-02-11 21:53:06 UTC (rev 241)
+@@ -1,128 +0,0 @@
+-// $Id$
+-/////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
+-//
+-// OpenSpace is free software; you can redistribute it and/or modify
+-// it under the terms of the GNU General Public License as published by
+-// the Free Software Foundation; either version 2 of the License, or
+-// (at your option) any later version.
+-//
+-// OpenSpace is distributed in the hope that it will be useful,
+-// but WITHOUT ANY WARRANTY; without even the implied warranty of
+-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-// GNU General Public License for more details.
+-//
+-// You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
+-// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+-/////////////////////////////////////////////////////////////////////////////
+-//
+-// C++ Interface: $MODULE$
+-//
+-// Author: Mateusz Dworak &lt;<A HREF="http://openspace.linux.pl">http://openspace.linux.pl</A>&gt;, (C) 2005
+-//
+-// Description:
+-//  FTP plugin derived from OpenSpace file list VFS plugin.
+-//
+-/////////////////////////////////////////////////////////////////////////////
+-#ifndef FILELIST_ftp
+-#define FILELIST_ftp
+-
+-#include &quot;../../OSVirtualFileSystemBase.h&quot;
+-#include &quot;../../OSPathType.h&quot;
+-#include &quot;../../OSFile.h&quot;
+-#include &quot;pftp.h&quot;
+-
+-#include &lt;map&gt;
+-#include &lt;string&gt;
+-#include &lt;vector&gt;
+-
+-// Forward declarations
+-class OSThreadExec;
+-class OSConfigure;
+-
+-/**
+- * Events logger class.
+- * 
+- * @todo Encapsulate public data members.
+- */
+-class SimpleLogger : public Logger
+-{
+-public:
+-
+-    OSThreadExec* te;
+-
+-    /**
+-     * Default constructor.
+-     */
+-    SimpleLogger( void );
+-
+-    void start( uint32_t bytes, const FXString &amp; name, uint32_t size );
+-    bool update( uint32_t bytes, const FXString &amp; s );
+-    void end( uint32_t bytes, const FXString &amp; );
+-    void choke( void );
+-    void error( int error );
+-    void logLine( FXString &amp; line );
+-    void error( FXString &amp; error );
+-
+-}; // SimpleLogger
+-
+-
+-/**
+- * FTP plugin main class.
+- * 
+- * @todo Pass &quot;big&quot; vectors through by-reference not by-value!
+- */
+-class filelist_ftp : public OSVirtualFileSystemBase
+-{
+-
+-private:
+-
+-    PFTP *pftp;
+-    SimpleLogger *log;
+-    std::string dir;
+-
+-    std::map&lt;std::string, OSFile&gt; filesMap;
+-    std::map&lt;std::string, OSFile&gt;::iterator iter;
+-    std::map&lt;std::string, OSFile&gt; filesMapGlobal;
+-    std::map&lt;std::string, OSFile&gt;::iterator iterGlobal;
+-
+-    int fieldsnum;
+-    std::vector&lt;std::string&gt; fields;
+-
+-    int priv_osopendir( std::string dir, std::string prefix, std::map &lt;std::string, osfile&gt; &amp; filesMap, std::map &lt;std::string, osfile&gt;::iterator &amp; iter );
+-    void gorecursive( std::string file, unsigned long &amp;size );
+-    OSFile priv_osreaddir( std::map &lt;std::string, osfile&gt; &amp; filesMap, std::map &lt;std::string, OSFile&gt;::iterator &amp; iter2 );
+-    void getRecursiveFiles( std::vector&lt;std::string&gt; src, unsigned long &amp;size );
+-    void goLocalRecursive( std::string path, std::string prefix, OSThreadExec* te );
+-    void local_totalsize( std::string path, unsigned long &amp;size );
+-    int str_mode_int( std::string per );
+-
+-public:
+-    
+-    int osopendir( std::string dir );
+-    OSFile osreaddir( void );
+-    int mkdir( std::string dir, int mode = 0 );
+-    int copy( OSThreadExec * te );
+-    int move( OSThreadExec * te );
+-    int remove( OSThreadExec * te );
+-    int rename( std::string orgname, std::string newname );
+-    int init( std::vector&lt;std::string&gt;* vector_name, OSPathType pt, OSConfigure * conf );
+-    int mode( std::string file );
+-    std::string owner( std::string file );
+-    std::string group( std::string file );
+-    bool mode( std::string file, unsigned int, bool recursive );
+-    bool owner( std::string file, std::string, bool recursive );
+-    bool group( std::string file, std::string, bool recursive );
+-    std::string info( void );
+-    void totalsize( std::string path, unsigned long &amp;size );
+-    std::string symlink( std::string path );
+-    bool symlink( std::string src, std::string dst );
+-    bool hardlink( std::string src, std::string dst );
+-    OSVirtualFileSystemInfo setup( void );
+-    int quit( void );
+-    std::string getinitialdir( void );
+-
+-
+-};
+-#endif
+
+Deleted: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_local.cpp
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/filelist_local.cpp	2006-02-11 21:32:58 UTC (rev 240)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/filelist_local.cpp	2006-02-11 21:53:06 UTC (rev 241)
+@@ -1,602 +0,0 @@
+-
+-#ifdef WIN32
+-#define EXPORTFUNCTION extern &quot;C&quot; __declspec(dllexport)
+-#else
+-#define EXPORTFUNCTION extern &quot;C&quot;
+-#endif
+-
+-#include &quot;filelist_local.h&quot;
+-#include &quot;OSFXFile.h&quot;
+-#include &quot;../../OSVirtualFileSystemHeader.h&quot;
+-#include &quot;../../OSVirtualFileSystemInfo.h&quot;
+-#include &quot;../../OSThreadExec.h&quot;
+-#include &quot;../../OSFile.h&quot;
+-#include &quot;../../OSUtils.h&quot;
+-
+-#ifdef WIN32
+-#define SEPARATOR &quot;\\&quot;
+-#else
+-#include &lt;dlfcn.h&gt;
+-#define SEPARATOR &quot;/&quot;
+-#endif
+-
+-#include &lt;fx.h&gt;
+-#include &lt;errno.h&gt;
+-#include &lt;fstream&gt;
+-#include &lt;sstream&gt;
+-#include &lt;sys/mount.h&gt;
+-#include &lt;sys/types.h&gt;
+-#include &lt;unistd.h&gt;
+-#include &lt;pwd.h&gt;
+-#include &lt;grp.h&gt;
+-
+-#include &lt;string&gt;
+-#include &lt;vector&gt;
+-
+-// XXX - What this global is for?
+-std::vector&lt;std::string&gt; name;
+-
+-OSVirtualFileSystemInfo filelist_local::setup (void)
+-{
+-	OSVirtualFileSystemInfo v;
+-	
+-	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;name&quot;));
+-	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;size&quot;,&quot;size&quot;));
+-	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;owner&quot;));
+-	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;group&quot;));
+-	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;accessed&quot;,&quot;date&quot;));
+-	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;modified&quot;,&quot;date&quot;));
+-	v.information=&quot;Local file list - default plugin&quot;;
+-	v.version=&quot;1&quot;;
+-	
+-    return v;	
+-}
+-
+-int filelist_local::init (std::vector&lt;std::string&gt; *vector_name, OSPathType pt, OSConfigure * conf)
+-{
+-
+-    fieldsnum = vector_name-&gt;size ();
+-    fields = (*vector_name);
+-
+-    return 0;
+-}
+-
+-
+-OSFile filelist_local::osreaddir ()
+-{
+-
+-    OSFile os_file;
+-    if (dp == NULL)
+-    {
+-	os_file.name = &quot;&quot;;
+-	return os_file;
+-    }
+-    if ((dirrec = readdir (dp)) == NULL)
+-    {
+-	closedir (dp);
+-	os_file.name = &quot;&quot;;
+-	return os_file;
+-    }
+-
+-    os_file.name = dirrec-&gt;d_name;
+-    os_file.type = 0;
+-
+-    os_file.size = FXFile::size (os_file.name.c_str ());
+-
+-    if (stat (dirrec-&gt;d_name, &amp;status) != -1)
+-    {
+-
+-	struct stat status2;
+-	if (lstat (dirrec-&gt;d_name, &amp;status2) != -1)
+-	{
+-	    if (S_ISLNK (status2.st_mode))
+-	    {
+-		os_file.type = os_file.type | SYMLINK;
+-	    }
+-
+-	}
+-
+-
+-	if (S_ISDIR (status.st_mode))
+-	{
+-	    os_file.type = os_file.type | FOLDER;
+-	}
+-	else
+-	{
+-	    /*
+-	       char line[20];
+-	       FILE *fr;    
+-	       fr = fopen (dirrec-&gt;d_name, &quot;rt&quot;); 
+-	       fgets(line, sizeof(line), fr);   
+-	       fclose(fr);  
+-	       std::string con=line;
+-
+-	       os_file.content=con.substr(0,con.size()-1);
+-	     */
+-	}
+-
+-
+-
+-
+-	if (S_ISCHR (status.st_mode))
+-	    os_file.type = os_file.type | CHARDEV;
+-
+-	if (S_ISBLK (status.st_mode))
+-	    os_file.type = os_file.type | BLOCKDEV;
+-
+-	if (access (dirrec-&gt;d_name, X_OK) == 0)
+-	    os_file.type = os_file.type | EXECUTABLE;
+-    }
+-
+-
+-
+-
+-
+-    for (int i = 0; i &lt; fieldsnum - 1; i++)
+-    {
+-
+-	if (fields[i + 1] == &quot;size&quot;)
+-	    os_file.attrib.push_back(numtostring (os_file.size));
+-	else if (fields[i + 1] == &quot;owner&quot;)
+-	   os_file.attrib.push_back(FXFile::owner (os_file.name.c_str ()).text ());
+-	else if (fields[i + 1] == &quot;group&quot;)
+-	   os_file.attrib.push_back(FXFile::group (os_file.name.c_str ()).text ());
+-	else if (fields[i + 1] == &quot;accessed&quot;)
+-	    os_file.attrib.push_back(FXFile::time (&quot;%H:%M %d/%m/%y&quot;, FXFile::accessed (os_file.name.c_str ())).text ());
+-	else if (fields[i + 1] == &quot;created&quot;)
+-	    os_file.attrib.push_back(FXFile::time (&quot;%H:%M %d/%m/%y&quot;, FXFile::created (os_file.name.c_str ())).text ()); 
+-	else if (fields[i + 1] == &quot;modified&quot;)
+- 	    os_file.attrib.push_back(FXFile::time (&quot;%H:%M %d/%m/%y&quot;, FXFile::modified (os_file.name.c_str ())).text ());       
+-	else if (fields[i + 1] == &quot;mode&quot;)
+-	{
+-
+-	    struct stat info;
+-	    std::string str = &quot;---------&quot;;
+-	    if (lstat (os_file.name.c_str (), &amp;info) == 0)
+-	    {
+-
+-		(info.st_mode &amp; S_IRUSR) ? str[0] = 'r' : str[0] = '-';
+-		(info.st_mode &amp; S_IWUSR) ? str[1] = 'w' : str[1] = '-';
+-		(info.st_mode &amp; S_IXUSR) ? str[2] = 'x' : str[2] = '-';
+-		(info.st_mode &amp; S_IRGRP) ? str[3] = 'r' : str[3] = '-';
+-		(info.st_mode &amp; S_IWGRP) ? str[4] = 'w' : str[4] = '-';
+-		(info.st_mode &amp; S_IXGRP) ? str[5] = 'x' : str[5] = '-';
+-		(info.st_mode &amp; S_IROTH) ? str[6] = 'r' : str[6] = '-';
+-		(info.st_mode &amp; S_IWOTH) ? str[7] = 'w' : str[7] = '-';
+-		(info.st_mode &amp; S_IXOTH) ? str[8] = 'x' : str[8] = '-';
+-
+-	    }
+-
+-
+-	    os_file.attrib.push_back(str);
+-
+-	}
+-
+-    }
+-
+-
+-
+-    return os_file;
+-
+-
+-}
+-
+-
+-int filelist_local::osopendir (std::string dir)
+-{
+-    this-&gt;dir = dir;
+-
+-#ifndef WIN32
+-    std::string line;
+-    std::ifstream infile (&quot;/etc/fstab&quot;);
+-
+-    while (std::getline (infile, line))
+-    {
+-
+-	std::stringstream parser (line);
+-	std::string command;
+-	std::string field;
+-	std::string partition;
+-	parser &gt;&gt; partition;
+-
+-	std::string type;
+-
+-	if (partition[0] != '#')
+-	{
+-
+-	    parser &gt;&gt; command;
+-
+-	    if (command == dir)
+-	    {
+-
+-		parser &gt;&gt; type;
+-		parser &gt;&gt; field;
+-		std::string::size_type pos = field.find (&quot;noauto&quot;, 0);
+-		if (pos != std::string::npos)
+-		{
+-
+-		    if (mount (partition.c_str (), command.c_str (), type.c_str (), MS_RDONLY, &quot;&quot;) == 0)
+-			FXTRACE ((5, &quot;MOUNT\n&quot;));
+-
+-		}
+-	    }
+-
+-	}
+-    }
+-
+-#endif
+-
+-    dp = opendir (dir.c_str ());
+-    if (dp == NULL)
+-	return -1;
+-
+-    chdir (dir.c_str ());
+-
+-
+-}
+-
+-int filelist_local::mkdir (std::string dir, int mode)
+-{
+-    FXTRACE ((5, &quot;MKDIR\n&quot;));
+-    std::string d = this-&gt;dir + SEPARATOR + dir;
+-
+-    return FXFile::createDirectory (d.c_str (), mode);
+-    return 0;
+-}
+-
+-int filelist_local::copy ( OSThreadExec * te)
+-{
+-    copymove (te, true);
+-}
+-
+-int filelist_local::move (OSThreadExec* te)
+-{
+-    copymove (te, false);
+-}
+-
+-
+-int filelist_local::remove (OSThreadExec* te)
+-{
+-
+-    bool canc = false;
+-
+-    std::vector&lt;std::string&gt;::iterator iter;
+-
+-    for (iter = te-&gt;src.begin (); iter != te-&gt;src.end(); iter++)
+-    {
+-  
+-	if (!canc)
+-	{
+-
+-	    std::string sr = (*iter);
+-	    if (FXFile::isDirectory (sr.c_str ()))
+-		sr.append (SEPARATOR);
+-	    FXTRACE ((5, &quot;REMOVE: %s&quot;, sr.c_str ()));
+-
+-	    if (OSFXFile::remove (sr.c_str (), te) == FALSE)
+-		canc = true;
+-		
+-	}
+-
+-
+-    }
+-    if(canc)
+-    {
+-    te-&gt;error=true;
+-    te-&gt;msg=&quot;operation failed&quot;;
+-    }
+-    
+-
+-
+-}
+-
+-int filelist_local::rename (std::string orgname, std::string newname)
+-{
+-
+-    FXString newfile = newname.c_str ();
+-    FXString oldfile = orgname.c_str ();
+-
+-#ifndef WIN32
+-    if (!FXFile::exists (oldfile))
+-	return false;
+-    if (FXFile::exists (newfile))
+-    {
+-	return false;
+-
+-    }
+-
+-    if (::rename (oldfile.text (), newfile.text ()) == 0)
+-	return true;
+-    if (errno != EXDEV)
+-	return false;
+-	
+-#else
+-    if (!FXFile::exists (oldfile))
+-	return false;
+-    if (FXFile::exists (newfile))
+-    {
+-	return false;
+-
+-    }
+-
+-    if (::MoveFile (oldfile.text (), newfile.text ()) != 0)
+-	return true;
+-#endif
+-}
+-
+-
+-int filelist_local::copymove (OSThreadExec* te, bool copy)
+-{
+-
+-    unsigned long size = 0;
+-
+- 
+-     std::vector &lt; std::string &gt;::iterator iter;
+-
+-    for (iter = te-&gt;src.begin (); iter != te-&gt;src.end(); iter++)
+-    {
+-	std::string sr = (*iter);
+-	if (FXFile::isDirectory (sr.c_str ()))
+-	    sr.append (SEPARATOR);
+-	totalsize (sr, size);
+-
+-    }
+-
+-    te-&gt;total_size = size;
+-
+-    bool canc = false;
+-
+-
+-
+-    for (iter = te-&gt;src.begin (); iter != te-&gt;src.end(); iter++)
+-    {
+-	if (!canc)
+-	{
+-	    std::string ds = te-&gt;dst;
+-	    ds.append (SEPARATOR);
+-	    ds.append (FXFile::name (iter-&gt;c_str ()).text ());
+-
+-
+-	    std::string sr = (*iter);
+-	    if (FXFile::isDirectory (sr.c_str ()))
+-		sr.append (SEPARATOR);
+-
+-
+-
+-	    if (copy)
+-	    {
+-		if (OSFXFile::copy (sr.c_str (), ds.c_str (), te) == FALSE)
+-		    canc = true;
+-	    }
+-	    else
+-	    {
+-		FXTRACE ((5, &quot;MOVE;]&quot;));
+-		if (OSFXFile::move (sr.c_str (), ds.c_str (), te) == FALSE)
+-		    canc = true;
+-	    }
+-
+-	}
+-
+-    }
+-    if(canc)
+-    {
+-    te-&gt;error=true;
+-    te-&gt;msg=&quot;operation failed&quot;;
+-    }
+-
+-}
+-
+-
+-
+-void filelist_local::totalsize (std::string path, unsigned long &amp;size)
+-{
+-
+-    if (FXFile::isDirectory (path.c_str ()))
+-    {
+-	struct stat status;
+-	struct dirent *dp;
+-	DIR *dirp;
+-
+-
+-	dirp = opendir (path.c_str ());
+-
+-	while ((dp = readdir (dirp)) != NULL)
+-	{
+-	    if (dp-&gt;d_name[0] != '.' || (dp-&gt;d_name[1] != '\0' &amp;&amp; (dp-&gt;d_name[1] != '.' || dp-&gt;d_name[2] != '\0')))
+-	    {
+-
+-		std::string file = path;
+-		file.append (dp-&gt;d_name);
+-#ifndef WIN32
+-		lstat (file.c_str (), &amp;status);
+-#else
+-		stat (file.c_str (), &amp;status);
+-#endif
+-		if (S_ISDIR (status.st_mode))
+-		{
+-		    size = size + (unsigned int) status.st_size;
+-		    file.append (&quot;/&quot;);
+-		    totalsize (file, size);
+-
+-		}
+-		else
+-		{
+-		    size = size + status.st_size;
+-		}
+-	    }
+-	}
+-
+-	closedir (dirp);
+-    }
+-    else
+-    {
+-	size += FXFile::size (path.c_str ());
+-
+-    }
+-
+-}
+-
+-std::string filelist_local::info (void)
+-{
+-    return &quot;&quot;;
+-}
+-
+-
+-int filelist_local::mode (std::string file)
+-{
+-    struct stat status;
+-    return !file.empty () &amp;&amp; (::stat (file.c_str (), &amp;status) == 0) ? status.st_mode : 0;
+-}
+-
+-bool filelist_local::mode (std::string file, unsigned int mod, bool recursive)
+-{
+-    FXTRACE ((5, &quot;MODE&quot;));
+-    if (!recursive)
+-    {
+-	return FXFile::mode (file.c_str (), mod);
+-    }
+-    else
+-    {
+-	FXFile::mode (file.c_str (), mod);
+-	std::string path = file + SEPARATOR;
+-
+-	if (FXFile::isDirectory (path.c_str ()))
+-	{
+-
+-	    struct stat status;
+-	    struct dirent *dp;
+-	    DIR *dirp;
+-
+-
+-	    dirp = opendir (path.c_str ());
+-
+-	    while ((dp = readdir (dirp)) != NULL)
+-	    {
+-		if (dp-&gt;d_name[0] != '.' || (dp-&gt;d_name[1] != '\0' &amp;&amp; (dp-&gt;d_name[1] != '.' || dp-&gt;d_name[2] != '\0')))
+-		{
+-
+-		    std::string file = path;
+-		    file.append (dp-&gt;d_name);
+-		    mode (file, mod, true);
+-
+-		}
+-	    }
+-
+-	    closedir (dirp);
+-	}
+-
+-
+-    }
+-}
+-
+-std::string filelist_local::owner (std::string file)
+-{
+-    return FXFile::owner (file.c_str ()).text ();
+-}
+-std::string filelist_local::group (std::string file)
+-{
+-    return FXFile::group (file.c_str ()).text ();
+-}
+-
+-bool filelist_local::owner (std::string file, std::string ownername, bool recursive)
+-{
+-    FXTRACE ((5, &quot;MODE&quot;));
+-    if (!recursive)
+-    {
+-	passwd *p = getpwnam( ownername.c_str() );
+-	return chown (file.c_str(), p-&gt;pw_uid, (gid_t)-1);
+-
+-    }
+-    else
+-    {
+-	passwd *p = getpwnam(ownername.c_str ());
+-	chown (file.c_str(), p-&gt;pw_uid, (gid_t)-1);
+-
+-	std::string path = file + SEPARATOR;
+-
+-	if (FXFile::isDirectory (path.c_str ()))
+-	{
+-	    struct stat status;
+-	    struct dirent *dp;
+-	    DIR *dirp;
+-
+-	    dirp = opendir (path.c_str ());
+-
+-	    while ((dp = readdir (dirp)) != NULL)
+-	    {
+-		if (dp-&gt;d_name[0] != '.' || (dp-&gt;d_name[1] != '\0' &amp;&amp; (dp-&gt;d_name[1] != '.' || dp-&gt;d_name[2] != '\0')))
+-		{
+-
+-		    std::string file = path;
+-		    file.append (dp-&gt;d_name);
+-		    owner (file, ownername, true);
+-		}
+-	    }
+-
+-	    closedir (dirp);
+-	}
+-    }
+-}
+-
+-bool filelist_local::group (std::string file, std::string groupname, bool recursive)
+-{
+-    FXTRACE ((5, &quot;MODE&quot;));
+-    if (!recursive)
+-    {
+-	::group * grp = getgrnam (groupname.c_str ());
+-	return chown (file.c_str(), (uid_t)-1, grp-&gt;gr_gid);
+-    }
+-    else
+-    {
+-	::group * grp = getgrnam (groupname.c_str ());
+-	chown (file.c_str(), (uid_t)-1, grp-&gt;gr_gid);
+-	std::string path = file + SEPARATOR;
+-
+-	if (FXFile::isDirectory (path.c_str ()))
+-	{
+-	    struct stat status;
+-	    struct dirent *dp;
+-	    DIR *dirp;
+-
+-	    dirp = opendir (path.c_str ());
+-
+-	    while ((dp = readdir (dirp)) != NULL)
+-	    {
+-		if (dp-&gt;d_name[0] != '.' || (dp-&gt;d_name[1] != '\0' &amp;&amp; (dp-&gt;d_name[1] != '.' || dp-&gt;d_name[2] != '\0')))
+-		{
+-
+-		    std::string file = path;
+-		    file.append (dp-&gt;d_name);
+-		    group (file, groupname, true);
+-		}
+-	    }
+-
+-	    closedir (dirp);
+-	}
+-    }
+-}
+-
+-std::string filelist_local::symlink (std::string path)
+-{
+-    return FXFile::symlink (path.c_str ()).text ();
+-}
+-bool filelist_local::symlink (std::string src, std::string dst)
+-{
+-    return FXFile::symlink (src.c_str (), dst.c_str ());
+-}
+-bool filelist_local::hardlink (std::string src, std::string dst)
+-{
+-    return FXFile::link (src.c_str (), dst.c_str ());
+-}
+-
+-
+-int filelist_local::quit (void)
+-{
+-    return 0;
+-}
+-
+-EXPORTFUNCTION OSVirtualFileSystemBase* get_filelist (void)
+-{
+-    FXTRACE ((5, &quot;PLUGIN LOAD\n&quot;));
+-    return new filelist_local ();
+-}
+
+Deleted: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_local.h
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/filelist_local.h	2006-02-11 21:32:58 UTC (rev 240)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/filelist_local.h	2006-02-11 21:53:06 UTC (rev 241)
+@@ -1,90 +0,0 @@
+-// $Id$
+-/////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
+-//
+-// OpenSpace is free software; you can redistribute it and/or modify
+-// it under the terms of the GNU General Public License as published by
+-// the Free Software Foundation; either version 2 of the License, or
+-// (at your option) any later version.
+-//
+-// OpenSpace is distributed in the hope that it will be useful,
+-// but WITHOUT ANY WARRANTY; without even the implied warranty of
+-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+-// GNU General Public License for more details.
+-//
+-// You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
+-// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+-/////////////////////////////////////////////////////////////////////////////
+-//
+-// C++ Interface: $MODULE$
+-//
+-// Author: Mateusz Dworak &lt;<A HREF="http://openspace.linux.pl">http://openspace.linux.pl</A>&gt;, (C) 2005
+-//
+-// Description: 
+-//
+-/////////////////////////////////////////////////////////////////////////////
+-#ifndef FILELIST_LOCAL
+-#define FILELIST_LOCAL
+-
+-#include&quot;../../OSVirtualFileSystemBase.h&quot;
+-
+-#include &lt;sys/types.h&gt;
+-#include &lt;sys/stat.h&gt;
+-#include &lt;dirent.h&gt;
+-#include &lt;string&gt;
+-#include &lt;vector&gt;
+-
+-// Forward declarations
+-class OSConfigure;
+-class OSFile;
+-class OSPathType;
+-class OSThreadExec;
+-
+-/**
+- * Local file list plugin class.
+- * 
+- * @todo This plugin will be reorganized/renamed.
+- */
+-class filelist_local: public OSVirtualFileSystemBase
+-{
+-private:
+-
+-    DIR *dp;
+-    dirent *dirrec;
+-    struct stat status;
+-    std::string dir;
+-    std::string display_size;
+-    int fieldsnum;
+-    std::vector&lt;std::string&gt; fields;
+-
+-    int copymove( OSThreadExec * te, bool copy = true );
+-
+-public:
+-
+-    int osopendir ( std::string dir );
+-    OSFile osreaddir ( void );
+-    int mkdir ( std::string dir, int mode );
+-    int copy ( OSThreadExec * te );
+-    int move ( OSThreadExec * te );
+-    int remove ( OSThreadExec * te );
+-    int rename ( std::string orgname, std::string newname );
+-    int init ( std::vector&lt;std::string&gt; *vector_name, OSPathType pt, OSConfigure* conf );
+-    int mode ( std::string file );
+-    std::string owner ( std::string file );
+-    std::string group ( std::string file );
+-    bool mode ( std::string file, unsigned int, bool recursive = false );
+-    bool owner ( std::string file, std::string ownername, bool recursive = false );
+-    bool group ( std::string file, std::string groupname, bool recursive = false );
+-    std::string info ( void );
+-    int quit ( void );
+-    std::string symlink ( std::string path );
+-    bool symlink ( std::string src, std::string dst );
+-    bool hardlink ( std::string src, std::string dst );
+-    OSVirtualFileSystemInfo setup ( void );
+-    void totalsize ( std::string path, unsigned long &amp;size );
+-
+-};
+-
+-#endif
+-
+
+Deleted: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_search.cpp
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/filelist_search.cpp	2006-02-11 21:32:58 UTC (rev 240)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/filelist_search.cpp	2006-02-11 21:53:06 UTC (rev 241)
+@@ -1,189 +0,0 @@
+-#ifdef WIN32
+-#define EXPORTFUNCTION extern &quot;C&quot; __declspec(dllexport)
+-#else
+-#define EXPORTFUNCTION extern &quot;C&quot;
+-#endif
+-
+-#include &quot;filelist_search.h&quot;
+-
+-#include &quot;../../OSVirtualFileSystemBase.h&quot;
+-#include &quot;../../OSVirtualFileSystemInfo.h&quot;
+-#include &quot;../../OSFile.h&quot;
+-#include &quot;../../OSPathType.h&quot;
+-#include &quot;../../OSConfigure.h&quot;
+-#include &quot;../../OSThreadExec.h&quot;
+-
+-#include &lt;string&gt;
+-#include &lt;vector&gt;
+-
+-OSVirtualFileSystemInfo filelist_search::setup (void)
+-{
+-	OSVirtualFileSystemInfo v;
+-	
+-	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;name&quot;));
+-	v.information=&quot;search vfs - default plugin&quot;;
+-	v.version=&quot;1&quot;;
+-	v.type=&quot;search&quot;;
+-return v;	
+-	
+-}
+-
+-
+-int filelist_search::osopendir (std::string dir)
+-{
+-
+-  iter=files.begin(); 
+-
+-}
+-OSFile filelist_search::osreaddir (void)
+-{
+-    OSFile os_file;
+-
+-if(iter!=files.end())
+-{
+-
+-	    os_file.type = 0;
+-	    os_file.name = *iter;
+-	    os_file.size = 300;
+-	
+-	    iter++;
+-	 
+-	    return os_file;
+-}		    
+-
+-
+-    
+-    os_file.name = &quot;&quot;;
+-    return os_file;
+-    
+-
+-
+-}
+-int filelist_search::mkdir (std::string dir, int mode)
+-{
+-}
+-int filelist_search::copy (OSThreadExec * te)
+-{
+-
+-	std::string::size_type pos = te-&gt;options.find (&quot;download&quot;);
+-	if (pos == std::string::npos) //upload only supported
+-	{
+-	return fil_local-&gt;copy(te);
+-	}
+-	else
+-	{
+-	 te-&gt;error=true;
+-         te-&gt;msg=&quot;operation not allowed&quot;;
+-	}
+-
+-}
+-int filelist_search::move (OSThreadExec * te)
+-{
+-
+-	std::string::size_type pos = te-&gt;options.find (&quot;download&quot;);
+-	if (pos == std::string::npos) //upload only supported
+-	{
+-	return fil_local-&gt;move(te);
+-	}
+-	else
+-	{
+-	 te-&gt;error=true;
+-         te-&gt;msg=&quot;operation not allowed&quot;;
+-	}
+-
+-}
+-int filelist_search::remove (OSThreadExec * te)
+-{
+-return fil_local-&gt;remove(te);
+-}
+-int filelist_search::rename (std::string orgname, std::string newname)
+-{
+-
+-	int ret=fil_local-&gt;rename(orgname,newname);
+-	if(ret)
+-	{
+-		std::vector &lt; std::string &gt;::iterator iter = find(files.begin(), files.end(), orgname.substr(1,orgname.length()-1)); // Search the list.
+-		if (iter != files.end())
+-		{
+-  		(*iter)=newname.substr(1,newname.length()-1);
+-		}
+-	}
+-
+-	return ret;
+-}
+-int filelist_search::init(std::vector&lt;std::string&gt;* vector_name, OSPathType pt, OSConfigure* conf)
+-{
+-    fil_local=new filelist_local();
+-
+-    pipe = popen (pt.server.c_str(), &quot;r&quot;);
+-
+-    if (pipe != NULL)
+-    {
+-	std::string line;
+-	while (fgets (readbuf, sizeof (readbuf), pipe) != NULL)
+-	{
+-
+-
+-	    std::string path = readbuf;
+-	    path = path.substr (1, path.length () - 2);
+-	    files.push_back(path);
+-	   
+-	}
+-
+-	pclose (pipe);
+-    }
+-    
+-iter=files.begin();
+-    
+-
+-}
+-int filelist_search::mode (std::string file)
+-{
+-return fil_local-&gt;mode(file);
+-}
+-std::string filelist_search::owner (std::string file)
+-{
+-return fil_local-&gt;owner(file);
+-}
+-std::string filelist_search::group (std::string file)
+-{
+-return fil_local-&gt;group(file);
+-}
+-bool filelist_search::mode (std::string file, unsigned int mod, bool recursive)
+-{
+-return fil_local-&gt;mode(file,mod,recursive);
+-}
+-bool filelist_search::owner (std::string file, std::string ow, bool recursive)
+-{
+-return fil_local-&gt;owner(file,ow,recursive);
+-}
+-bool filelist_search::group (std::string file, std::string gr, bool recursive)
+-{
+-return fil_local-&gt;group(file,gr,recursive);
+-}
+-std::string filelist_search::info (void)
+-{
+-return &quot;&quot;;
+-}
+-void filelist_search::totalsize (std::string path, unsigned long &amp;size)
+-{
+-}
+-std::string filelist_search::symlink (std::string path)
+-{
+-}
+-bool filelist_search::symlink (std::string src, std::string dst)
+-{
+-}
+-bool filelist_search::hardlink (std::string src, std::string dst)
+-{
+-}
+-
+-int filelist_search::quit (void)
+-{
+-}
+-
+-EXPORTFUNCTION OSVirtualFileSystemBase *get_filelist(void)
+-{
+-    FXTRACE ((5, &quot;PLUGIN SEARCH LOAD\n&quot;));
+-    return new filelist_search ();
+-}
+
+Deleted: branches/mloskot-style-refactoring/src/plugins/filelist/filelist_search.h
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/filelist_search.h	2006-02-11 21:32:58 UTC (rev 240)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/filelist_search.h	2006-02-11 21:53:06 UTC (rev 241)
+@@ -1,56 +0,0 @@
+-#ifndef FILELIST_search
+-#define FILELIST_search
+-
+-#include &quot;../../OSVirtualFileSystemBase.h&quot;
+-#include &quot;../../OSPathType.h&quot;
+-#include &quot;filelist_local.h&quot;
+-
+-#include &lt;string&gt;
+-#include &lt;vector&gt;
+-
+-// Forward declarations
+-class OSThreadClass;
+-class OSConfigure;
+-
+-/**
+- * Search plugin class
+- *
+- * @todo To rename.
+- */
+-class filelist_search : public OSVirtualFileSystemBase
+-{
+-  
+-private:
+-  
+-  FILE *pipe;
+-  char readbuf[1024];
+-  std::vector&lt;std::string&gt; files;
+-  std::vector&lt;std::string&gt;::iterator iter;
+-
+-  filelist_local *fil_local;
+-  
+-public:
+-  
+-    int osopendir (std::string dir);
+-    OSFile osreaddir (void);
+-    int mkdir (std::string dir, int mode = 0);
+-    int copy (OSThreadExec * te);
+-    int move (OSThreadExec * te);
+-    int remove (OSThreadExec * te);
+-    int rename (std::string orgname, std::string newname);
+-    int init (std::vector&lt;std::string&gt;* vector_name, OSPathType pt, OSConfigure * conf);
+-    int mode (std::string file);
+-    std::string owner (std::string file);
+-    std::string group (std::string file);
+-    bool mode (std::string file, unsigned int, bool recursive);
+-    bool owner (std::string file, std::string, bool recursive);
+-    bool group (std::string file, std::string, bool recursive);
+-    std::string info (void);
+-    void totalsize (std::string path, unsigned long &amp;size);
+-    std::string symlink (std::string path);
+-    bool symlink (std::string src, std::string dst);
+-    bool hardlink (std::string src, std::string dst);
+-    OSVirtualFileSystemInfo setup(void);
+-    int quit (void);
+-};
+-#endif
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000021.html">[Openspace-svn] r240 - in branches/mloskot-style-refactoring: . src src/plugins/cmddialog src/plugins/filelist
+</A></li>
+	<LI>Next message: <A HREF="000023.html">[Openspace-svn] r242 - in branches/mloskot-style-refactoring/src: . plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#22">[ date ]</a>
+              <a href="thread.html#22">[ thread ]</a>
+              <a href="subject.html#22">[ subject ]</a>
+              <a href="author.html#22">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

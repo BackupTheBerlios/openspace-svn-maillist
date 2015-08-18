@@ -1,0 +1,298 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r292 - in trunk: . src src/plugins/filelist
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r292%20-%20in%20trunk%3A%20.%20src%20src/plugins/filelist&In-Reply-To=%3C200604291330.k3TDUO2s007173%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000072.html">
+   <LINK REL="Next"  HREF="000074.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r292 - in trunk: . src src/plugins/filelist</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r292%20-%20in%20trunk%3A%20.%20src%20src/plugins/filelist&In-Reply-To=%3C200604291330.k3TDUO2s007173%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r292 - in trunk: . src src/plugins/filelist">compbatant at berlios.de
+       </A><BR>
+    <I>Sat Apr 29 15:30:24 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000072.html">[Openspace-svn] r291 - trunk/src/plugins/filelist
+</A></li>
+        <LI>Next message: <A HREF="000074.html">[Openspace-svn] r293 - in trunk: . src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#73">[ date ]</a>
+              <a href="thread.html#73">[ thread ]</a>
+              <a href="subject.html#73">[ subject ]</a>
+              <a href="author.html#73">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-29 15:30:00 +0200 (Sat, 29 Apr 2006)
+New Revision: 292
+
+Modified:
+   trunk/openspacerc.in
+   trunk/src/OSFileList.cpp
+   trunk/src/plugins/filelist/OSVfsLocal.cpp
+   trunk/src/plugins/filelist/OSVfsSftp.cpp
+   trunk/src/plugins/filelist/OSVfsSftp.h
+Log:
+dodanie wyswietlania praw i dat w sftp, wyswietlanie informacji na pasku stanu w zaleznosci czy vfs local czy nie
+
+
+Modified: trunk/openspacerc.in
+===================================================================
+--- trunk/openspacerc.in	2006-04-28 23:18:42 UTC (rev 291)
++++ trunk/openspacerc.in	2006-04-29 13:30:00 UTC (rev 292)
+@@ -630,6 +630,8 @@
+ 			&lt;style&gt;small icons&lt;/style&gt;
+ 			&lt;headers&gt;
+ 				&lt;header&gt;size&lt;/header&gt;
++				&lt;header&gt;mode&lt;/header&gt;
++				&lt;header&gt;modified&lt;/header&gt;
+ 			&lt;/headers&gt;
+ 			&lt;properties&gt;
+ 				&lt;name&gt;
+@@ -640,6 +642,17 @@
+ 					&lt;display&gt;MB&lt;/display&gt;
+ 					&lt;type&gt;size&lt;/type&gt;
+ 				&lt;/size&gt;
++				&lt;accessed&gt;
++					&lt;width&gt;100&lt;/width&gt;
++					&lt;type&gt;date&lt;/type&gt;
++				&lt;/accessed&gt;
++				&lt;modified&gt;
++					&lt;width&gt;100&lt;/width&gt;
++					&lt;type&gt;date&lt;/type&gt;
++				&lt;/modified&gt;
++				&lt;mode&gt;
++					&lt;width&gt;80&lt;/width&gt;
++				&lt;/mode&gt;
+ 			&lt;/properties&gt;	
+ 		&lt;/sftp&gt;
+ 		&lt;search&gt;
+
+Modified: trunk/src/OSFileList.cpp
+===================================================================
+--- trunk/src/OSFileList.cpp	2006-04-28 23:18:42 UTC (rev 291)
++++ trunk/src/OSFileList.cpp	2006-04-29 13:30:00 UTC (rev 292)
+@@ -519,7 +519,6 @@
+ 
+ string OSFileList::getfiledescription (string name)
+ {
+-
+       string r;   
+       r = magic_file(ms2, name.c_str());      
+       return r;
+@@ -2039,7 +2038,14 @@
+     string inf = &quot;selected: &quot; + ntos (count) + &quot; size: &quot; + numtostring (size) + &quot; ( &quot;+ ntos(size) + &quot; B )&quot;;
+     if (count == 1)
+     {
+-    inf = inf + &quot; type: &quot;+getfiletype(os-&gt;osf.name) + &quot;\n &quot;+getfiledescription(os-&gt;osf.name)+ &quot;  &quot; + os-&gt;osf.name;
++    	   if(this-&gt;type==&quot;local&quot; || this-&gt;type==&quot;search&quot;)
++           {
++           inf = inf + &quot; type: &quot;+getfiletype(os-&gt;osf.name) + &quot;\n &quot;+getfiledescription(os-&gt;osf.name)+ &quot;  &quot; + os-&gt;osf.name;
++	   }
++	   else
++	   {
++	   inf = inf + &quot; type: &quot;+getfiletype(os-&gt;osf.name) +&quot; &quot;+os-&gt;osf.name;
++	   }
+     }
+ 
+ 
+
+Modified: trunk/src/plugins/filelist/OSVfsLocal.cpp
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsLocal.cpp	2006-04-28 23:18:42 UTC (rev 291)
++++ trunk/src/plugins/filelist/OSVfsLocal.cpp	2006-04-29 13:30:00 UTC (rev 292)
+@@ -42,6 +42,7 @@
+ 	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;size&quot;,&quot;size&quot;));
+ 	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;owner&quot;));
+ 	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;group&quot;));
++	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;mode&quot;));
+ 	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;accessed&quot;,&quot;date&quot;));
+ 	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;modified&quot;,&quot;date&quot;));
+ 	v.information=&quot;Local file list - default plugin&quot;;
+
+Modified: trunk/src/plugins/filelist/OSVfsSftp.cpp
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-28 23:18:42 UTC (rev 291)
++++ trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-29 13:30:00 UTC (rev 292)
+@@ -46,7 +46,10 @@
+ 	OSVirtualFileSystemInfo v;
+ 	
+ 	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;name&quot;));
+-	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;size&quot;,&quot;size&quot;));	
++	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;mode&quot;));
++	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;size&quot;,&quot;size&quot;));
++	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;accessed&quot;,&quot;date&quot;));
++	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;modified&quot;,&quot;date&quot;));	
+ 	v.information=&quot;SFTP file list - default plugin&quot;;
+ 	v.version=&quot;1&quot;;
+ 	
+@@ -235,6 +238,17 @@
+     
+ 
+ 
++	if(sftp)
++	version=sftp-&gt;server_version;
++	
++	
++	char chstr[ 20 ] = { 0 };
++        sprintf ( chstr, &quot;%d&quot;, version );
++	
++	string info=&quot;version &quot; + string(chstr);
++	fxmessage(&quot;%s\n&quot;,info.c_str());
++
++
+     return 0;
+ }
+ 
+@@ -264,6 +278,28 @@
+ 
+ 	if (fields[i + 1] == &quot;size&quot;)
+ 	    os_file.attrib.push_back(numtostring (os_file.size));
++	else if (fields[i + 1] == &quot;accessed&quot;)
++	    os_file.attrib.push_back(FXFile::time (&quot;%H:%M %d/%m/%y&quot;, file-&gt;atime).text());
++	else if (fields[i + 1] == &quot;modified&quot;)
++ 	    os_file.attrib.push_back(FXFile::time (&quot;%H:%M %d/%m/%y&quot;, file-&gt;mtime).text());  
++	else if (fields[i + 1] == &quot;mode&quot;)
++	{
++
++	    std::string str = &quot;---------&quot;;	 
++
++		(file-&gt;permissions &amp; S_IRUSR) ? str[0] = 'r' : str[0] = '-';
++		(file-&gt;permissions &amp; S_IWUSR) ? str[1] = 'w' : str[1] = '-';
++		(file-&gt;permissions &amp; S_IXUSR) ? str[2] = 'x' : str[2] = '-';
++		(file-&gt;permissions &amp; S_IRGRP) ? str[3] = 'r' : str[3] = '-';
++		(file-&gt;permissions &amp; S_IWGRP) ? str[4] = 'w' : str[4] = '-';
++		(file-&gt;permissions &amp; S_IXGRP) ? str[5] = 'x' : str[5] = '-';
++		(file-&gt;permissions &amp; S_IROTH) ? str[6] = 'r' : str[6] = '-';
++		(file-&gt;permissions &amp; S_IWOTH) ? str[7] = 'w' : str[7] = '-';
++		(file-&gt;permissions &amp; S_IXOTH) ? str[8] = 'x' : str[8] = '-';
++
++	    os_file.attrib.push_back(str);
++
++	}
+ 	
+ 
+     }
+@@ -315,6 +351,7 @@
+     //if(dirsftp)
+     //sftp_dir_close(dirsftp);   
+ 
++
+     
+     /* opening a directory */
+   
+@@ -477,24 +514,21 @@
+ 
+     	if (file-&gt;name[0] != '.' || (file-&gt;name[1] != '\0' &amp;&amp; (file-&gt;name[1] != '.' || file-&gt;name[2] != '\0')))
+     	{
+-
+-    
++   
+     		std::string filename = path;
+ 		filename.append (&quot;/&quot;);
+ 		filename.append (file-&gt;name);
+  
+     	        totalsize (filename, size);
+-
+-	}	
++	}
++	
+     }
+    sftp_dir_close (dirsftp);
+    }
+   }
+   else
+   {
+-  //fxmessage(&quot;%d\n&quot;,attr-&gt;size);
+   size += (unsigned int) attr-&gt;size;
+-  //fxmessage(&quot;total=%d\n&quot;,size);
+   }    
+  sftp_attributes_free(attr);
+  }
+@@ -504,13 +538,16 @@
+ 
+ std::string OSVfsSftp::info (void)
+ {
+-    return &quot;&quot;;
++string info=&quot;&quot;;
++return info;
+ }
+ 
+ 
+ int OSVfsSftp::mode (std::string file)
+ {
+     
++
++    
+ }
+ 
+ bool OSVfsSftp::mode (std::string file, unsigned int mod, bool recursive)
+@@ -520,6 +557,17 @@
+ 
+ std::string OSVfsSftp::owner (std::string file)
+ {
++
++	SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)file.c_str ());
++        if(attr) 
++	{
++	string owner=&quot;&quot;;
++	//owner+=attr-&gt;owner;
++	//fxmessage(attr-&gt;uid);
++	sftp_attributes_free(attr);	
++	return owner;
++	}
++
+ return &quot;&quot;;   
+ }
+ std::string OSVfsSftp::group (std::string file)
+
+Modified: trunk/src/plugins/filelist/OSVfsSftp.h
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsSftp.h	2006-04-28 23:18:42 UTC (rev 291)
++++ trunk/src/plugins/filelist/OSVfsSftp.h	2006-04-29 13:30:00 UTC (rev 292)
+@@ -61,6 +61,7 @@
+     SSH_SESSION *session;
+     SFTP_SESSION *sftp;
+     SFTP_DIR *dirsftp;
++    int version;
+ 
+ public:
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000072.html">[Openspace-svn] r291 - trunk/src/plugins/filelist
+</A></li>
+	<LI>Next message: <A HREF="000074.html">[Openspace-svn] r293 - in trunk: . src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#73">[ date ]</a>
+              <a href="thread.html#73">[ thread ]</a>
+              <a href="subject.html#73">[ subject ]</a>
+              <a href="author.html#73">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

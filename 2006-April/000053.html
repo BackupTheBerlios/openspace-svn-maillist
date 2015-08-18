@@ -1,0 +1,116 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r272 - trunk/src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r272%20-%20trunk/src&In-Reply-To=%3C200604041900.k34J0c6e006761%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000052.html">
+   <LINK REL="Next"  HREF="000054.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r272 - trunk/src</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r272%20-%20trunk/src&In-Reply-To=%3C200604041900.k34J0c6e006761%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r272 - trunk/src">compbatant at berlios.de
+       </A><BR>
+    <I>Tue Apr  4 21:00:38 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000052.html">[Openspace-svn] r271 - trunk/src
+</A></li>
+        <LI>Next message: <A HREF="000054.html">[Openspace-svn] r273 - trunk/src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#53">[ date ]</a>
+              <a href="thread.html#53">[ thread ]</a>
+              <a href="subject.html#53">[ subject ]</a>
+              <a href="author.html#53">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-04 21:00:35 +0200 (Tue, 04 Apr 2006)
+New Revision: 272
+
+Modified:
+   trunk/src/OSFileListItem.cpp
+   trunk/src/OSPreferences.cpp
+Log:
+kosmetyka
+
+
+Modified: trunk/src/OSFileListItem.cpp
+===================================================================
+--- trunk/src/OSFileListItem.cpp	2006-04-03 21:57:41 UTC (rev 271)
++++ trunk/src/OSFileListItem.cpp	2006-04-04 19:00:35 UTC (rev 272)
+@@ -247,19 +247,19 @@
+         {
+             dc.drawIcon( bigIcon, xi, y + 4 + font-&gt;getFontHeight() );
+         }
+-        if ( osf.type &amp; EXECUTABLE &amp;&amp; !( osf.type &amp; FOLDER ) )
++	if ( osf.type &amp; SYMLINK )
+         {
+-	    FXIcon *icon=( ( OSFileList* ) list ) -&gt;specialicons[ 2 ];
++	    FXIcon *icon=( ( OSFileList* ) list ) -&gt;specialicons[ 3 ];
+ 	    if(icon)
+             dc.drawIcon( icon, xi, y + 4 + font-&gt;getFontHeight() );
+         }
+-        else if ( osf.type &amp; SYMLINK )
++        else if ( osf.type &amp; EXECUTABLE &amp;&amp; !( osf.type &amp; FOLDER ) )
+         {
+-	    FXIcon *icon=( ( OSFileList* ) list ) -&gt;specialicons[ 3 ];
++	    FXIcon *icon=( ( OSFileList* ) list ) -&gt;specialicons[ 2 ];
+ 	    if(icon)
+             dc.drawIcon( icon, xi, y + 4 + font-&gt;getFontHeight() );
+         }
+-
++        
+         if ( osf.content != &quot;&quot; )
+         {
+             dc.setFont( font1 );
+
+Modified: trunk/src/OSPreferences.cpp
+===================================================================
+--- trunk/src/OSPreferences.cpp	2006-04-03 21:57:41 UTC (rev 271)
++++ trunk/src/OSPreferences.cpp	2006-04-04 19:00:35 UTC (rev 272)
+@@ -638,7 +638,7 @@
+ 
+ 
+ 
+-    new FXLabel ( commandsPane, &quot;shortuct mask: &quot;, NULL, LAYOUT_LEFT );
++    new FXLabel ( commandsPane, &quot;shortcut mask: &quot;, NULL, LAYOUT_LEFT );
+     shortcutMaskList = new FXListBox ( commandsPane );
+     shortcutMaskList-&gt;setNumVisible( 3 );
+     shortcutMaskList-&gt;appendItem( &quot;&quot; );
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000052.html">[Openspace-svn] r271 - trunk/src
+</A></li>
+	<LI>Next message: <A HREF="000054.html">[Openspace-svn] r273 - trunk/src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#53">[ date ]</a>
+              <a href="thread.html#53">[ thread ]</a>
+              <a href="subject.html#53">[ subject ]</a>
+              <a href="author.html#53">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

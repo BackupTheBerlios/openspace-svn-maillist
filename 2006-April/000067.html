@@ -1,0 +1,681 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r286 - in trunk: . src/plugins/filelist
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r286%20-%20in%20trunk%3A%20.%20src/plugins/filelist&In-Reply-To=%3C200604281625.k3SGPklh012508%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000066.html">
+   <LINK REL="Next"  HREF="000068.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r286 - in trunk: . src/plugins/filelist</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r286%20-%20in%20trunk%3A%20.%20src/plugins/filelist&In-Reply-To=%3C200604281625.k3SGPklh012508%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r286 - in trunk: . src/plugins/filelist">compbatant at berlios.de
+       </A><BR>
+    <I>Fri Apr 28 18:25:46 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000066.html">[Openspace-svn] r285 - trunk/src
+</A></li>
+        <LI>Next message: <A HREF="000068.html">[Openspace-svn] r287 - trunk/src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#67">[ date ]</a>
+              <a href="thread.html#67">[ thread ]</a>
+              <a href="subject.html#67">[ subject ]</a>
+              <a href="author.html#67">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-28 18:25:45 +0200 (Fri, 28 Apr 2006)
+New Revision: 286
+
+Added:
+   trunk/src/plugins/filelist/OSVfsSftp.cpp
+   trunk/src/plugins/filelist/OSVfsSftp.h
+Modified:
+   trunk/openspacerc.in
+   trunk/src/plugins/filelist/Makefile.am
+   trunk/src/plugins/filelist/Makefile.in
+Log:
+poczatek prac nad dodaniem obslugi sftp, biblioteka libssh potrzebna do skompilowania
+
+
+Modified: trunk/openspacerc.in
+===================================================================
+--- trunk/openspacerc.in	2006-04-17 12:52:50 UTC (rev 285)
++++ trunk/openspacerc.in	2006-04-28 16:25:45 UTC (rev 286)
+@@ -426,6 +426,12 @@
+ 							&lt;command&gt;unzip&lt;/command&gt;
+ 					&lt;/commands&gt;
+ 				&lt;/zip&gt;
++				&lt;x-zip&gt;
++					&lt;icon&gt;mime-application-x-compressed-tar&lt;/icon&gt;
++					&lt;commands&gt;
++							&lt;command&gt;unzip&lt;/command&gt;
++					&lt;/commands&gt;
++				&lt;/x-zip&gt;				
+ 				&lt;x-cd-image&gt;
+ 					&lt;icon&gt;mime-application-x-cd-image&lt;/icon&gt;
+ 				&lt;/x-cd-image&gt;
+@@ -619,6 +625,15 @@
+ 				&lt;/mode&gt;
+ 			&lt;/properties&gt;	
+ 		&lt;/ftp&gt;
++		&lt;sftp&gt;
++			&lt;type&gt;network&lt;/type&gt;
++			&lt;style&gt;small icons&lt;/style&gt;
++			&lt;properties&gt;
++				&lt;name&gt;
++					&lt;width&gt;400&lt;/width&gt;					
++				&lt;/name&gt;
++			&lt;/properties&gt;	
++		&lt;/sftp&gt;
+ 		&lt;search&gt;
+ 			&lt;type&gt;search&lt;/type&gt;
+ 			&lt;style&gt;small icons&lt;/style&gt;
+
+Modified: trunk/src/plugins/filelist/Makefile.am
+===================================================================
+--- trunk/src/plugins/filelist/Makefile.am	2006-04-17 12:52:50 UTC (rev 285)
++++ trunk/src/plugins/filelist/Makefile.am	2006-04-28 16:25:45 UTC (rev 286)
+@@ -1,4 +1,4 @@
+-pkglib_LTLIBRARIES= libOSVfsLocal.la libOSVfsSearch.la libOSVfsArchive.la libOSVfsFtp.la   
++pkglib_LTLIBRARIES= libOSVfsLocal.la libOSVfsSearch.la libOSVfsArchive.la libOSVfsFtp.la    libOSVfsSftp.la
+ pkglibdir=$(libdir)/openspace/plugins/filelist
+ INCLUDES = `WANT_FOX=&quot;1.4&quot; fox-config --cflags` `xml2-config  --cflags` 
+ 
+@@ -12,7 +12,10 @@
+ libOSVfsFtp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+ libOSVfsFtp_la_SOURCES =OSVfsFtp.cpp OSVfsFtp.h  pftp.cpp pftp.h  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSConfigure.h 
+ 
++libOSVfsSftp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs` -lssh
++libOSVfsSftp_la_SOURCES =OSVfsSftp.cpp OSVfsSftp.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
+ 
++
+ #libfilelistsftp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+ #libfilelistsftp_la_SOURCES =filelist_sftp.cpp filelist_sftp.h  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
+ 
+
+Modified: trunk/src/plugins/filelist/Makefile.in
+===================================================================
+--- trunk/src/plugins/filelist/Makefile.in	2006-04-17 12:52:50 UTC (rev 285)
++++ trunk/src/plugins/filelist/Makefile.in	2006-04-28 16:25:45 UTC (rev 286)
+@@ -14,7 +14,7 @@
+ 
+ @SET_MAKE@
+ 
+-SOURCES = $(libOSVfsArchive_la_SOURCES) $(libOSVfsFtp_la_SOURCES) $(libOSVfsLocal_la_SOURCES) $(libOSVfsSearch_la_SOURCES)
++SOURCES = $(libOSVfsArchive_la_SOURCES) $(libOSVfsFtp_la_SOURCES) $(libOSVfsLocal_la_SOURCES) $(libOSVfsSearch_la_SOURCES) $(libOSVfsSftp_la_SOURCES)
+ 
+ srcdir = @srcdir@
+ top_srcdir = @top_srcdir@
+@@ -62,6 +62,9 @@
+ am_libOSVfsSearch_la_OBJECTS = OSVfsSearch.lo OSFXFile.lo \
+ 	OSThreadExec.lo
+ libOSVfsSearch_la_OBJECTS = $(am_libOSVfsSearch_la_OBJECTS)
++libOSVfsSftp_la_LIBADD =
++am_libOSVfsSftp_la_OBJECTS = OSVfsSftp.lo OSFXFile.lo OSThreadExec.lo
++libOSVfsSftp_la_OBJECTS = $(am_libOSVfsSftp_la_OBJECTS)
+ DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/src
+ depcomp = $(SHELL) $(top_srcdir)/depcomp
+ am__depfiles_maybe = depfiles
+@@ -71,7 +74,8 @@
+ @AMDEP_TRUE@	./$(DEPDIR)/OSVfsArchive.Plo \
+ @AMDEP_TRUE@	./$(DEPDIR)/OSVfsFtp.Plo \
+ @AMDEP_TRUE@	./$(DEPDIR)/OSVfsLocal.Plo \
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">- at AMDEP_TRUE</A>@	./$(DEPDIR)/OSVfsSearch.Plo ./$(DEPDIR)/pftp.Plo
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">+ at AMDEP_TRUE</A>@	./$(DEPDIR)/OSVfsSearch.Plo \
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">+ at AMDEP_TRUE</A>@	./$(DEPDIR)/OSVfsSftp.Plo ./$(DEPDIR)/pftp.Plo
+ CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+ 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+ LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
+@@ -89,9 +93,11 @@
+ LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+ SOURCES = $(libOSVfsArchive_la_SOURCES) $(libOSVfsFtp_la_SOURCES) \
+-	$(libOSVfsLocal_la_SOURCES) $(libOSVfsSearch_la_SOURCES)
++	$(libOSVfsLocal_la_SOURCES) $(libOSVfsSearch_la_SOURCES) \
++	$(libOSVfsSftp_la_SOURCES)
+ DIST_SOURCES = $(libOSVfsArchive_la_SOURCES) $(libOSVfsFtp_la_SOURCES) \
+-	$(libOSVfsLocal_la_SOURCES) $(libOSVfsSearch_la_SOURCES)
++	$(libOSVfsLocal_la_SOURCES) $(libOSVfsSearch_la_SOURCES) \
++	$(libOSVfsSftp_la_SOURCES)
+ ETAGS = etags
+ CTAGS = ctags
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+@@ -192,7 +198,7 @@
+ sharedstatedir = @sharedstatedir@
+ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+-pkglib_LTLIBRARIES = libOSVfsLocal.la libOSVfsSearch.la libOSVfsArchive.la libOSVfsFtp.la   
++pkglib_LTLIBRARIES = libOSVfsLocal.la libOSVfsSearch.la libOSVfsArchive.la libOSVfsFtp.la    libOSVfsSftp.la
+ INCLUDES = `WANT_FOX=&quot;1.4&quot; fox-config --cflags` `xml2-config  --cflags` 
+ libOSVfsLocal_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs`  
+ libOSVfsLocal_la_SOURCES = OSVfsLocal.cpp OSVfsLocal.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h ../../OSUtils.cpp ../../OSUtils.h 
+@@ -202,6 +208,8 @@
+ libOSVfsArchive_la_SOURCES = OSVfsArchive.cpp OSVfsArchive.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
+ libOSVfsFtp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+ libOSVfsFtp_la_SOURCES = OSVfsFtp.cpp OSVfsFtp.h  pftp.cpp pftp.h  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSConfigure.h 
++libOSVfsSftp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs` -lssh
++libOSVfsSftp_la_SOURCES = OSVfsSftp.cpp OSVfsSftp.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
+ all: all-am
+ 
+ .SUFFIXES:
+@@ -270,6 +278,8 @@
+ 	$(CXXLINK) -rpath $(pkglibdir) $(libOSVfsLocal_la_LDFLAGS) $(libOSVfsLocal_la_OBJECTS) $(libOSVfsLocal_la_LIBADD) $(LIBS)
+ libOSVfsSearch.la: $(libOSVfsSearch_la_OBJECTS) $(libOSVfsSearch_la_DEPENDENCIES) 
+ 	$(CXXLINK) -rpath $(pkglibdir) $(libOSVfsSearch_la_LDFLAGS) $(libOSVfsSearch_la_OBJECTS) $(libOSVfsSearch_la_LIBADD) $(LIBS)
++libOSVfsSftp.la: $(libOSVfsSftp_la_OBJECTS) $(libOSVfsSftp_la_DEPENDENCIES) 
++	$(CXXLINK) -rpath $(pkglibdir) $(libOSVfsSftp_la_LDFLAGS) $(libOSVfsSftp_la_OBJECTS) $(libOSVfsSftp_la_LIBADD) $(LIBS)
+ 
+ mostlyclean-compile:
+ 	-rm -f *.$(OBJEXT)
+@@ -284,6 +294,7 @@
+ @AMDEP_TRUE@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSVfsFtp.Plo at am__quote</A>@
+ @AMDEP_TRUE@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSVfsLocal.Plo at am__quote</A>@
+ @AMDEP_TRUE@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSVfsSearch.Plo at am__quote</A>@
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">+ at AMDEP_TRUE</A>@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSVfsSftp.Plo at am__quote</A>@
+ @AMDEP_TRUE@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">pftp.Plo at am__quote</A>@
+ 
+ .cpp.o:
+
+Added: trunk/src/plugins/filelist/OSVfsSftp.cpp
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-17 12:52:50 UTC (rev 285)
++++ trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-28 16:25:45 UTC (rev 286)
+@@ -0,0 +1,361 @@
++
++#ifdef WIN32
++#define EXPORTFUNCTION extern &quot;C&quot; __declspec(dllexport)
++#else
++#define EXPORTFUNCTION extern &quot;C&quot;
++#endif
++
++#include &quot;OSVfsSftp.h&quot;
++#include &quot;OSFXFile.h&quot;
++#include &quot;../../OSVirtualFileSystemHeader.h&quot;
++#include &quot;../../OSVirtualFileSystemInfo.h&quot;
++#include &quot;../../OSThreadExec.h&quot;
++#include &quot;../../OSFile.h&quot;
++#include &quot;../../OSUtils.h&quot;
++
++#ifdef WIN32
++#define SEPARATOR &quot;\\&quot;
++#else
++#include &lt;dlfcn.h&gt;
++#define SEPARATOR &quot;/&quot;
++#endif
++
++#include &lt;fx.h&gt;
++#include &lt;errno.h&gt;
++#include &lt;fstream&gt;
++#include &lt;sstream&gt;
++#include &lt;sys/mount.h&gt;
++#include &lt;sys/types.h&gt;
++#include &lt;unistd.h&gt;
++#include &lt;pwd.h&gt;
++#include &lt;grp.h&gt;
++
++#include &lt;string&gt;
++#include &lt;vector&gt;
++#include &lt;iostream&gt;
++
++using namespace std;
++
++
++OSVirtualFileSystemInfo OSVfsSftp::setup (void)
++{
++	OSVirtualFileSystemInfo v;
++	
++	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;name&quot;));
++	v.information=&quot;SFTP file list - default plugin&quot;;
++	v.version=&quot;1&quot;;
++	
++    return v;	
++}
++
++int OSVfsSftp::init (long id, std::vector&lt;std::string&gt; *vector_name, OSPathType pt, OSConfigure * conf)
++{
++    this-&gt;id=id;
++    fields = (*vector_name);
++
++
++
++    dirsftp=NULL;
++
++    
++    SSH_OPTIONS *options;
++    int auth=0;
++    char *password;
++    char *banner;
++    int state;
++    char buf[10];
++    char hash[MD5_DIGEST_LEN];
++
++    options=options_new();
++    if(!options)
++    {
++        fprintf(stderr,&quot;Error : %s\n&quot;,ssh_get_error(NULL));
++        return -1;
++    } 
++      
++    options_set_username(options,(char*)pt.user.c_str());
++    options_set_host(options,(char*)pt.server.c_str());
++    session=ssh_connect(options);
++    
++    if(!session)
++    {
++        fprintf(stderr,&quot;Connection failed : %s\n&quot;,ssh_get_error(NULL));
++        return -1;
++    }
++
++    state=ssh_is_server_known(session);
++    switch(state){
++        case SSH_SERVER_KNOWN_OK:
++            break; /* ok */
++        case SSH_SERVER_KNOWN_CHANGED:
++            fprintf(stderr,&quot;Host key for server changed : server's one is now :\n&quot;);
++            ssh_get_pubkey_hash(session,hash);
++            ssh_print_hexa(&quot;Public key hash&quot;,(unsigned char*)hash,MD5_DIGEST_LEN);
++            fprintf(stderr,&quot;For security reason, connection will be stopped\n&quot;);
++            ssh_disconnect(session);
++            return -1;
++        case SSH_SERVER_FOUND_OTHER:
++            fprintf(stderr,&quot;The host key for this server was not found but an other type of key exists.\n&quot;);
++            fprintf(stderr,&quot;An attacker might change the default server key to confuse your client&quot;
++                &quot;into thinking the key does not exist\n&quot;
++                &quot;We advise you to rerun the client with -d or -r for more safety.\n&quot;);
++                ssh_disconnect(session);
++              return -1;
++        case SSH_SERVER_NOT_KNOWN:
++            fprintf(stderr,&quot;The server is unknown. Do you trust the host key ?\n&quot;);
++            ssh_get_pubkey_hash(session,hash);
++            ssh_print_hexa(&quot;Public key hash&quot;,(unsigned char*)hash,MD5_DIGEST_LEN);
++            fgets(buf,sizeof(buf),stdin);
++            if(strncasecmp(buf,&quot;yes&quot;,3)!=0){
++                ssh_disconnect(session);
++                return -1;
++            }
++            fprintf(stderr,&quot;This new key will be written on disk for further usage. do you agree ?\n&quot;);
++            fgets(buf,sizeof(buf),stdin);
++            if(strncasecmp(buf,&quot;yes&quot;,3)==0){
++                if(ssh_write_knownhost(session))
++                    fprintf(stderr,&quot;error %s\n&quot;,ssh_get_error(session));
++            }
++            
++            break;
++        case SSH_SERVER_ERROR:
++            fprintf(stderr,&quot;%s&quot;,ssh_get_error(session));
++            ssh_disconnect(session);
++            return -1;
++    }
++
++    /* no ? you should :) */
++    auth=ssh_userauth_autopubkey(session);
++    if(auth==SSH_AUTH_ERROR){
++        fprintf(stderr,&quot;Authenticating with pubkey: %s\n&quot;,ssh_get_error(session));
++        return -1;
++    }
++    banner=ssh_get_issue_banner(session);
++    if(banner){
++        printf(&quot;%s\n&quot;,banner);
++        free(banner);
++    }
++    if(auth!=SSH_AUTH_SUCCESS){
++        //M auth=auth_kbdint(session);
++        if(auth==SSH_AUTH_ERROR){
++            fprintf(stderr,&quot;authenticating with keyb-interactive: %s\n&quot;,
++                    ssh_get_error(session));
++            return -1;
++        }
++    }
++    if(auth!=SSH_AUTH_SUCCESS){
++        password=getpass(&quot;Password : &quot;);
++        if(ssh_userauth_password(session,NULL,password) != SSH_AUTH_SUCCESS){
++            fprintf(stderr,&quot;Authentication failed: %s\n&quot;,ssh_get_error(session));
++            ssh_disconnect(session);
++            return -1;
++        }
++        memset(password,0,strlen(password));
++    }
++    ssh_say(1,&quot;Authentication success\n&quot;);
++
++
++     //do_sftp(session);    
++    //if(!sftp)
++        //do_cleanup();
++    
++
++    sftp=sftp_new(session);
++    
++    if(!sftp)
++    {
++        ssh_say(0,&quot;sftp error initialising channel : %s\n&quot;,ssh_get_error(session));
++        return -1;
++    }
++    if(sftp_init(sftp))
++    {
++        ssh_say(0,&quot;error initialising sftp : %s\n&quot;,ssh_get_error(session));
++        return -1;
++    }
++    /* the connection is made */
++    
++
++
++    return 0;
++}
++
++
++OSFile OSVfsSftp::osreaddir ()
++{
++
++    OSFile os_file;
++
++    SFTP_ATTRIBUTES *file=sftp_readdir(sftp,dirsftp);
++    
++    if(file)
++    {
++    os_file.name=file-&gt;name;
++    	if((file-&gt;permissions &amp; S_IFMT) == S_IFDIR)
++	os_file.type = FOLDER;
++	else
++        os_file.type = 0;
++    
++    //fxmessage(&quot;name=%s type=%x\n&quot;,file-&gt;name,file-&gt;permissions);
++    
++    sftp_attributes_free(file);
++    return os_file;
++    }
++
++
++    os_file.name = &quot;&quot;;
++    return os_file;
++
++
++}
++
++
++std::string OSVfsSftp::getinitialdir( void )
++{
++       char* path=&quot;./&quot;;    
++       return string(sftp_canonicalize_path(sftp, path));
++}
++
++
++
++int OSVfsSftp::osopendir (std::string dir)
++{
++  
++    if(dirsftp)
++    sftp_dir_close(dirsftp);   
++
++    
++    /* opening a directory */
++  
++    dirsftp=sftp_opendir(sftp,(char*)dir.c_str());
++    
++    if(!dirsftp) 
++    {
++        ssh_say(0,&quot;Directory not opened(%s)\n&quot;,ssh_get_error(session));
++        return -1;
++    }
++
++
++    /*
++    
++     reading the whole directory, file by file 
++    while((file=sftp_readdir(sftp,dir))){
++        ssh_say(0,&quot;%30s(%.8lo) : %.5d.%.5d : %.10lld bytes\n&quot;,file-&gt;name,file-&gt;permissions,file-&gt;uid,file-&gt;gid,file-&gt;size);
++        sftp_attributes_free(file);
++    }
++     when file=NULL, an error has occured OR the directory listing is end of file 
++    if(!sftp_dir_eof(dir)){
++        ssh_say(0,&quot;error : %s\n&quot;,ssh_get_error(session));
++        return -1;
++    }
++    if(sftp_dir_close(dir)){
++        ssh_say(0,&quot;Error : %s\n&quot;,ssh_get_error(session));
++        return -1;
++    }
++
++*/
++
++}
++
++int OSVfsSftp::mkdir (std::string dir, int mode)
++{
++  
++}
++
++int OSVfsSftp::copy ( OSThreadExec * te)
++{
++
++}
++
++int OSVfsSftp::move (OSThreadExec* te)
++{
++
++}
++
++
++int OSVfsSftp::remove (OSThreadExec* te)
++{
++
++
++
++}
++
++int OSVfsSftp::rename (std::string orgname, std::string newname)
++{
++
++}
++
++
++int OSVfsSftp::copymove (OSThreadExec* te, bool copy)
++{
++
++  
++}
++
++
++
++void OSVfsSftp::totalsize (std::string path, unsigned long &amp;size)
++{
++
++   
++}
++
++std::string OSVfsSftp::info (void)
++{
++    return &quot;&quot;;
++}
++
++
++int OSVfsSftp::mode (std::string file)
++{
++    
++}
++
++bool OSVfsSftp::mode (std::string file, unsigned int mod, bool recursive)
++{
++   
++}
++
++std::string OSVfsSftp::owner (std::string file)
++{
++    
++}
++std::string OSVfsSftp::group (std::string file)
++{
++  
++}
++
++bool OSVfsSftp::owner (std::string file, std::string ownername, bool recursive)
++{
++   
++}
++
++bool OSVfsSftp::group (std::string file, std::string groupname, bool recursive)
++{
++   
++}
++
++std::string OSVfsSftp::symlink (std::string path)
++{
++  
++}
++bool OSVfsSftp::symlink (std::string src, std::string dst)
++{
++
++}
++bool OSVfsSftp::hardlink (std::string src, std::string dst)
++{
++ 
++}
++
++
++int OSVfsSftp::quit (void)
++{
++    ssh_disconnect(session);
++    return 0;
++}
++
++EXPORTFUNCTION OSVirtualFileSystemBase* get_filelist (void)
++{
++    FXTRACE ((5, &quot;PLUGIN LOAD\n&quot;));
++    return new OSVfsSftp ();
++}
+
+Added: trunk/src/plugins/filelist/OSVfsSftp.h
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsSftp.h	2006-04-17 12:52:50 UTC (rev 285)
++++ trunk/src/plugins/filelist/OSVfsSftp.h	2006-04-28 16:25:45 UTC (rev 286)
+@@ -0,0 +1,93 @@
++// $Id: OSVfsSftp.h 255 2006-02-18 17:08:23Z compbatant $
++/////////////////////////////////////////////////////////////////////////////
++// This file is part of OpenSpace project.
++//
++// OpenSpace is free software; you can redistribute it and/or modify
++// it under the terms of the GNU General Public License as published by
++// the Free Software Foundation; either version 2 of the License, or
++// (at your option) any later version.
++//
++// OpenSpace is distributed in the hope that it will be useful,
++// but WITHOUT ANY WARRANTY; without even the implied warranty of
++// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++// GNU General Public License for more details.
++//
++// You should have received a copy of the GNU General Public License
++// along with OpenSpace; if not, write to the Free Software
++// Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++/////////////////////////////////////////////////////////////////////////////
++//
++// C++ Interface: $MODULE$
++//
++// Author: Mateusz Dworak &lt;<A HREF="http://openspace.linux.pl">http://openspace.linux.pl</A>&gt;, (C) 2005
++//
++// Description: 
++//
++/////////////////////////////////////////////////////////////////////////////
++#ifndef FILELIST_LOCAL
++#define FILELIST_LOCAL
++
++#include&quot;../../OSVirtualFileSystemBase.h&quot;
++
++#include &lt;sys/types.h&gt;
++#include &lt;sys/stat.h&gt;
++#include &lt;dirent.h&gt;
++#include &lt;string&gt;
++#include &lt;vector&gt;
++
++
++#include &lt;libssh/libssh.h&gt;
++#include &lt;libssh/sftp.h&gt;
++
++// Forward declarations
++class OSConfigure;
++class OSFile;
++class OSPathType;
++class OSThreadExec;
++
++/**
++ * Local file list plugin class.
++ * 
++ * @todo This plugin will be reorganized/renamed.
++ */
++class OSVfsSftp: public OSVirtualFileSystemBase
++{
++private:
++
++    
++    std::string dir;
++    std::vector&lt;std::string&gt; fields;
++    int copymove( OSThreadExec * te, bool copy = true );
++    SSH_SESSION *session;
++    SFTP_SESSION *sftp;
++    SFTP_DIR *dirsftp;
++
++public:
++
++    int osopendir ( std::string dir );
++    OSFile osreaddir ( void );
++    int mkdir ( std::string dir, int mode );
++    int copy ( OSThreadExec * te );
++    int move ( OSThreadExec * te );
++    int remove ( OSThreadExec * te );
++    int rename ( std::string orgname, std::string newname );
++    int init ( long id, std::vector&lt;std::string&gt; *vector_name, OSPathType pt, OSConfigure* conf );
++    int mode ( std::string file );
++    std::string owner ( std::string file );
++    std::string group ( std::string file );
++    bool mode ( std::string file, unsigned int, bool recursive = false );
++    bool owner ( std::string file, std::string ownername, bool recursive = false );
++    bool group ( std::string file, std::string groupname, bool recursive = false );
++    std::string info ( void );
++    int quit ( void );
++    std::string symlink ( std::string path );
++    bool symlink ( std::string src, std::string dst );
++    bool hardlink ( std::string src, std::string dst );
++    OSVirtualFileSystemInfo setup ( void );
++    void totalsize ( std::string path, unsigned long &amp;size );
++    std::string getinitialdir( void );
++
++};
++
++#endif
++
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000066.html">[Openspace-svn] r285 - trunk/src
+</A></li>
+	<LI>Next message: <A HREF="000068.html">[Openspace-svn] r287 - trunk/src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#67">[ date ]</a>
+              <a href="thread.html#67">[ thread ]</a>
+              <a href="subject.html#67">[ subject ]</a>
+              <a href="author.html#67">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

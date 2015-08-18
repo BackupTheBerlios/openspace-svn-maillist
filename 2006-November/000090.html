@@ -1,0 +1,185 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r309 - trunk/src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-November/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r309%20-%20trunk/src&In-Reply-To=%3C200611141715.kAEHF7Lj008019%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r309 - trunk/src</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r309%20-%20trunk/src&In-Reply-To=%3C200611141715.kAEHF7Lj008019%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r309 - trunk/src">compbatant at mail.berlios.de
+       </A><BR>
+    <I>Tue Nov 14 18:15:07 CET 2006</I>
+    <P><UL>
+        
+        
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#90">[ date ]</a>
+              <a href="thread.html#90">[ thread ]</a>
+              <a href="subject.html#90">[ subject ]</a>
+              <a href="author.html#90">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-11-14 18:15:07 +0100 (Tue, 14 Nov 2006)
+New Revision: 309
+
+Modified:
+   trunk/src/Makefile
+   trunk/src/OSConfigure.cpp
+Log:
+libxml segafault fix?
+
+
+Modified: trunk/src/Makefile
+===================================================================
+--- trunk/src/Makefile	2006-09-14 13:29:50 UTC (rev 308)
++++ trunk/src/Makefile	2006-11-14 17:15:07 UTC (rev 309)
+@@ -24,7 +24,7 @@
+ pkgincludedir = $(includedir)/nao
+ top_builddir = ..
+ am__cd = CDPATH=&quot;$${ZSH_VERSION+.}$(PATH_SEPARATOR)&quot; &amp;&amp; cd
+-INSTALL = /bin/install -c
++INSTALL = /usr/bin/install -c
+ install_sh_DATA = $(install_sh) -c -m 644
+ install_sh_PROGRAM = $(install_sh) -c
+ install_sh_SCRIPT = $(install_sh) -c
+@@ -111,14 +111,14 @@
+ CTAGS = ctags
+ DIST_SUBDIRS = $(SUBDIRS)
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+-ACLOCAL = ${SHELL} /mnt/1/root/nao/missing --run aclocal-1.8
++ACLOCAL = ${SHELL} /home/compbatant/dane/wazne_dane/programy/nao/nao_svn/missing --run aclocal-1.8
+ AMDEP_FALSE = #
+ AMDEP_TRUE = 
+-AMTAR = ${SHELL} /mnt/1/root/nao/missing --run tar
++AMTAR = ${SHELL} /home/compbatant/dane/wazne_dane/programy/nao/nao_svn/missing --run tar
+ AR = ar
+-AUTOCONF = ${SHELL} /mnt/1/root/nao/missing --run autoconf
+-AUTOHEADER = ${SHELL} /mnt/1/root/nao/missing --run autoheader
+-AUTOMAKE = ${SHELL} /mnt/1/root/nao/missing --run automake-1.8
++AUTOCONF = ${SHELL} /home/compbatant/dane/wazne_dane/programy/nao/nao_svn/missing --run autoconf
++AUTOHEADER = ${SHELL} /home/compbatant/dane/wazne_dane/programy/nao/nao_svn/missing --run autoheader
++AUTOMAKE = ${SHELL} /home/compbatant/dane/wazne_dane/programy/nao/nao_svn/missing --run automake-1.8
+ AWK = gawk
+ CC = gcc
+ CCDEPMODE = depmode=gcc3
+@@ -138,9 +138,9 @@
+ ECHO_T = 
+ EGREP = grep -E
+ EXEEXT = 
+-F77 = 
+-FFLAGS = 
+-FOX_CONFIG = yes
++F77 = gfortran
++FFLAGS = -g -O2
++FOX_CONFIG = no 
+ INSTALL_DATA = ${INSTALL} -m 644
+ INSTALL_PROGRAM = ${INSTALL}
+ INSTALL_SCRIPT = ${INSTALL}
+@@ -151,7 +151,7 @@
+ LIBTOOL = $(SHELL) $(top_builddir)/libtool
+ LN_S = ln -s
+ LTLIBOBJS = 
+-MAKEINFO = ${SHELL} /mnt/1/root/nao/missing --run makeinfo
++MAKEINFO = ${SHELL} /home/compbatant/dane/wazne_dane/programy/nao/nao_svn/missing --run makeinfo
+ OBJEXT = o
+ PACKAGE = nao
+ PACKAGE_BUGREPORT = <A HREF="http://nao.linux.pl">http://nao.linux.pl</A>
+@@ -169,7 +169,7 @@
+ ac_ct_AR = ar
+ ac_ct_CC = gcc
+ ac_ct_CXX = g++
+-ac_ct_F77 = 
++ac_ct_F77 = gfortran
+ ac_ct_RANLIB = ranlib
+ ac_ct_STRIP = strip
+ am__fastdepCC_FALSE = #
+@@ -194,18 +194,18 @@
+ host_vendor = pc
+ includedir = ${prefix}/include
+ infodir = ${prefix}/info
+-install_sh = /mnt/1/root/nao/install-sh
++install_sh = /home/compbatant/dane/wazne_dane/programy/nao/nao_svn/install-sh
+ libdir = ${exec_prefix}/lib
+ libexecdir = ${exec_prefix}/libexec
+ localstatedir = ${prefix}/var
+ mandir = ${prefix}/man
+ mkdir_p = mkdir -p -- .
+ oldincludedir = /usr/include
+-prefix = /usr
++prefix = /usr/local
+ program_transform_name = s,x,x,
+ sbindir = ${exec_prefix}/sbin
+ sharedstatedir = ${prefix}/com
+-sysconfdir = /etc
++sysconfdir = ${prefix}/etc
+ target_alias = 
+ nao_SOURCES = main.cpp OSCMDDialogBox.cpp OSCMDDialogBox.h \
+ 	OSCommandTypeInfo.cpp OSCommandTypeInfo.h OSConfigure.cpp OSConfigure.h OSFile.h \
+
+Modified: trunk/src/OSConfigure.cpp
+===================================================================
+--- trunk/src/OSConfigure.cpp	2006-09-14 13:29:50 UTC (rev 308)
++++ trunk/src/OSConfigure.cpp	2006-11-14 17:15:07 UTC (rev 309)
+@@ -373,6 +373,9 @@
+ {
+     xmlChar* keyword = NULL;
+ 
++if(pos &lt; nodeset-&gt;nodeNr)
++{
++
+     if ( nodeset-&gt;nodeNr == pos )
+     {
+         xmlXPathFreeObject ( result );
+@@ -386,8 +389,13 @@
+     pos++;
+     ret = retstring;
+     return true;
+-
+ }
++else 
++{
++xmlXPathFreeObject ( result );
++return false;
++}
++}
+ 
+ int OSConfigure::countxpath ( std::string path )
+ {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#90">[ date ]</a>
+              <a href="thread.html#90">[ thread ]</a>
+              <a href="subject.html#90">[ subject ]</a>
+              <a href="author.html#90">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

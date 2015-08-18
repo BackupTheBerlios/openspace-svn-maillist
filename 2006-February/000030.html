@@ -1,0 +1,290 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r249 - trunk/src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r249%20-%20trunk/src&In-Reply-To=%3C200602121834.k1CIYuTr026006%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000029.html">
+   <LINK REL="Next"  HREF="000031.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r249 - trunk/src</H1>
+    <B>compbatant at berlios.de</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r249%20-%20trunk/src&In-Reply-To=%3C200602121834.k1CIYuTr026006%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r249 - trunk/src">compbatant at berlios.de
+       </A><BR>
+    <I>Sun Feb 12 19:34:56 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000029.html">[Openspace-svn] r248 - trunk/src
+</A></li>
+        <LI>Next message: <A HREF="000031.html">[Openspace-svn] r250 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#30">[ date ]</a>
+              <a href="thread.html#30">[ thread ]</a>
+              <a href="subject.html#30">[ subject ]</a>
+              <a href="author.html#30">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-02-12 19:34:35 +0100 (Sun, 12 Feb 2006)
+New Revision: 249
+
+Modified:
+   trunk/src/OSMainWindow.cpp
+   trunk/src/OSMainWindow.h
+Log:
+refactoring in progress
+
+
+Modified: trunk/src/OSMainWindow.cpp
+===================================================================
+--- trunk/src/OSMainWindow.cpp	2006-02-12 17:22:22 UTC (rev 248)
++++ trunk/src/OSMainWindow.cpp	2006-02-12 18:34:35 UTC (rev 249)
+@@ -185,22 +185,19 @@
+             string dir = parseDir ( conf-&gt;readonestring ( &quot;/OpenspaceConfig/leftdir/dir&quot; ) );
+             string type = conf-&gt;readonestring ( &quot;/OpenspaceConfig/leftdir/type&quot; );
+             OSPathType pt ( dir, type );
+-            left_frame = new Frame ( leftcontrolframe, leftframe, pt, this, -1 );
+-            left_frame-&gt;f-&gt;toolbar-&gt;dock( topdock );
+-            left_frame-&gt;f-&gt;toolbar-&gt;hide();
+-            left_frame-&gt;f-&gt;toolbar2-&gt;dock( rightdock );
+-            left_frame-&gt;f-&gt;toolbar2-&gt;hide();
++            left_frame = new Frame ( controlframe, leftframe, pt, this,topdock,rightdock);
++	    	   
++         
+ 
+             dir = parseDir ( conf-&gt;readonestring ( &quot;/OpenspaceConfig/rightdir/dir&quot; ) );
+             type = conf-&gt;readonestring ( &quot;/OpenspaceConfig/rightdir/type&quot; );
+             OSPathType pt2 ( dir, type );
+-            right_frame = new Frame ( rightcontrolframe, rightframe, pt2, this, -1 );
++            right_frame = new Frame (controlframe, rightframe, pt2, this,topdock,rightdock);
+ 
+-            right_frame-&gt;f-&gt;toolbar-&gt;dock( topdock );
+-            right_frame-&gt;f-&gt;toolbar2-&gt;dock( rightdock );
+-
+-            left_frame-&gt;f-&gt;filelist_opposite = right_frame-&gt;f;
+-            right_frame-&gt;f-&gt;filelist_opposite = left_frame-&gt;f;
++          
++	    left_frame-&gt;moveToFront(leftcontrolframe,leftframe,right_frame);
++	    right_frame-&gt;moveToFront(rightcontrolframe,rightframe,left_frame);
++	    
+             infoframe = new FXVerticalFrame ( ff, LAYOUT_FILL_X );
+             networkframe = NULL;
+             searchframe = NULL;
+@@ -325,19 +322,11 @@
+         controlframe-&gt;recalc ();
+     }
+     OSPathType pt ( dir, type, str_server, str_user, str_pass, str_port );
+-    Frame *fr = new Frame ( controlframe, leftframe, pt, this, 0 );
++    Frame *fr = new Frame ( controlframe, leftframe, pt, this,topdock,rightdock);
++    fr-&gt;create ();
+ 
+-    fr-&gt;frame-&gt;create ();
+-    fr-&gt;hf-&gt;create ();
+-    fr-&gt;f-&gt;toolbar-&gt;dock( topdock );
+-    fr-&gt;f-&gt;toolbar-&gt;hide();
+-    fr-&gt;f-&gt;toolbar2-&gt;dock( rightdock );
+-    fr-&gt;f-&gt;toolbar2-&gt;hide();
+-
+-
+     this-&gt;handle ( fr-&gt;toleft, FXSEL ( SEL_LEFTBUTTONRELEASE, ID_TOLEFT ), NULL );
+ 
+-    controlframe-&gt;recalc ();
+ }
+ 
+ 
+@@ -634,40 +623,25 @@
+         type = &quot;archive&quot;;
+         OSPathType pt ( dir, type, str_server );
+         Frame *fr;
+-        if ( left_frame-&gt;f-&gt;active )
+-            fr = new Frame ( leftcontrolframe, leftframe, pt, this, -1 );
++	
++        fr = new Frame ( controlframe, leftframe, pt, this,topdock,rightdock);
++	fr-&gt;create ();
+ 
+-        else
+-            fr = new Frame ( rightcontrolframe, rightframe, pt, this, -1 );
+ 	    
+         if ( left_frame-&gt;f-&gt;active )
+         {
+  	    left_frame-&gt;moveToBack(controlframe);
+             left_frame = fr;
++	    fr-&gt;moveToFront( leftcontrolframe, leftframe,right_frame );
+         }
+-
+         else
+         {
+             right_frame-&gt;moveToBack(controlframe);
+             right_frame = fr;
++	    fr-&gt;moveToFront( rightcontrolframe, rightframe,left_frame );
+         }
+-        controlframe-&gt;recalc ();
+-        fr-&gt;frame-&gt;create ();
+-        fr-&gt;hf-&gt;create ();
+-        fr-&gt;frame-&gt;show ();
+-        fr-&gt;f-&gt;toolbar-&gt;dock( topdock );
+-        fr-&gt;f-&gt;toolbar2-&gt;dock( rightdock );
+ 
+-        left_frame-&gt;f-&gt;filelist_opposite = right_frame-&gt;f;
+-        right_frame-&gt;f-&gt;filelist_opposite = left_frame-&gt;f;
+-
+-        if ( left_frame-&gt;f-&gt;active )
+-            left_frame-&gt;f-&gt;handle ( this, FXSEL ( SEL_FOCUSIN, OSFileList::ID_ICO ), NULL );
+-        else
+-            right_frame-&gt;f-&gt;handle ( this, FXSEL ( SEL_FOCUSIN, OSFileList::ID_ICO ), NULL );
+-
+-        rightframe-&gt;recalc ();
+-        leftframe-&gt;recalc ();
++	
+     }
+ 
+     else if ( id == 666 )       //directory change, for example user clicked double on direcotry, or clicked with 3rd button to go to parent dir
+@@ -1112,7 +1086,7 @@
+ }
+ 
+ //-----FRAME---------------------------------------------------------------------------------------------------------------------------
+-Frame::Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt, int position = 0 )
++Frame::Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt,FXDockSite* dock1,FXDockSite* dock2)
+ {
+     this-&gt;pathdir = pt.dir;
+     this-&gt;type = pt.type;
+@@ -1121,6 +1095,8 @@
+     pathdir = path;
+     firstbutton=NULL;
+     
++    this-&gt;dock1=dock1;
++    this-&gt;dock2=dock2;
+     
+     FXButton *prebutton = NULL;
+     FXButton *nextbutton = NULL;
+@@ -1139,24 +1115,23 @@
+         new FXLabel( hf, lab.c_str() );
+     }
+ 
+-    if ( position != 0 )
+-    {
+-        toleft-&gt;hide ();
+-        toclose-&gt;hide ();
+-        toright-&gt;hide ();
+-    }
+    
+     generateMenu(pathdir,tgt);
+ 
+     frame = new FXVerticalFrame ( p, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_SUNKEN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+     f = new OSFileList ( frame, pt );
+-    if ( position == 0 )
+-    {
+-        frame-&gt;hide ();
+-    }
++  
++
+ }
+ 
++void Frame::create(void)
++{
++    frame-&gt;create ();
++    hf-&gt;create ();
++}
+ 
++
++
+ //generate buttons path for given path
+ void Frame::generateMenu ( string path, FXObject * tgt )
+ {
+@@ -1231,7 +1206,7 @@
+ }
+ 
+ 
+-void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer,Frame * frameOpposite)
++void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer,Frame * frameOpposite)  
+ {
+ 	hf-&gt;reparent ( controlframeContainer );
+ 	frame-&gt;reparent ( frameContainer );
+@@ -1241,7 +1216,13 @@
+ 	frame-&gt;show ();	
+ 	
+     	frameOpposite-&gt;f-&gt;filelist_opposite = f;
+-    	f-&gt;filelist_opposite = frameOpposite-&gt;f;    	
++    	f-&gt;filelist_opposite = frameOpposite-&gt;f;    
++	f-&gt;toolbar-&gt;dock(dock1);
++  	f-&gt;toolbar2-&gt;dock(dock2);
++
++        f-&gt;toolbar-&gt;show();        
++        f-&gt;toolbar2-&gt;show();
++		
+ 	f-&gt;handle ( frameContainer, FXSEL ( SEL_FOCUSIN, OSFileList::ID_ICO ), NULL );	
+ 	frameContainer-&gt;recalc();
+         
+@@ -1255,4 +1236,8 @@
+         toright-&gt;show ();
+         toclose-&gt;show ();
+         frame-&gt;hide ();
++	f-&gt;toolbar-&gt;hide();        
++        f-&gt;toolbar2-&gt;hide();
++	
++	controlframeContainer-&gt;recalc ();
+ }
+
+Modified: trunk/src/OSMainWindow.h
+===================================================================
+--- trunk/src/OSMainWindow.h	2006-02-12 17:22:22 UTC (rev 248)
++++ trunk/src/OSMainWindow.h	2006-02-12 18:34:35 UTC (rev 249)
+@@ -167,6 +167,8 @@
+ {
+   private:
+ 	
++	FXDockSite* dock1;
++	FXDockSite* dock2;
+   public:
+ 
+     string pathdir;
+@@ -180,11 +182,12 @@
+     FXVerticalFrame * frame;
+     FXHorizontalFrame *hf;
+ 
+-    Frame (FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt, int position);
++    Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt,FXDockSite* dock1,FXDockSite* dock2);
+     void generateMenu (string path, FXObject * tgt);
+     void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer,Frame * frameOpposite);
+     void Frame::moveToBack(FXComposite * controlframeContainer);
+     ~Frame ();
++    void create(void);
+ 
+ 
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000029.html">[Openspace-svn] r248 - trunk/src
+</A></li>
+	<LI>Next message: <A HREF="000031.html">[Openspace-svn] r250 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#30">[ date ]</a>
+              <a href="thread.html#30">[ thread ]</a>
+              <a href="subject.html#30">[ subject ]</a>
+              <a href="author.html#30">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

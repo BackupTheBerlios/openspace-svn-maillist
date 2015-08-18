@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r285 - trunk/src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r285%20-%20trunk/src&In-Reply-To=%3C200604171252.k3HCqs3V000749%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000065.html">
+   <LINK REL="Next"  HREF="000067.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r285 - trunk/src</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r285%20-%20trunk/src&In-Reply-To=%3C200604171252.k3HCqs3V000749%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r285 - trunk/src">compbatant at berlios.de
+       </A><BR>
+    <I>Mon Apr 17 14:52:54 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000065.html">[Openspace-svn] r284 - in trunk: . src
+</A></li>
+        <LI>Next message: <A HREF="000067.html">[Openspace-svn] r286 - in trunk: . src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#66">[ date ]</a>
+              <a href="thread.html#66">[ thread ]</a>
+              <a href="subject.html#66">[ subject ]</a>
+              <a href="author.html#66">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-17 14:52:50 +0200 (Mon, 17 Apr 2006)
+New Revision: 285
+
+Modified:
+   trunk/src/OSFileList.cpp
+   trunk/src/OSFileList.h
+Log:
+wyswietlanie szczegolowych informacji o typie pliku w statusbarze, wyswietalnie wielkosci pliku takze w bajtach
+
+
+Modified: trunk/src/OSFileList.cpp
+===================================================================
+--- trunk/src/OSFileList.cpp	2006-04-16 00:02:26 UTC (rev 284)
++++ trunk/src/OSFileList.cpp	2006-04-17 12:52:50 UTC (rev 285)
+@@ -93,6 +93,7 @@
+      bool OSFileList::strcase = false;
+      bool OSFileList::mime_magic = false;
+      magic_set* OSFileList::ms = NULL;
++     magic_set* OSFileList::ms2 = NULL;
+ 
+ //-----FILELIST----------------------------------------------------------------------------------------------------------------------------------------- 
+ 
+@@ -119,6 +120,24 @@
+     }
+ }
+ 
++
++if(ms2==NULL)
++{
++//fxmessage(&quot;LOAD&quot;);
++ms2 = magic_open(MAGIC_NONE);
++    if (ms != NULL) 
++    {
++    	if(magic_load(ms2, NULL) == -1) 
++    	{
++	magic_close(ms2);
++	ms2=NULL;
++	}
++	//else
++	//fxmessage(&quot;OK\n&quot;);
++
++    }
++}
++
+ objmanager=OSObjectManager::instance(getApp());
+  
+ FXScrollArea::vertical-&gt;setArrowColor(FXRGB(255, 255, 255));
+@@ -480,6 +499,10 @@
+       {
+        r=r.substr(0,n);
+       }
++      
++      if(r==&quot;&quot;)
++      r = OSMimeType::getMimeFromName (name);
++      
+     } 
+    //printf(&quot;Name: '%s' MimeType: '%s'\n&quot;, name.c_str(), r.c_str());
+ 
+@@ -488,6 +511,15 @@
+ }
+ 
+      
++
++string OSFileList::getfiledescription (string name)
++{
++
++      string r;   
++      r = magic_file(ms2, name.c_str());      
++      return r;
++
++}
+  
+ 
+ //return command with replaced {f} with valid path
+@@ -1998,10 +2030,10 @@
+ 
+     }
+     }
+-    string inf = &quot;selected: &quot; + ntos (count) + &quot; size: &quot; + numtostring (size);
++    string inf = &quot;selected: &quot; + ntos (count) + &quot; size: &quot; + numtostring (size) + &quot; ( &quot;+ ntos(size) + &quot; B )&quot;;
+     if (count == 1)
+     {
+-    inf = inf + &quot; &quot; + os-&gt;osf.name;
++    inf = inf + &quot; type: &quot;+getfiletype(os-&gt;osf.name) + &quot;\n &quot;+getfiledescription(os-&gt;osf.name)+ &quot;  &quot; + os-&gt;osf.name;
+     }
+ 
+ 
+
+Modified: trunk/src/OSFileList.h
+===================================================================
+--- trunk/src/OSFileList.h	2006-04-16 00:02:26 UTC (rev 284)
++++ trunk/src/OSFileList.h	2006-04-17 12:52:50 UTC (rev 285)
+@@ -57,6 +57,7 @@
+     long id;
+     
+     static  magic_set *ms;
++    static  magic_set *ms2;
+     
+     OSFileListController *controller;  
+ 
+@@ -116,6 +117,7 @@
+     string resolvecommand( string command, string name );
+     int runCommand( string name );
+     static string getfiletype ( string name );
++    static string getfiledescription ( string name );
+     long setKeys ( void );
+ 
+ public:
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000065.html">[Openspace-svn] r284 - in trunk: . src
+</A></li>
+	<LI>Next message: <A HREF="000067.html">[Openspace-svn] r286 - in trunk: . src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#66">[ date ]</a>
+              <a href="thread.html#66">[ thread ]</a>
+              <a href="subject.html#66">[ subject ]</a>
+              <a href="author.html#66">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

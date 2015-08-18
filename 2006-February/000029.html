@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r248 - trunk/src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r248%20-%20trunk/src&In-Reply-To=%3C200602121722.k1CHMP0e015703%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000028.html">
+   <LINK REL="Next"  HREF="000030.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r248 - trunk/src</H1>
+    <B>compbatant at berlios.de</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r248%20-%20trunk/src&In-Reply-To=%3C200602121722.k1CHMP0e015703%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r248 - trunk/src">compbatant at berlios.de
+       </A><BR>
+    <I>Sun Feb 12 18:22:25 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000028.html">[Openspace-svn] r247 - trunk/src
+</A></li>
+        <LI>Next message: <A HREF="000030.html">[Openspace-svn] r249 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#29">[ date ]</a>
+              <a href="thread.html#29">[ thread ]</a>
+              <a href="subject.html#29">[ subject ]</a>
+              <a href="author.html#29">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-02-12 18:22:22 +0100 (Sun, 12 Feb 2006)
+New Revision: 248
+
+Modified:
+   trunk/src/OSMainWindow.cpp
+   trunk/src/OSMainWindow.h
+Log:
+refactoring
+
+
+Modified: trunk/src/OSMainWindow.cpp
+===================================================================
+--- trunk/src/OSMainWindow.cpp	2006-02-12 16:42:45 UTC (rev 247)
++++ trunk/src/OSMainWindow.cpp	2006-02-12 17:22:22 UTC (rev 248)
+@@ -600,23 +600,17 @@
+ 	    	    
+ 		if ( id == ID_TOLEFT )
+    		{
+-        	boxel-&gt;fr-&gt;moveToFront( leftcontrolframe, leftframe );
++        	boxel-&gt;fr-&gt;moveToFront( leftcontrolframe, leftframe,right_frame );
+         	left_frame-&gt;moveToBack(controlframe);
+        	 	left_frame = boxel-&gt;fr;
+     		}	
+     		else
+     		{
+-        	boxel-&gt;fr-&gt;moveToFront( rightcontrolframe, rightframe );
++        	boxel-&gt;fr-&gt;moveToFront( rightcontrolframe, rightframe,left_frame );
+         	right_frame-&gt;moveToBack(controlframe);
+         	right_frame = boxel-&gt;fr;
+    		}
+-    
+-    	left_frame-&gt;f-&gt;filelist_opposite = right_frame-&gt;f;
+-    	right_frame-&gt;f-&gt;filelist_opposite = left_frame-&gt;f;
+-    	boxel-&gt;fr-&gt;f-&gt;handle ( this, FXSEL ( SEL_FOCUSIN, OSFileList::ID_ICO ), NULL );
+-
+-    	rightframe-&gt;recalc ();
+-    	leftframe-&gt;recalc ();	    
++   
+     }
+    
+ }
+@@ -1166,7 +1160,6 @@
+ //generate buttons path for given path
+ void Frame::generateMenu ( string path, FXObject * tgt )
+ {
+-
+     OSObjectManager * objmanager = OSObjectManager::instance( hf-&gt;getApp() );
+ 
+     if (path.length()&gt;1 &amp;&amp; path[ 0 ] == '/' &amp;&amp; path[ 1 ] == '/' )
+@@ -1221,6 +1214,7 @@
+ 
+         else
+             firstbutton = bt;
++	    
+         bt-&gt;setUserData ( new box ( this, prebutton, bt, NULL ) );
+         prebutton = bt;
+     }
+@@ -1237,14 +1231,19 @@
+ }
+ 
+ 
+-void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer)
++void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer,Frame * frameOpposite)
+ {
+ 	hf-&gt;reparent ( controlframeContainer );
+ 	frame-&gt;reparent ( frameContainer );
+ 	toleft-&gt;hide ();
+         toright-&gt;hide ();
+         toclose-&gt;hide ();
+-	frame-&gt;show ();
++	frame-&gt;show ();	
++	
++    	frameOpposite-&gt;f-&gt;filelist_opposite = f;
++    	f-&gt;filelist_opposite = frameOpposite-&gt;f;    	
++	f-&gt;handle ( frameContainer, FXSEL ( SEL_FOCUSIN, OSFileList::ID_ICO ), NULL );	
++	frameContainer-&gt;recalc();
+         
+ }
+ void Frame::moveToBack(FXComposite * controlframeContainer)
+
+Modified: trunk/src/OSMainWindow.h
+===================================================================
+--- trunk/src/OSMainWindow.h	2006-02-12 16:42:45 UTC (rev 247)
++++ trunk/src/OSMainWindow.h	2006-02-12 17:22:22 UTC (rev 248)
+@@ -182,7 +182,7 @@
+ 
+     Frame (FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt, int position);
+     void generateMenu (string path, FXObject * tgt);
+-    void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer);
++    void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer,Frame * frameOpposite);
+     void Frame::moveToBack(FXComposite * controlframeContainer);
+     ~Frame ();
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000028.html">[Openspace-svn] r247 - trunk/src
+</A></li>
+	<LI>Next message: <A HREF="000030.html">[Openspace-svn] r249 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#29">[ date ]</a>
+              <a href="thread.html#29">[ thread ]</a>
+              <a href="subject.html#29">[ subject ]</a>
+              <a href="author.html#29">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

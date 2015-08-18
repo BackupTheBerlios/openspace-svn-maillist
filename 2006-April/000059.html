@@ -1,0 +1,213 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r278 - trunk/src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r278%20-%20trunk/src&In-Reply-To=%3C200604071605.k37G5owQ017775%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000058.html">
+   <LINK REL="Next"  HREF="000060.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r278 - trunk/src</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r278%20-%20trunk/src&In-Reply-To=%3C200604071605.k37G5owQ017775%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r278 - trunk/src">compbatant at berlios.de
+       </A><BR>
+    <I>Fri Apr  7 18:05:50 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000058.html">[Openspace-svn] r277 - trunk/src
+</A></li>
+        <LI>Next message: <A HREF="000060.html">[Openspace-svn] r279 - in trunk: icons/big icons/default src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#59">[ date ]</a>
+              <a href="thread.html#59">[ thread ]</a>
+              <a href="subject.html#59">[ subject ]</a>
+              <a href="author.html#59">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-07 18:05:49 +0200 (Fri, 07 Apr 2006)
+New Revision: 278
+
+Modified:
+   trunk/src/OSPreferences.cpp
+Log:
+aaaaaaaaaaaale bug ;)
+
+
+Modified: trunk/src/OSPreferences.cpp
+===================================================================
+--- trunk/src/OSPreferences.cpp	2006-04-07 15:20:02 UTC (rev 277)
++++ trunk/src/OSPreferences.cpp	2006-04-07 16:05:49 UTC (rev 278)
+@@ -674,13 +674,13 @@
+ 
+ 
+ 
+-        OSCommandTypeInfo * ctlast;
++        OSCommandTypeInfo ctlast;
+         string res;
+         while ( conf-&gt;getnextnode ( res ) )
+         {
+ 
+             OSCommandTypeInfo ct;
+-            ctlast = &ct;
++            
+             commandsCombo-&gt;appendItem( res.c_str (), objmanager-&gt;osicons[ &quot;execute&quot; ] );
+             ct.name = res;
+             OSConfigure conflocal = *conf;
+@@ -708,20 +708,20 @@
+             ct.key_mask = conflocal.readonestring ( &quot;/OpenspaceConfig/commands/&quot; + res + &quot;/key_mask&quot; );
+ 
+             commandsMap[ ct.name ] = ct;
+-
++	    ctlast = ct;
+         }
+ 
+-        commandsRescan-&gt;setCheck( ctlast-&gt;rescan );
+-        commandsCapture-&gt;setCheck( ctlast-&gt;capture );
+-        commandsTextfield-&gt;setText ( ctlast-&gt;exec.c_str () );
++        commandsRescan-&gt;setCheck( ctlast.rescan );
++        commandsCapture-&gt;setCheck( ctlast.capture );
++        commandsTextfield-&gt;setText ( ctlast.exec.c_str () );
+         commandsCombo-&gt;setCurrentItem ( commandsCombo-&gt;getNumItems () - 1 );
+-        currentCommandName = ctlast-&gt;name;
++        currentCommandName = ctlast.name;
+ 
+         string str;
+-        if ( ctlast-&gt;type == &quot;&quot; )
++        if ( ctlast.type == &quot;&quot; )
+             str = &quot;command type: EXTERNAL&quot;;
+         else
+-            str = &quot;command type: &quot; + ctlast-&gt;type;
++            str = &quot;command type: &quot; + ctlast.type;
+ 
+         commandsType-&gt;setText( str.c_str() );
+         string shorticonname;
+@@ -737,14 +737,14 @@
+             if ( icon != NULL )
+                 iconsList-&gt;appendItem( iter-&gt;first.c_str(), icon );
+         }
+-        if ( ctlast-&gt;icon != &quot;&quot; )
+-            iconsList-&gt;setCurrentItem( iconsList-&gt;findItem( ctlast-&gt;icon.c_str() ) );
++        if ( ctlast.icon != &quot;&quot; )
++            iconsList-&gt;setCurrentItem( iconsList-&gt;findItem( ctlast.icon.c_str() ) );
+ 
+-        if ( ctlast-&gt;key != &quot;&quot; )
+-            shortcutList-&gt;setCurrentItem( shortcutList-&gt;findItem( ctlast-&gt;key.c_str() ) );
++        if ( ctlast.key != &quot;&quot; )
++            shortcutList-&gt;setCurrentItem( shortcutList-&gt;findItem( ctlast.key.c_str() ) );
+ 
+-        if ( ctlast-&gt;key_mask != &quot;&quot; )
+-            shortcutMaskList-&gt;setCurrentItem( shortcutMaskList-&gt;findItem( ctlast-&gt;key_mask.c_str() ) );
++        if ( ctlast.key_mask != &quot;&quot; )
++            shortcutMaskList-&gt;setCurrentItem( shortcutMaskList-&gt;findItem( ctlast.key_mask.c_str() ) );
+ 
+ 
+ 
+@@ -754,7 +754,7 @@
+         new FXButton ( hfr, &quot;New Command&quot;, objmanager-&gt;osicons[&quot;plus&quot;], this, ID_NEW_COMMAND, FRAME_RAISED|ICON_BEFORE_TEXT  );
+         newCommandEdit = new FXTextField ( hfr, 20 );
+ 
+-        if ( ctlast-&gt;type == &quot;INTERNAL&quot; || ctlast-&gt;type == &quot;PLUGIN&quot; )
++        if ( ctlast.type == &quot;INTERNAL&quot; || ctlast.type == &quot;PLUGIN&quot; )
+         {
+             commandsTextfield-&gt;disable();
+             commandsRescan-&gt;disable();
+@@ -773,7 +773,7 @@
+ 
+     if ( conf-&gt;openxpath ( &quot;/OpenspaceConfig/file_types&quot; ) != -1 )
+     {
+-        OSFileTypeInfo * ctlast;
++        OSFileTypeInfo ctlast;
+         new FXLabel( filetypePane, &quot;File Type:&quot; );
+         fileTypeList = new FXListBox ( filetypePane, this, ID_FILETYPE_CHANGE );
+         fileTypeList-&gt;setNumVisible( 30 );
+@@ -864,14 +864,15 @@
+             }
+             OSFileTypeInfo ct;
+             ct.load( res );
+-            ctlast = &ct;
++            
+             fileTypeList-&gt;appendItem( xml2mime( ct.name ) .c_str (), objmanager-&gt;osicons[ &quot;unknown&quot; ] );
+ 
+ 
+             filetypesMap[ ct.name ] = ct;
++	    ctlast = ct;
+         }
+ 
+-        filetypestring = ctlast-&gt;name;
++        filetypestring = ctlast.name;
+ 
+         map &lt; string, FXIcon * &gt;::iterator iter2;
+         iconsList2-&gt;appendItem( &quot;&quot;, NULL );
+@@ -880,8 +881,8 @@
+             FXIcon *icon = iter2-&gt;second;
+             iconsList2-&gt;appendItem( iter2-&gt;first.c_str(), icon );
+         }
+-        if ( ctlast-&gt;icon != &quot;&quot; )
+-            iconsList2-&gt;setCurrentItem( iconsList2-&gt;findItem( ctlast-&gt;icon.c_str() ) );
++        if ( ctlast.icon != &quot;&quot; )
++            iconsList2-&gt;setCurrentItem( iconsList2-&gt;findItem( ctlast.icon.c_str() ) );
+ 
+ 
+ 
+@@ -901,8 +902,8 @@
+         }
+ 
+         vector&lt;string&gt;::iterator iter;
+-        if ( ctlast-&gt;commands.size() &gt; 0 )
+-            for ( iter = ctlast-&gt;commands.begin();iter != ctlast-&gt;commands.end();iter++ )
++        if ( ctlast.commands.size() &gt; 0 )
++            for ( iter = ctlast.commands.begin();iter != ctlast.commands.end();iter++ )
+             {
+                 additionalCommands-&gt;appendItem( iter-&gt;c_str() );
+ 
+@@ -911,10 +912,10 @@
+ 
+ 
+         fileTypeList-&gt;setCurrentItem ( fileTypeList-&gt;getNumItems () - 1 );
+-        fileTypeDefaultBox-&gt;setCurrentItem( fileTypeDefaultBox-&gt;findItem( ctlast-&gt;command.c_str() ) );
++        fileTypeDefaultBox-&gt;setCurrentItem( fileTypeDefaultBox-&gt;findItem( ctlast.command.c_str() ) );
+ 
+-        setAllColor( colorbutton, readcolor( ctlast-&gt;color ) );
+-        setAllColor( backcolorbutton, readcolor2( ctlast-&gt;backcolor ) );
++        setAllColor( colorbutton, readcolor( ctlast.color ) );
++        setAllColor( backcolorbutton, readcolor2( ctlast.backcolor ) );
+ 
+     }
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000058.html">[Openspace-svn] r277 - trunk/src
+</A></li>
+	<LI>Next message: <A HREF="000060.html">[Openspace-svn] r279 - in trunk: icons/big icons/default src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#59">[ date ]</a>
+              <a href="thread.html#59">[ thread ]</a>
+              <a href="subject.html#59">[ subject ]</a>
+              <a href="author.html#59">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

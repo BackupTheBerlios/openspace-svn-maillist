@@ -1,0 +1,555 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r250 - trunk/src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r250%20-%20trunk/src&In-Reply-To=%3C200602122059.k1CKxdan015150%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000030.html">
+   <LINK REL="Next"  HREF="000032.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r250 - trunk/src</H1>
+    <B>compbatant at berlios.de</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r250%20-%20trunk/src&In-Reply-To=%3C200602122059.k1CKxdan015150%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r250 - trunk/src">compbatant at berlios.de
+       </A><BR>
+    <I>Sun Feb 12 21:59:39 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000030.html">[Openspace-svn] r249 - trunk/src
+</A></li>
+        <LI>Next message: <A HREF="000032.html">[Openspace-svn] r251 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#31">[ date ]</a>
+              <a href="thread.html#31">[ thread ]</a>
+              <a href="subject.html#31">[ subject ]</a>
+              <a href="author.html#31">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-02-12 21:59:31 +0100 (Sun, 12 Feb 2006)
+New Revision: 250
+
+Modified:
+   trunk/src/Makefile
+   trunk/src/Makefile.am
+   trunk/src/Makefile.in
+   trunk/src/OSMainWindow.cpp
+   trunk/src/OSMainWindow.h
+   trunk/src/OSObjectManager.h
+Log:
+refactoring
+
+
+Modified: trunk/src/Makefile
+===================================================================
+--- trunk/src/Makefile	2006-02-12 18:34:35 UTC (rev 249)
++++ trunk/src/Makefile	2006-02-12 20:59:31 UTC (rev 250)
+@@ -60,7 +60,8 @@
+ 	OSMainWindow.$(OBJEXT) OSMimeApp.$(OBJEXT) \
+ 	OSMimeType.$(OBJEXT) OSObjectManager.$(OBJEXT) \
+ 	OSPathType.$(OBJEXT) OSPreferences.$(OBJEXT) \
+-	OSShutter.$(OBJEXT) OSThreadExec.$(OBJEXT) OSUtils.$(OBJEXT)
++	OSShutter.$(OBJEXT) OSThreadExec.$(OBJEXT) OSUtils.$(OBJEXT) \
++	OSFrame.$(OBJEXT)
+ openspace_OBJECTS = $(am_openspace_OBJECTS)
+ openspace_LDADD = $(LDADD)
+ DEFAULT_INCLUDES = -I. -I$(srcdir) -I.
+@@ -74,7 +75,7 @@
+ 	./$(DEPDIR)/OSFileTypeInfo.Po \
+ 	./$(DEPDIR)/OSFileTypeSymbol.Po \
+ 	./$(DEPDIR)/OSFirstRunDialogBox.Po \
+-	./$(DEPDIR)/OSInfoPanel.Po \
++	./$(DEPDIR)/OSFrame.Po ./$(DEPDIR)/OSInfoPanel.Po \
+ 	./$(DEPDIR)/OSMainWindow.Po \
+ 	./$(DEPDIR)/OSMimeApp.Po ./$(DEPDIR)/OSMimeType.Po \
+ 	./$(DEPDIR)/OSObjectManager.Po \
+@@ -216,7 +217,8 @@
+ 	OSMimeApp.cpp OSMimeApp.h OSMimeType.cpp OSMimeType.h OSObjectManager.cpp \
+ 	OSObjectManager.h OSPathType.cpp OSPathType.h OSPreferences.cpp OSPreferences.h \
+ 	OSShutter.cpp OSShutter.h OSThreadExec.cpp OSThreadExec.h OSUtils.cpp OSUtils.h \
+-	OSVirtualFileSystemBase.h OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h
++	OSVirtualFileSystemBase.h OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h \
++	OSFrame.h OSFrame.cpp
+ 
+ SUBDIRS = plugins
+ INCLUDES = -I$(top_srcdir)/src `WANT_FOX=&quot;1.4&quot; fox-config --cflags`  `xml2-config  --cflags`  \
+@@ -324,6 +326,7 @@
+ include ./$(DEPDIR)/OSFileTypeInfo.Po
+ include ./$(DEPDIR)/OSFileTypeSymbol.Po
+ include ./$(DEPDIR)/OSFirstRunDialogBox.Po
++include ./$(DEPDIR)/OSFrame.Po
+ include ./$(DEPDIR)/OSInfoPanel.Po
+ include ./$(DEPDIR)/OSMainWindow.Po
+ include ./$(DEPDIR)/OSMimeApp.Po
+
+Modified: trunk/src/Makefile.am
+===================================================================
+--- trunk/src/Makefile.am	2006-02-12 18:34:35 UTC (rev 249)
++++ trunk/src/Makefile.am	2006-02-12 20:59:31 UTC (rev 250)
+@@ -8,7 +8,8 @@
+ 	OSMimeApp.cpp OSMimeApp.h OSMimeType.cpp OSMimeType.h OSObjectManager.cpp \
+ 	OSObjectManager.h OSPathType.cpp OSPathType.h OSPreferences.cpp OSPreferences.h \
+ 	OSShutter.cpp OSShutter.h OSThreadExec.cpp OSThreadExec.h OSUtils.cpp OSUtils.h \
+-	OSVirtualFileSystemBase.h OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h
++	OSVirtualFileSystemBase.h OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h \
++	OSFrame.h OSFrame.cpp
+ 
+ SUBDIRS = plugins
+ 
+
+Modified: trunk/src/Makefile.in
+===================================================================
+--- trunk/src/Makefile.in	2006-02-12 18:34:35 UTC (rev 249)
++++ trunk/src/Makefile.in	2006-02-12 20:59:31 UTC (rev 250)
+@@ -60,7 +60,8 @@
+ 	OSMainWindow.$(OBJEXT) OSMimeApp.$(OBJEXT) \
+ 	OSMimeType.$(OBJEXT) OSObjectManager.$(OBJEXT) \
+ 	OSPathType.$(OBJEXT) OSPreferences.$(OBJEXT) \
+-	OSShutter.$(OBJEXT) OSThreadExec.$(OBJEXT) OSUtils.$(OBJEXT)
++	OSShutter.$(OBJEXT) OSThreadExec.$(OBJEXT) OSUtils.$(OBJEXT) \
++	OSFrame.$(OBJEXT)
+ openspace_OBJECTS = $(am_openspace_OBJECTS)
+ openspace_LDADD = $(LDADD)
+ DEFAULT_INCLUDES = -I. -I$(srcdir) -I.
+@@ -74,7 +75,7 @@
+ @AMDEP_TRUE@	./$(DEPDIR)/OSFileTypeInfo.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/OSFileTypeSymbol.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/OSFirstRunDialogBox.Po \
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">- at AMDEP_TRUE</A>@	./$(DEPDIR)/OSInfoPanel.Po \
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">+ at AMDEP_TRUE</A>@	./$(DEPDIR)/OSFrame.Po ./$(DEPDIR)/OSInfoPanel.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/OSMainWindow.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/OSMimeApp.Po ./$(DEPDIR)/OSMimeType.Po \
+ @AMDEP_TRUE@	./$(DEPDIR)/OSObjectManager.Po \
+@@ -216,7 +217,8 @@
+ 	OSMimeApp.cpp OSMimeApp.h OSMimeType.cpp OSMimeType.h OSObjectManager.cpp \
+ 	OSObjectManager.h OSPathType.cpp OSPathType.h OSPreferences.cpp OSPreferences.h \
+ 	OSShutter.cpp OSShutter.h OSThreadExec.cpp OSThreadExec.h OSUtils.cpp OSUtils.h \
+-	OSVirtualFileSystemBase.h OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h
++	OSVirtualFileSystemBase.h OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h \
++	OSFrame.h OSFrame.cpp
+ 
+ SUBDIRS = plugins
+ INCLUDES = -I$(top_srcdir)/src `WANT_FOX=&quot;1.4&quot; fox-config --cflags`  `xml2-config  --cflags`  \
+@@ -324,6 +326,7 @@
+ @AMDEP_TRUE@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSFileTypeInfo.Po at am__quote</A>@
+ @AMDEP_TRUE@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSFileTypeSymbol.Po at am__quote</A>@
+ @AMDEP_TRUE@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSFirstRunDialogBox.Po at am__quote</A>@
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">+ at AMDEP_TRUE</A>@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSFrame.Po at am__quote</A>@
+ @AMDEP_TRUE@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSInfoPanel.Po at am__quote</A>@
+ @AMDEP_TRUE@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSMainWindow.Po at am__quote</A>@
+ @AMDEP_TRUE@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSMimeApp.Po at am__quote</A>@
+
+Modified: trunk/src/OSMainWindow.cpp
+===================================================================
+--- trunk/src/OSMainWindow.cpp	2006-02-12 18:34:35 UTC (rev 249)
++++ trunk/src/OSMainWindow.cpp	2006-02-12 20:59:31 UTC (rev 250)
+@@ -1,13 +1,6 @@
+ #include &quot;config.h&quot;
+-#include &lt;string&gt;
+-#include &lt;vector&gt;
+-#include &lt;map&gt;
+-using namespace std;
+ 
+-#include &quot;fx.h&quot; 
+-// #include &quot;FXPNGIcon.h&quot;
+ #include &quot;OSThreadExec.h&quot;
+-#include &quot;OSFileList.h&quot;
+ #include &quot;OSObjectManager.h&quot;
+ #include &quot;OSMainWindow.h&quot;
+ #include &quot;OSInfoPanel.h&quot;
+@@ -21,20 +14,13 @@
+ #include &lt;unistd.h&gt;
+ #include &lt;dirent.h&gt;
+ 
+-#ifdef WIN32
+-#define SEPARATOR &quot;\\&quot;
+-#else /*  */
+-#include &lt;dlfcn.h&gt;
+-#define SEPARATOR &quot;/&quot;
+-#endif /*  */
++
+ using namespace FX;
+ FXDEFMAP ( OSMainWindow ) OSMainWindowMap[] =
+     {
+ 
+         //________Message_Type_____________________ID____________Message_Handler_______
+         FXMAPFUNC ( SEL_COMMAND, OSMainWindow::ID_DIRCH, OSMainWindow::onChangeDir ),
+-        // FXMAPFUNC(SEL_ENTER, OSMainWindow::ID_DIRCH,   OSMainWindow::onListNextDir),
+-        // FXMAPFUNC(SEL_LEAVE, OSMainWindow::ID_DIRCH,   OSMainWindow::onListNextDir),
+         FXMAPFUNC ( SEL_RIGHTBUTTONRELEASE, OSMainWindow::ID_DIR, OSMainWindow::onListDirs ),
+         FXMAPFUNC ( SEL_COMMAND, OSMainWindow::ID_DIR, OSMainWindow::onOpenDir ),
+         FXMAPFUNC ( SEL_COMMAND, OSMainWindow::ID_CONFIGURE, OSMainWindow::onOpenConfigure ),
+@@ -185,14 +171,14 @@
+             string dir = parseDir ( conf-&gt;readonestring ( &quot;/OpenspaceConfig/leftdir/dir&quot; ) );
+             string type = conf-&gt;readonestring ( &quot;/OpenspaceConfig/leftdir/type&quot; );
+             OSPathType pt ( dir, type );
+-            left_frame = new Frame ( controlframe, leftframe, pt, this,topdock,rightdock);
++            left_frame = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock);
+ 	    	   
+          
+ 
+             dir = parseDir ( conf-&gt;readonestring ( &quot;/OpenspaceConfig/rightdir/dir&quot; ) );
+             type = conf-&gt;readonestring ( &quot;/OpenspaceConfig/rightdir/type&quot; );
+             OSPathType pt2 ( dir, type );
+-            right_frame = new Frame (controlframe, rightframe, pt2, this,topdock,rightdock);
++            right_frame = new OSFrame (controlframe, rightframe, pt2, this,topdock,rightdock);
+ 
+           
+ 	    left_frame-&gt;moveToFront(leftcontrolframe,leftframe,right_frame);
+@@ -322,7 +308,7 @@
+         controlframe-&gt;recalc ();
+     }
+     OSPathType pt ( dir, type, str_server, str_user, str_pass, str_port );
+-    Frame *fr = new Frame ( controlframe, leftframe, pt, this,topdock,rightdock);
++    OSFrame *fr = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock);
+     fr-&gt;create ();
+ 
+     this-&gt;handle ( fr-&gt;toleft, FXSEL ( SEL_LEFTBUTTONRELEASE, ID_TOLEFT ), NULL );
+@@ -622,9 +608,9 @@
+         dir = &quot;/&quot;;
+         type = &quot;archive&quot;;
+         OSPathType pt ( dir, type, str_server );
+-        Frame *fr;
++        OSFrame *fr;
+ 	
+-        fr = new Frame ( controlframe, leftframe, pt, this,topdock,rightdock);
++        fr = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock);
+ 	fr-&gt;create ();
+ 
+ 	    
+@@ -1085,159 +1071,3 @@
+ 
+ }
+ 
+-//-----FRAME---------------------------------------------------------------------------------------------------------------------------
+-Frame::Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt,FXDockSite* dock1,FXDockSite* dock2)
+-{
+-    this-&gt;pathdir = pt.dir;
+-    this-&gt;type = pt.type;
+-    string path = pathdir;
+-    hf = new FXHorizontalFrame ( cp, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+-    pathdir = path;
+-    firstbutton=NULL;
+-    
+-    this-&gt;dock1=dock1;
+-    this-&gt;dock2=dock2;
+-    
+-    FXButton *prebutton = NULL;
+-    FXButton *nextbutton = NULL;
+-
+-    OSObjectManager*objmanager = OSObjectManager::instance( cp-&gt;getApp() );
+-
+-    toleft = new FXButton ( hf, &quot;&quot;, objmanager-&gt;osicons[ &quot;left&quot; ], tgt, OSMainWindow::ID_TOLEFT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
+-    toleft-&gt;setUserData ( new box ( this, NULL, NULL, NULL ) );
+-    toclose = new FXButton ( hf, &quot;&quot;, objmanager-&gt;osicons[ &quot;close&quot; ], tgt, OSMainWindow::ID_TOCLOSE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
+-    toclose-&gt;setUserData ( new box ( this, NULL, NULL, NULL ) );
+-    toright = new FXButton ( hf, &quot;&quot;, objmanager-&gt;osicons[ &quot;right&quot; ], tgt, OSMainWindow::ID_TORIGHT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
+-    toright-&gt;setUserData ( new box ( this, NULL, NULL, NULL ) );
+-    if ( pt.server != &quot;&quot; )
+-    {
+-        string lab = pt.server + &quot;: &quot;;
+-        new FXLabel( hf, lab.c_str() );
+-    }
+-
+-   
+-    generateMenu(pathdir,tgt);
+-
+-    frame = new FXVerticalFrame ( p, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_SUNKEN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
+-    f = new OSFileList ( frame, pt );
+-  
+-
+-}
+-
+-void Frame::create(void)
+-{
+-    frame-&gt;create ();
+-    hf-&gt;create ();
+-}
+-
+-
+-
+-//generate buttons path for given path
+-void Frame::generateMenu ( string path, FXObject * tgt )
+-{
+-    OSObjectManager * objmanager = OSObjectManager::instance( hf-&gt;getApp() );
+-
+-    if (path.length()&gt;1 &amp;&amp; path[ 0 ] == '/' &amp;&amp; path[ 1 ] == '/' )
+-        path.erase ( 0, 1 );
+-	
+-    	if(firstbutton!=NULL)
+-	{	
+-    	box *boxel = ( box * ) firstbutton-&gt;getUserData ();
+-    	box *boxbackup = boxel;
+-    		while ( boxel )
+-    		{
+-        		box * boxel_del = boxel;
+-       			if ( boxel-&gt;nextbutton != NULL )
+-            		boxel = ( box * ) boxel-&gt;nextbutton-&gt;getUserData ();
+-        		else
+-            		boxel = NULL;
+-			
+-       		delete boxel_del-&gt;bt;
+-        	delete boxel_del;
+-       		boxel_del-&gt;bt = NULL;
+-        	boxel_del = NULL;
+-    		}
+-    	}
+-	
+-    this-&gt;pathdir = path;
+-    int z = 0;
+-    FXButton *prebutton = NULL;
+-    FXButton *nextbutton = NULL;
+-    while ( z != -1 )
+-    {
+-        string path_element = &quot;&quot;;
+-        z = path.find ( SEPARATOR, 1 );
+-        if ( z == -1 )
+-            path_element.append ( path );
+-
+-        else
+-            path_element.append ( path.substr ( 0, z ) );
+-        path.erase ( 0, z );
+-        FXButton *bt = new FXButton ( hf, path_element.c_str (), NULL, tgt,
+-                                      OSMainWindow::ID_DIR, FRAME_THICK, 0, 0, 0, 0, 0, 0,
+-                                      0, 0 );
+-        bt-&gt;setBackColor ( objmanager-&gt;maincolor );
+-	
+-	if(firstbutton!=NULL)
+-        bt-&gt;create ();
+-	
+-        if ( prebutton != NULL )
+-        {
+-            box * boxel = ( box * ) prebutton-&gt;getUserData ();
+-            boxel-&gt;nextbutton = bt;
+-        }
+-
+-        else
+-            firstbutton = bt;
+-	    
+-        bt-&gt;setUserData ( new box ( this, prebutton, bt, NULL ) );
+-        prebutton = bt;
+-    }
+-}
+-
+-
+-Frame::~Frame ()
+-{
+-	    f-&gt;fb-&gt;quit ();
+-    	    delete hf;
+-            delete f-&gt;toolbar;
+-            delete f-&gt;toolbar2;
+-            delete frame;
+-}
+-
+-
+-void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer,Frame * frameOpposite)  
+-{
+-	hf-&gt;reparent ( controlframeContainer );
+-	frame-&gt;reparent ( frameContainer );
+-	toleft-&gt;hide ();
+-        toright-&gt;hide ();
+-        toclose-&gt;hide ();
+-	frame-&gt;show ();	
+-	
+-    	frameOpposite-&gt;f-&gt;filelist_opposite = f;
+-    	f-&gt;filelist_opposite = frameOpposite-&gt;f;    
+-	f-&gt;toolbar-&gt;dock(dock1);
+-  	f-&gt;toolbar2-&gt;dock(dock2);
+-
+-        f-&gt;toolbar-&gt;show();        
+-        f-&gt;toolbar2-&gt;show();
+-		
+-	f-&gt;handle ( frameContainer, FXSEL ( SEL_FOCUSIN, OSFileList::ID_ICO ), NULL );	
+-	frameContainer-&gt;recalc();
+-        
+-}
+-void Frame::moveToBack(FXComposite * controlframeContainer)
+-{
+-	hf-&gt;reparent ( controlframeContainer );
+-        f-&gt;toolbar-&gt;hide();
+-        f-&gt;toolbar2-&gt;hide();
+-        toleft-&gt;show ();
+-        toright-&gt;show ();
+-        toclose-&gt;show ();
+-        frame-&gt;hide ();
+-	f-&gt;toolbar-&gt;hide();        
+-        f-&gt;toolbar2-&gt;hide();
+-	
+-	controlframeContainer-&gt;recalc ();
+-}
+
+Modified: trunk/src/OSMainWindow.h
+===================================================================
+--- trunk/src/OSMainWindow.h	2006-02-12 18:34:35 UTC (rev 249)
++++ trunk/src/OSMainWindow.h	2006-02-12 20:59:31 UTC (rev 250)
+@@ -1,28 +1,20 @@
+ #ifndef MAINWINDOW
+ #define MAINWINDOW
+ 
++#include &lt;string&gt;
++#include &lt;vector&gt;
+ #include &lt;map&gt;
+-using namespace std;
+ 
++#include &quot;fx.h&quot; 
++
++#include &quot;OSFrame.h&quot;
+ #include &quot;OSPathType.h&quot;
+ #include &quot;OSFileList.h&quot;
+ #include &quot;OSFileTypeSymbol.h&quot;
+ 
++using namespace std;
+ 
+-#ifdef WIN32
+-#define SEPARATOR &quot;\\&quot;
+-#else
+-#include &lt;dlfcn.h&gt;
+-#define SEPARATOR &quot;/&quot;
+-#endif
+ 
+-
+-//--------------------------------------------------------------------------------------------------------------------------------------------------    
+-
+-class box;
+-class Frame;
+-
+-
+ //the main application window
+ 
+ class OSMainWindow:public FXMainWindow
+@@ -108,11 +100,9 @@
+     FXTextField *password;
+     FXTextField *port;
+ 
+-    Frame *fr;
+-
+-    Frame *current_frame;
+-    Frame *left_frame;
+-    Frame *right_frame;
++    OSFrame *current_frame;
++    OSFrame *left_frame;
++    OSFrame *right_frame;
+     FXMenuPane *pane;
+     OSPreferences *pref;
+     float ratio;
+@@ -137,65 +127,4 @@
+ 
+ 
+ 
+-//--------------------------------------------------------------------------------------------------------------------------------------------------
+-
+-class Frame;
+-
+-class box
+-{
+-
+-  public:
+-
+-    Frame * fr;
+-    FXButton *prebutton;
+-    FXButton *bt;
+-    FXButton *nextbutton;
+-
+-
+-     box (Frame * fr, FXButton * prebutton, FXButton * bt, FXButton * nextbutton)
+-    {
+-	this-&gt;bt = bt;
+-	this-&gt;fr = fr;
+-	this-&gt;prebutton = prebutton;
+-	this-&gt;nextbutton = nextbutton;
+-    }
+-
+-};
+-
+-
+-class Frame
+-{
+-  private:
+-	
+-	FXDockSite* dock1;
+-	FXDockSite* dock2;
+-  public:
+-
+-    string pathdir;
+-    string type;
+-    OSFileList *f;
+-    FXButton *toleft;
+-    FXButton *toright;
+-    FXButton *toclose;
+-    FXButton *firstbutton;
+-    
+-    FXVerticalFrame * frame;
+-    FXHorizontalFrame *hf;
+-
+-    Frame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt,FXDockSite* dock1,FXDockSite* dock2);
+-    void generateMenu (string path, FXObject * tgt);
+-    void Frame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer,Frame * frameOpposite);
+-    void Frame::moveToBack(FXComposite * controlframeContainer);
+-    ~Frame ();
+-    void create(void);
+-
+-
+-
+-
+-};
+-
+-
+-
+-
+-
+ #endif
+
+Modified: trunk/src/OSObjectManager.h
+===================================================================
+--- trunk/src/OSObjectManager.h	2006-02-12 18:34:35 UTC (rev 249)
++++ trunk/src/OSObjectManager.h	2006-02-12 20:59:31 UTC (rev 250)
+@@ -34,6 +34,14 @@
+ #include &lt;fx.h&gt;
+ #include &lt;map&gt;
+ 
++#ifdef WIN32
++#define SEPARATOR &quot;\\&quot;
++#else
++#include &lt;dlfcn.h&gt;
++#define SEPARATOR &quot;/&quot;
++#endif
++
++
+ using namespace std;
+ 
+ extern OSConfigure *conf;
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000030.html">[Openspace-svn] r249 - trunk/src
+</A></li>
+	<LI>Next message: <A HREF="000032.html">[Openspace-svn] r251 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#31">[ date ]</a>
+              <a href="thread.html#31">[ thread ]</a>
+              <a href="subject.html#31">[ subject ]</a>
+              <a href="author.html#31">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

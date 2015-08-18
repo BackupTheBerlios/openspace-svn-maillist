@@ -1,0 +1,1152 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r242 - in branches/mloskot-style-refactoring/src: . plugins/filelist
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r242%20-%20in%20branches/mloskot-style-refactoring/src%3A%20.%20plugins/filelist&In-Reply-To=%3C200602112306.k1BN6XFS028874%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000022.html">
+   <LINK REL="Next"  HREF="000024.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r242 - in branches/mloskot-style-refactoring/src: . plugins/filelist</H1>
+    <B>compbatant at berlios.de</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r242%20-%20in%20branches/mloskot-style-refactoring/src%3A%20.%20plugins/filelist&In-Reply-To=%3C200602112306.k1BN6XFS028874%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r242 - in branches/mloskot-style-refactoring/src: . plugins/filelist">compbatant at berlios.de
+       </A><BR>
+    <I>Sun Feb 12 00:06:33 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000022.html">[Openspace-svn] r241 - in branches/mloskot-style-refactoring/src/plugins: cmddialog filelist
+</A></li>
+        <LI>Next message: <A HREF="000024.html">[Openspace-svn] r243 - branches/mloskot-style-refactoring/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#23">[ date ]</a>
+              <a href="thread.html#23">[ thread ]</a>
+              <a href="subject.html#23">[ subject ]</a>
+              <a href="author.html#23">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-02-12 00:06:27 +0100 (Sun, 12 Feb 2006)
+New Revision: 242
+
+Modified:
+   branches/mloskot-style-refactoring/src/OSFileList.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/Makefile.in
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsArchive.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsArchive.h
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsFtp.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsFtp.h
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsLocal.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsLocal.h
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsSearch.cpp
+   branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsSearch.h
+Log:
+code refactoring cd
+
+
+Modified: branches/mloskot-style-refactoring/src/OSFileList.cpp
+===================================================================
+--- branches/mloskot-style-refactoring/src/OSFileList.cpp	2006-02-11 21:53:06 UTC (rev 241)
++++ branches/mloskot-style-refactoring/src/OSFileList.cpp	2006-02-11 23:06:27 UTC (rev 242)
+@@ -254,13 +254,14 @@
+     }
+   }
+ 
++    string firstLetter=this-&gt;type.substr(0,1);
++    transform (firstLetter.begin(),firstLetter.end(), firstLetter.begin(), ::toupper);
+ 
+-    
++    string pluginName=&quot;libOSVfs&quot;+firstLetter+this-&gt;type.substr(1,this-&gt;type.length()-1);
+ 
++    string plugin_path = string(PATH_LIBDIR) + &quot;/openspace/plugins/filelist/&quot; +pluginName;
+ 
+-    string plugin_path = string(PATH_LIBDIR) + &quot;/openspace/plugins/filelist/libfilelist&quot; + this-&gt;type;
+ 
+-
+ #ifdef WIN32
+     plugin_path += &quot;.dll&quot;;
+ #else
+@@ -269,7 +270,7 @@
+ 
+     if(!FXFile::exists(plugin_path.c_str()))
+     {
+-    plugin_path = FXFile::getUserDirectory (&quot;&quot;).text ()+string(&quot;/.openspace/plugins/filelist/libfilelist&quot;)+ this-&gt;type;
++    plugin_path = FXFile::getUserDirectory (&quot;&quot;).text ()+string(&quot;/.openspace/plugins/filelist/libVfs&quot;)+ pluginName;
+     #ifdef WIN32
+     plugin_path += &quot;.dll&quot;;
+     #else
+
+Modified: branches/mloskot-style-refactoring/src/plugins/filelist/Makefile.in
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/Makefile.in	2006-02-11 21:53:06 UTC (rev 241)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/Makefile.in	2006-02-11 23:06:27 UTC (rev 242)
+@@ -14,7 +14,7 @@
+ 
+ @SET_MAKE@
+ 
+-SOURCES = $(libfilelistlocal_la_SOURCES)
++SOURCES = $(libOSVfsArchive_la_SOURCES) $(libOSVfsFtp_la_SOURCES) $(libOSVfsLocal_la_SOURCES) $(libOSVfsSearch_la_SOURCES)
+ 
+ srcdir = @srcdir@
+ top_srcdir = @top_srcdir@
+@@ -48,17 +48,30 @@
+ am__installdirs = &quot;$(DESTDIR)$(pkglibdir)&quot;
+ pkglibLTLIBRARIES_INSTALL = $(INSTALL)
+ LTLIBRARIES = $(pkglib_LTLIBRARIES)
+-libfilelistlocal_la_LIBADD =
+-am_libfilelistlocal_la_OBJECTS = filelist_local.lo OSFXFile.lo \
++libOSVfsArchive_la_LIBADD =
++am_libOSVfsArchive_la_OBJECTS = OSVfsArchive.lo OSThreadExec.lo
++libOSVfsArchive_la_OBJECTS = $(am_libOSVfsArchive_la_OBJECTS)
++libOSVfsFtp_la_LIBADD =
++am_libOSVfsFtp_la_OBJECTS = OSVfsFtp.lo pftp.lo OSThreadExec.lo
++libOSVfsFtp_la_OBJECTS = $(am_libOSVfsFtp_la_OBJECTS)
++libOSVfsLocal_la_LIBADD =
++am_libOSVfsLocal_la_OBJECTS = OSVfsLocal.lo OSFXFile.lo \
+ 	OSThreadExec.lo OSUtils.lo
+-libfilelistlocal_la_OBJECTS = $(am_libfilelistlocal_la_OBJECTS)
++libOSVfsLocal_la_OBJECTS = $(am_libOSVfsLocal_la_OBJECTS)
++libOSVfsSearch_la_LIBADD =
++am_libOSVfsSearch_la_OBJECTS = OSVfsSearch.lo OSFXFile.lo \
++	OSThreadExec.lo
++libOSVfsSearch_la_OBJECTS = $(am_libOSVfsSearch_la_OBJECTS)
+ DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)/src
+ depcomp = $(SHELL) $(top_srcdir)/depcomp
+ am__depfiles_maybe = depfiles
+ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">AMDEP_TRUE at DEP_FILES</A> = ./$(DEPDIR)/OSFXFile.Plo \
+ @AMDEP_TRUE@	./$(DEPDIR)/OSThreadExec.Plo \
+ @AMDEP_TRUE@	./$(DEPDIR)/OSUtils.Plo \
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">- at AMDEP_TRUE</A>@	./$(DEPDIR)/filelist_local.Plo
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">+ at AMDEP_TRUE</A>@	./$(DEPDIR)/OSVfsArchive.Plo \
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">+ at AMDEP_TRUE</A>@	./$(DEPDIR)/OSVfsFtp.Plo \
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">+ at AMDEP_TRUE</A>@	./$(DEPDIR)/OSVfsLocal.Plo \
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">+ at AMDEP_TRUE</A>@	./$(DEPDIR)/OSVfsSearch.Plo ./$(DEPDIR)/pftp.Plo
+ CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+ 	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+ LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
+@@ -75,12 +88,13 @@
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+-SOURCES = $(libfilelistlocal_la_SOURCES)
+-DIST_SOURCES = $(libfilelistlocal_la_SOURCES)
++SOURCES = $(libOSVfsArchive_la_SOURCES) $(libOSVfsFtp_la_SOURCES) \
++	$(libOSVfsLocal_la_SOURCES) $(libOSVfsSearch_la_SOURCES)
++DIST_SOURCES = $(libOSVfsArchive_la_SOURCES) $(libOSVfsFtp_la_SOURCES) \
++	$(libOSVfsLocal_la_SOURCES) $(libOSVfsSearch_la_SOURCES)
+ ETAGS = etags
+ CTAGS = ctags
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+-#libfilelistsearch.la  libfilelistarchive.la libfilelistftp.la libfilelistsftp.la
+ pkglibdir = $(libdir)/openspace/plugins/filelist
+ ACLOCAL = @ACLOCAL@
+ AMDEP_FALSE = @AMDEP_FALSE@
+@@ -178,10 +192,16 @@
+ sharedstatedir = @sharedstatedir@
+ sysconfdir = @sysconfdir@
+ target_alias = @target_alias@
+-pkglib_LTLIBRARIES = libfilelistlocal.la  
++pkglib_LTLIBRARIES = libOSVfsLocal.la libOSVfsSearch.la libOSVfsArchive.la libOSVfsFtp.la   
+ INCLUDES = `WANT_FOX=&quot;1.4&quot; fox-config --cflags` `xml2-config  --cflags` 
+-libfilelistlocal_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs`  
+-libfilelistlocal_la_SOURCES = filelist_local.cpp filelist_local.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h ../../OSUtils.cpp ../../OSUtils.h 
++libOSVfsLocal_la_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs` `xml2-config  --libs`  
++libOSVfsLocal_la_SOURCES = OSVfsLocal.cpp OSVfsLocal.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h ../../OSUtils.cpp ../../OSUtils.h 
++libOSVfsSearch_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
++libOSVfsSearch_la_SOURCES = OSVfsSearch.cpp OSVfsSearch.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
++libOSVfsArchive_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
++libOSVfsArchive_la_SOURCES = OSVfsArchive.cpp OSVfsArchive.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
++libOSVfsFtp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
++libOSVfsFtp_la_SOURCES = OSVfsFtp.cpp OSVfsFtp.h  pftp.cpp pftp.h  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSConfigure.h 
+ all: all-am
+ 
+ .SUFFIXES:
+@@ -242,8 +262,14 @@
+ 	  echo &quot;rm -f \&quot;$${dir}/so_locations\&quot;&quot;; \
+ 	  rm -f &quot;$${dir}/so_locations&quot;; \
+ 	done
+-libfilelistlocal.la: $(libfilelistlocal_la_OBJECTS) $(libfilelistlocal_la_DEPENDENCIES) 
+-	$(CXXLINK) -rpath $(pkglibdir) $(libfilelistlocal_la_LDFLAGS) $(libfilelistlocal_la_OBJECTS) $(libfilelistlocal_la_LIBADD) $(LIBS)
++libOSVfsArchive.la: $(libOSVfsArchive_la_OBJECTS) $(libOSVfsArchive_la_DEPENDENCIES) 
++	$(CXXLINK) -rpath $(pkglibdir) $(libOSVfsArchive_la_LDFLAGS) $(libOSVfsArchive_la_OBJECTS) $(libOSVfsArchive_la_LIBADD) $(LIBS)
++libOSVfsFtp.la: $(libOSVfsFtp_la_OBJECTS) $(libOSVfsFtp_la_DEPENDENCIES) 
++	$(CXXLINK) -rpath $(pkglibdir) $(libOSVfsFtp_la_LDFLAGS) $(libOSVfsFtp_la_OBJECTS) $(libOSVfsFtp_la_LIBADD) $(LIBS)
++libOSVfsLocal.la: $(libOSVfsLocal_la_OBJECTS) $(libOSVfsLocal_la_DEPENDENCIES) 
++	$(CXXLINK) -rpath $(pkglibdir) $(libOSVfsLocal_la_LDFLAGS) $(libOSVfsLocal_la_OBJECTS) $(libOSVfsLocal_la_LIBADD) $(LIBS)
++libOSVfsSearch.la: $(libOSVfsSearch_la_OBJECTS) $(libOSVfsSearch_la_DEPENDENCIES) 
++	$(CXXLINK) -rpath $(pkglibdir) $(libOSVfsSearch_la_LDFLAGS) $(libOSVfsSearch_la_OBJECTS) $(libOSVfsSearch_la_LIBADD) $(LIBS)
+ 
+ mostlyclean-compile:
+ 	-rm -f *.$(OBJEXT)
+@@ -254,7 +280,11 @@
+ @AMDEP_TRUE@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSFXFile.Plo at am__quote</A>@
+ @AMDEP_TRUE@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSThreadExec.Plo at am__quote</A>@
+ @AMDEP_TRUE@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSUtils.Plo at am__quote</A>@
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">- at AMDEP_TRUE</A>@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">filelist_local.Plo at am__quote</A>@
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">+ at AMDEP_TRUE</A>@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSVfsArchive.Plo at am__quote</A>@
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">+ at AMDEP_TRUE</A>@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSVfsFtp.Plo at am__quote</A>@
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">+ at AMDEP_TRUE</A>@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSVfsLocal.Plo at am__quote</A>@
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">+ at AMDEP_TRUE</A>@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">OSVfsSearch.Plo at am__quote</A>@
+<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">+ at AMDEP_TRUE</A>@@am__include@ @<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">am__quote at .</A>/$(DEPDIR)/<A HREF="https://lists.berlios.de/mailman/listinfo/openspace-svn">pftp.Plo at am__quote</A>@
+ 
+ .cpp.o:
+ @am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF &quot;$(DEPDIR)/$*.Tpo&quot; -c -o $@ $&lt;; \
+@@ -509,14 +539,8 @@
+ 	uninstall-pkglibLTLIBRARIES
+ 
+ 
+-#libfilelistsearch_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+-#libfilelistsearch_la_SOURCES =filelist_search.cpp filelist_search.h OSFXFile.cpp OSFXFile.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
+-#libfilelistarchive_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+-#libfilelistarchive_la_SOURCES =filelist_archive.cpp filelist_archive.h ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
+ #libfilelistsftp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+ #libfilelistsftp_la_SOURCES =filelist_sftp.cpp filelist_sftp.h  ../../OSThreadExec.cpp ../../OSThreadExec.h  ../../OSConfigure.h 
+-#libfilelistftp_la_LDFLAGS = `WANT_FOX=1.4 fox-config --libs` `xml2-config  --libs`
+-#libfilelistftp_la_SOURCES =filelist_ftp.cpp filelist_ftp.h  pftp.cpp pftp.h  ../../OSThreadExec.cpp ../../OSThreadExec.h ../../OSConfigure.h 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
+ # Otherwise a system limit (for SysV at least) may be exceeded.
+ .NOEXPORT:
+
+Modified: branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsArchive.cpp
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsArchive.cpp	2006-02-11 21:53:06 UTC (rev 241)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsArchive.cpp	2006-02-11 23:06:27 UTC (rev 242)
+@@ -3,14 +3,16 @@
+ #else
+ #define EXPORTFUNCTION extern &quot;C&quot;
+ #endif
+-#include &quot;filelist_archive.h&quot;
++#include &quot;OSVfsArchive.h&quot;
++#include &quot;../../OSThreadExec.h&quot;
+ 
++using namespace std;
+ 
+-vfs filelist_archive::setup (void)
++OSVirtualFileSystemInfo OSVfsArchive::setup (void)
+ {
+-	vfs v;
++	OSVirtualFileSystemInfo v;
+ 	
+-	v.vfsheaders.push_back(vfsheader_container(&quot;name&quot;));
++	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;name&quot;));
+ 	v.information=&quot;tar.bz2 and tar.gz archive - default plugin&quot;;
+ 	v.version=&quot;1&quot;;
+ 	v.type=&quot;vfs&quot;;
+@@ -18,17 +20,16 @@
+ 	
+ }
+ 
+-
+-int filelist_archive::osopendir (string dir)
++int OSVfsArchive::osopendir (string dir)
+ {
+-
+ this-&gt;dir=dir;
+ iter=files.begin();
+ }
+-osfile filelist_archive::osreaddir (void)
++
++OSFile OSVfsArchive::osreaddir (void)
+ {
+ 
+-osfile os_file;
++OSFile os_file;
+ 
+ while(iter!=files.end())
+ {
+@@ -83,24 +84,24 @@
+     return os_file;
+ 
+ }
+-int filelist_archive::mkdir (string dir, int mode)
++int OSVfsArchive::mkdir (string dir, int mode)
+ {
+ }
+-int filelist_archive::copy (thread_elem * te)
++int OSVfsArchive::copy (OSThreadExec * te)
+ {
+ filesoperation(&quot;copy&quot;,te);
+ }
+ 
+-int filelist_archive::move (thread_elem * te)
++int OSVfsArchive::move (OSThreadExec * te)
+ {
+ filesoperation(&quot;move&quot;,te);
+ }
+-int filelist_archive::remove (thread_elem * te)
++int OSVfsArchive::remove (OSThreadExec * te)
+ {
+ filesoperation(&quot;remove&quot;,te);
+ }
+ 
+-int filelist_archive::filesoperation(string typeoperation,thread_elem * te)
++int OSVfsArchive::filesoperation(string typeoperation,OSThreadExec * te)
+ {
+ 
+  vector &lt; string &gt;::iterator iter;
+@@ -153,7 +154,7 @@
+ 		if(typeoperation==&quot;move&quot;)
+ 		{
+ 		
+-		thread_elem *el2 = new thread_elem (this, &quot;remove&quot;, &quot;&quot;, file_list_vec);
++		OSThreadExec *el2 = new OSThreadExec (this, &quot;remove&quot;, &quot;&quot;, file_list_vec);
+ 		this-&gt;remove(el2);
+ 		delete el2;
+ 		
+@@ -308,10 +309,10 @@
+ }
+ 
+ 
+-int filelist_archive::rename (string orgname, string newname)
++int OSVfsArchive::rename (string orgname, string newname)
+ {
+ }
+-int filelist_archive::init (vector &lt; string &gt; *vector_name, pathtype pt, configure * conf)
++int OSVfsArchive::init (vector &lt; string &gt; *vector_name, OSPathType pt, OSConfigure * conf)
+ {
+ archive_filename = pt.server;
+ 
+@@ -347,49 +348,49 @@
+ iter=files.begin();
+ 
+ }
+-int filelist_archive::mode (string file)
++int OSVfsArchive::mode (string file)
+ {
+ }
+-string filelist_archive::owner (string file)
++string OSVfsArchive::owner (string file)
+ {
+ return &quot;&quot;;
+ }
+-string filelist_archive::group (string file)
++string OSVfsArchive::group (string file)
+ {
+ return &quot;&quot;;
+ }
+-bool filelist_archive::mode (string file, unsigned int, bool recursive)
++bool OSVfsArchive::mode (string file, unsigned int, bool recursive)
+ {
+ }
+-bool filelist_archive::owner (string file, string, bool recursive)
++bool OSVfsArchive::owner (string file, string, bool recursive)
+ {
+ }
+-bool filelist_archive::group (string file, string, bool recursive)
++bool OSVfsArchive::group (string file, string, bool recursive)
+ {
+ }
+-string filelist_archive::info (void)
++string OSVfsArchive::info (void)
+ {
+ return &quot;&quot;;
+ }
+-void filelist_archive::totalsize (string path, unsigned long &amp;size)
++void OSVfsArchive::totalsize (string path, unsigned long &amp;size)
+ {
+ }
+-string filelist_archive::symlink (string path)
++string OSVfsArchive::symlink (string path)
+ {
+ return &quot;&quot;;
+ }
+-bool filelist_archive::symlink (string src, string dst)
++bool OSVfsArchive::symlink (string src, string dst)
+ {
+ }
+-bool filelist_archive::hardlink (string src, string dst)
++bool OSVfsArchive::hardlink (string src, string dst)
+ {
+ }
+ 
+-int filelist_archive::quit (void)
++int OSVfsArchive::quit (void)
+ {
+ }
+-EXPORTFUNCTION filelist_base *get_filelist (void)
++EXPORTFUNCTION OSVirtualFileSystemBase *get_filelist (void)
+ {
+     FXTRACE ((5, &quot;PLUGIN LOAD\n&quot;));
+-    return new filelist_archive ();
++    return new OSVfsArchive ();
+ }
+
+Modified: branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsArchive.h
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsArchive.h	2006-02-11 21:53:06 UTC (rev 241)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsArchive.h	2006-02-11 23:06:27 UTC (rev 242)
+@@ -18,7 +18,7 @@
+  *
+  * @todo Why all filelist_* plugins redeclare the same interface?
+  */
+-class filelist_archive : public OSVirtualFileSystemBase
++class OSVfsArchive : public OSVirtualFileSystemBase
+ {
+  
+ private:  
+
+Modified: branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsFtp.cpp
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsFtp.cpp	2006-02-11 21:53:06 UTC (rev 241)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsFtp.cpp	2006-02-11 23:06:27 UTC (rev 242)
+@@ -33,8 +33,12 @@
+ #define EXPORTFUNCTION extern &quot;C&quot;
+ #endif
+ 
+-#include &quot;filelist_ftp.h&quot;
++#include &quot;OSVfsFtp.h&quot;
+ #include &quot;../../OSVirtualFileSystemBase.h&quot;
++#include &quot;../../OSFile.h&quot;
++#include &quot;../../OSPathType.h&quot;
++#include &quot;../../OSConfigure.h&quot;
++#include &quot;../../OSThreadExec.h&quot;
+ 
+ #include &lt;sstream&gt;
+ #include &lt;sys/types.h&gt;
+@@ -46,7 +50,9 @@
+ #include &lt;string&gt;
+ #include &lt;vector&gt;
+ #include &lt;map&gt;
++using namespace std;
+ 
++
+ SimpleLogger::SimpleLogger()
+ {
+     te = NULL;
+@@ -92,14 +98,14 @@
+     fxmessage( &quot;ERROR=%s\n&quot;, error.text() );
+ }
+ 
+-vfs filelist_ftp::setup ( void )
++OSVirtualFileSystemInfo OSVfsFtp::setup ( void )
+ {
+-    OSVirtualFileSystemBase v;
++    OSVirtualFileSystemInfo v;
+ 
+-    v.vfsheaders.push_back( vfsheader_container( &quot;name&quot; ) );
+-    v.vfsheaders.push_back( vfsheader_container( &quot;size&quot;, &quot;size&quot; ) );
+-    v.vfsheaders.push_back( vfsheader_container( &quot;owner&quot; ) );
+-    v.vfsheaders.push_back( vfsheader_container( &quot;group&quot; ) );
++    v.vfsheaders.push_back( OSVirtualFileSystemHeader( &quot;name&quot; ) );
++    v.vfsheaders.push_back( OSVirtualFileSystemHeader( &quot;size&quot;, &quot;size&quot; ) );
++    v.vfsheaders.push_back( OSVirtualFileSystemHeader( &quot;owner&quot; ) );
++    v.vfsheaders.push_back( OSVirtualFileSystemHeader( &quot;group&quot; ) );
+     v.information = &quot;FTP - default plugin&quot;;
+     v.version = &quot;1&quot;;
+     v.type = &quot;network&quot;;
+@@ -108,7 +114,7 @@
+ }
+ 
+ 
+-int filelist_ftp::priv_osopendir ( std::string dir, std::string prefix, std::map &lt;std::string, osfile&gt; &amp; filesMap, std::map &lt;std::string, osfile&gt;::iterator &amp; iter )
++int OSVfsFtp::priv_osopendir ( std::string dir, std::string prefix, std::map &lt;std::string, OSFile&gt; &amp; filesMap, std::map &lt;std::string, OSFile&gt;::iterator &amp; iter )
+ {
+ 
+     filesMap.clear();
+@@ -162,7 +168,7 @@
+ 
+ 
+ 
+-        osfile os_file;
++        OSFile os_file;
+         os_file.type = 0;
+         if ( ptr[ 0 ] == 'd' )
+             os_file.type = os_file.type | FOLDER;
+@@ -170,7 +176,7 @@
+             os_file.type = 0;
+ 
+         std::stringstream parser ( ptr );
+-        std::std::string field;
++        std::string field;
+ 
+         std::string user;
+         std::string group;
+@@ -252,7 +258,7 @@
+ 
+ 
+ 
+-int filelist_ftp::osopendir ( std::string dir )
++int OSVfsFtp::osopendir ( std::string dir )
+ {
+ 
+ 
+@@ -264,9 +270,9 @@
+ 
+ }
+ 
+-osfile filelist_ftp::priv_osreaddir ( std::map &lt;std::string, osfile&gt; &amp; filesMap, std::map &lt;std::string, osfile&gt;::iterator &amp; iter )
++OSFile OSVfsFtp::priv_osreaddir ( std::map &lt;std::string, OSFile&gt; &amp; filesMap, std::map &lt;std::string, OSFile&gt;::iterator &amp; iter )
+ {
+-    osfile os_file;
++    OSFile os_file;
+ 
+     if ( iter != filesMap.end() )
+     {
+@@ -284,12 +290,12 @@
+ }
+ 
+ 
+-osfile filelist_ftp::osreaddir ( void )
++OSFile OSVfsFtp::osreaddir ( void )
+ {
+ 
+     return priv_osreaddir( filesMap, iter );
+ }
+-int filelist_ftp::mkdir ( std::string dir, int mode )
++int OSVfsFtp::mkdir ( std::string dir, int mode )
+ {
+     pftp-&gt;mkDir( dir.c_str() );
+ }
+@@ -308,7 +314,7 @@
+ 
+ 
+ 
+-void filelist_ftp::local_totalsize ( std::string path, unsigned long &amp;size )
++void OSVfsFtp::local_totalsize ( std::string path, unsigned long &amp;size )
+ {
+ 
+     if ( FXFile::isDirectory ( path.c_str () ) )
+@@ -362,7 +368,7 @@
+ 
+ 
+ 
+-int filelist_ftp::copy ( thread_elem * te )
++int OSVfsFtp::copy ( OSThreadExec * te )
+ {
+     log-&gt;te = te;
+     unsigned long size = 0;
+@@ -440,7 +446,7 @@
+ }
+ 
+ 
+-void filelist_ftp::goLocalRecursive ( std::string path, std::string prefix, thread_elem *te )
++void OSVfsFtp::goLocalRecursive ( std::string path, std::string prefix, OSThreadExec *te )
+ {
+ 
+     if ( te-&gt;cancel == true )
+@@ -499,23 +505,23 @@
+ 
+ 
+ 
+-int filelist_ftp::move ( thread_elem * te )
++int OSVfsFtp::move ( OSThreadExec * te )
+ {}
+ 
+ 
+-void filelist_ftp::gorecursive( std::string file, unsigned long &amp;size )
++void OSVfsFtp::gorecursive( std::string file, unsigned long &amp;size )
+ {
+ 
+ 
+-    std::map &lt;std::string, osfile&gt; filesMap;
+-    std::map &lt;std::string, osfile&gt;::iterator iter;
++    std::map &lt;std::string, OSFile&gt; filesMap;
++    std::map &lt;std::string, OSFile&gt;::iterator iter;
+ 
+     if ( priv_osopendir( file, file + &quot;/&quot;, filesMap, iter ) != -1 )
+     {
+ 
+         while ( 1 )
+         {
+-            osfile os_file = priv_osreaddir ( filesMap, iter );
++            OSFile os_file = priv_osreaddir ( filesMap, iter );
+             if ( os_file.name == &quot;&quot; )
+                 break;
+ 
+@@ -532,7 +538,7 @@
+ 
+ }
+ 
+-void filelist_ftp::getRecursiveFiles( std::vector &lt; std::string &gt;src, unsigned long &amp;size )
++void OSVfsFtp::getRecursiveFiles( std::vector &lt; std::string &gt;src, unsigned long &amp;size )
+ {
+ 
+     filesMapGlobal.clear();
+@@ -544,7 +550,7 @@
+     {
+ 
+         std::string name = FXFile::name( iter_files-&gt;c_str() ).text();
+-        osfile os_file;
++        OSFile os_file;
+         os_file.name = name;
+         os_file.type = filesMap[ name ].type;
+         os_file.size = filesMap[ name ].size;
+@@ -572,7 +578,7 @@
+     }
+ }
+ 
+-int filelist_ftp::remove ( thread_elem * te )
++int OSVfsFtp::remove ( OSThreadExec * te )
+ {
+     unsigned long size;
+     getRecursiveFiles( te-&gt;src, size );
+@@ -594,7 +600,7 @@
+ 
+ 
+ }
+-int filelist_ftp::rename ( std::string orgname, std::string newname )
++int OSVfsFtp::rename ( std::string orgname, std::string newname )
+ {
+ 
+     FXString tmp;
+@@ -602,7 +608,7 @@
+     pftp-&gt;sendCmd( &quot;RNTO &quot;, FXFile::name( newname.c_str() ), tmp );
+ 
+ }
+-int filelist_ftp::init ( std::vector &lt; std::string &gt; *vector_name, pathtype pt, configure * conf )
++int OSVfsFtp::init ( std::vector &lt; std::string &gt; *vector_name, OSPathType pt, OSConfigure * conf )
+ {
+ 
+     fieldsnum = vector_name-&gt;size ();
+@@ -616,7 +622,7 @@
+     else return -1;
+ }
+ 
+-int filelist_ftp::str_mode_int( std::string per )
++int OSVfsFtp::str_mode_int( std::string per )
+ {
+     unsigned int mode = 0;
+     if ( per[ 0 ] == 'r' )
+@@ -640,7 +646,7 @@
+     return mode;
+ }
+ 
+-int filelist_ftp::mode ( std::string file )
++int OSVfsFtp::mode ( std::string file )
+ {
+ 
+     std::string per = filesMap[ FXFile::name( file.c_str() ).text() ].mode;
+@@ -648,15 +654,15 @@
+     return str_mode_int( per );
+ 
+ }
+-std::string filelist_ftp::owner ( std::string file )
++std::string OSVfsFtp::owner ( std::string file )
+ {
+     return filesMap[ FXFile::name( file.c_str() ).text() ].user;
+ }
+-std::string filelist_ftp::group ( std::string file )
++std::string OSVfsFtp::group ( std::string file )
+ {
+     return filesMap[ FXFile::name( file.c_str() ).text() ].group;
+ }
+-bool filelist_ftp::mode ( std::string file, unsigned int per, bool recursive )
++bool OSVfsFtp::mode ( std::string file, unsigned int per, bool recursive )
+ {
+ 
+     unsigned int mode = per;
+@@ -701,15 +707,15 @@
+ 
+ 
+ }
+-bool filelist_ftp::owner ( std::string file, std::string, bool recursive )
++bool OSVfsFtp::owner ( std::string file, std::string, bool recursive )
+ {}
+-bool filelist_ftp::group ( std::string file, std::string, bool recursive )
++bool OSVfsFtp::group ( std::string file, std::string, bool recursive )
+ {}
+-std::string filelist_ftp::info ( void )
++std::string OSVfsFtp::info ( void )
+ {
+     return &quot;&quot;;
+ }
+-void filelist_ftp::totalsize ( std::string path, unsigned long &amp;size )
++void OSVfsFtp::totalsize ( std::string path, unsigned long &amp;size )
+ {
+     size = 0;
+ 
+@@ -731,21 +737,21 @@
+ 
+ 
+ }
+-std::string filelist_ftp::symlink ( std::string path )
++std::string OSVfsFtp::symlink ( std::string path )
+ {
+     return &quot;&quot;;
+ }
+-bool filelist_ftp::symlink ( std::string src, std::string dst )
++bool OSVfsFtp::symlink ( std::string src, std::string dst )
+ {}
+-bool filelist_ftp::hardlink ( std::string src, std::string dst )
++bool OSVfsFtp::hardlink ( std::string src, std::string dst )
+ {}
+ 
+-int filelist_ftp::quit ( void )
++int OSVfsFtp::quit ( void )
+ {
+     pftp-&gt;logout();
+ }
+ 
+-std::string filelist_ftp::getinitialdir( void )
++std::string OSVfsFtp::getinitialdir( void )
+ {
+     FXString base;
+     pftp-&gt;pwd( base );
+@@ -755,8 +761,8 @@
+ 
+ 
+ 
+-EXPORTFUNCTION filelist_base *get_filelist ( void )
++EXPORTFUNCTION OSVirtualFileSystemBase *get_filelist ( void )
+ {
+     FXTRACE ( ( 5, &quot;PLUGIN LOAD\n&quot; ) );
+-    return new filelist_ftp ();
++    return new OSVfsFtp ();
+ }
+
+Modified: branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsFtp.h
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsFtp.h	2006-02-11 21:53:06 UTC (rev 241)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsFtp.h	2006-02-11 23:06:27 UTC (rev 242)
+@@ -73,7 +73,7 @@
+  * 
+  * @todo Pass &quot;big&quot; vectors through by-reference not by-value!
+  */
+-class filelist_ftp : public OSVirtualFileSystemBase
++class OSVfsFtp : public OSVirtualFileSystemBase
+ {
+ 
+ private:
+@@ -90,9 +90,9 @@
+     int fieldsnum;
+     std::vector&lt;std::string&gt; fields;
+ 
+-    int priv_osopendir( std::string dir, std::string prefix, std::map &lt;std::string, osfile&gt; &amp; filesMap, std::map &lt;std::string, osfile&gt;::iterator &amp; iter );
++    int priv_osopendir( std::string dir, std::string prefix, std::map &lt;std::string, OSFile&gt; &amp; filesMap, std::map &lt;std::string, OSFile&gt;::iterator &amp; iter );
+     void gorecursive( std::string file, unsigned long &amp;size );
+-    OSFile priv_osreaddir( std::map &lt;std::string, osfile&gt; &amp; filesMap, std::map &lt;std::string, OSFile&gt;::iterator &amp; iter2 );
++    OSFile priv_osreaddir( std::map &lt;std::string, OSFile&gt; &amp; filesMap, std::map &lt;std::string, OSFile&gt;::iterator &amp; iter2 );
+     void getRecursiveFiles( std::vector&lt;std::string&gt; src, unsigned long &amp;size );
+     void goLocalRecursive( std::string path, std::string prefix, OSThreadExec* te );
+     void local_totalsize( std::string path, unsigned long &amp;size );
+
+Modified: branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsLocal.cpp
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsLocal.cpp	2006-02-11 21:53:06 UTC (rev 241)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsLocal.cpp	2006-02-11 23:06:27 UTC (rev 242)
+@@ -5,7 +5,7 @@
+ #define EXPORTFUNCTION extern &quot;C&quot;
+ #endif
+ 
+-#include &quot;filelist_local.h&quot;
++#include &quot;OSVfsLocal.h&quot;
+ #include &quot;OSFXFile.h&quot;
+ #include &quot;../../OSVirtualFileSystemHeader.h&quot;
+ #include &quot;../../OSVirtualFileSystemInfo.h&quot;
+@@ -33,10 +33,8 @@
+ #include &lt;string&gt;
+ #include &lt;vector&gt;
+ 
+-// XXX - What this global is for?
+-std::vector&lt;std::string&gt; name;
+ 
+-OSVirtualFileSystemInfo filelist_local::setup (void)
++OSVirtualFileSystemInfo OSVfsLocal::setup (void)
+ {
+ 	OSVirtualFileSystemInfo v;
+ 	
+@@ -52,7 +50,7 @@
+     return v;	
+ }
+ 
+-int filelist_local::init (std::vector&lt;std::string&gt; *vector_name, OSPathType pt, OSConfigure * conf)
++int OSVfsLocal::init (std::vector&lt;std::string&gt; *vector_name, OSPathType pt, OSConfigure * conf)
+ {
+ 
+     fieldsnum = vector_name-&gt;size ();
+@@ -62,7 +60,7 @@
+ }
+ 
+ 
+-OSFile filelist_local::osreaddir ()
++OSFile OSVfsLocal::osreaddir ()
+ {
+ 
+     OSFile os_file;
+@@ -182,7 +180,7 @@
+ }
+ 
+ 
+-int filelist_local::osopendir (std::string dir)
++int OSVfsLocal::osopendir (std::string dir)
+ {
+     this-&gt;dir = dir;
+ 
+@@ -235,7 +233,7 @@
+ 
+ }
+ 
+-int filelist_local::mkdir (std::string dir, int mode)
++int OSVfsLocal::mkdir (std::string dir, int mode)
+ {
+     FXTRACE ((5, &quot;MKDIR\n&quot;));
+     std::string d = this-&gt;dir + SEPARATOR + dir;
+@@ -244,18 +242,18 @@
+     return 0;
+ }
+ 
+-int filelist_local::copy ( OSThreadExec * te)
++int OSVfsLocal::copy ( OSThreadExec * te)
+ {
+     copymove (te, true);
+ }
+ 
+-int filelist_local::move (OSThreadExec* te)
++int OSVfsLocal::move (OSThreadExec* te)
+ {
+     copymove (te, false);
+ }
+ 
+ 
+-int filelist_local::remove (OSThreadExec* te)
++int OSVfsLocal::remove (OSThreadExec* te)
+ {
+ 
+     bool canc = false;
+@@ -290,7 +288,7 @@
+ 
+ }
+ 
+-int filelist_local::rename (std::string orgname, std::string newname)
++int OSVfsLocal::rename (std::string orgname, std::string newname)
+ {
+ 
+     FXString newfile = newname.c_str ();
+@@ -325,7 +323,7 @@
+ }
+ 
+ 
+-int filelist_local::copymove (OSThreadExec* te, bool copy)
++int OSVfsLocal::copymove (OSThreadExec* te, bool copy)
+ {
+ 
+     unsigned long size = 0;
+@@ -388,7 +386,7 @@
+ 
+ 
+ 
+-void filelist_local::totalsize (std::string path, unsigned long &amp;size)
++void OSVfsLocal::totalsize (std::string path, unsigned long &amp;size)
+ {
+ 
+     if (FXFile::isDirectory (path.c_str ()))
+@@ -436,19 +434,19 @@
+ 
+ }
+ 
+-std::string filelist_local::info (void)
++std::string OSVfsLocal::info (void)
+ {
+     return &quot;&quot;;
+ }
+ 
+ 
+-int filelist_local::mode (std::string file)
++int OSVfsLocal::mode (std::string file)
+ {
+     struct stat status;
+     return !file.empty () &amp;&amp; (::stat (file.c_str (), &amp;status) == 0) ? status.st_mode : 0;
+ }
+ 
+-bool filelist_local::mode (std::string file, unsigned int mod, bool recursive)
++bool OSVfsLocal::mode (std::string file, unsigned int mod, bool recursive)
+ {
+     FXTRACE ((5, &quot;MODE&quot;));
+     if (!recursive)
+@@ -489,16 +487,16 @@
+     }
+ }
+ 
+-std::string filelist_local::owner (std::string file)
++std::string OSVfsLocal::owner (std::string file)
+ {
+     return FXFile::owner (file.c_str ()).text ();
+ }
+-std::string filelist_local::group (std::string file)
++std::string OSVfsLocal::group (std::string file)
+ {
+     return FXFile::group (file.c_str ()).text ();
+ }
+ 
+-bool filelist_local::owner (std::string file, std::string ownername, bool recursive)
++bool OSVfsLocal::owner (std::string file, std::string ownername, bool recursive)
+ {
+     FXTRACE ((5, &quot;MODE&quot;));
+     if (!recursive)
+@@ -538,7 +536,7 @@
+     }
+ }
+ 
+-bool filelist_local::group (std::string file, std::string groupname, bool recursive)
++bool OSVfsLocal::group (std::string file, std::string groupname, bool recursive)
+ {
+     FXTRACE ((5, &quot;MODE&quot;));
+     if (!recursive)
+@@ -576,21 +574,21 @@
+     }
+ }
+ 
+-std::string filelist_local::symlink (std::string path)
++std::string OSVfsLocal::symlink (std::string path)
+ {
+     return FXFile::symlink (path.c_str ()).text ();
+ }
+-bool filelist_local::symlink (std::string src, std::string dst)
++bool OSVfsLocal::symlink (std::string src, std::string dst)
+ {
+     return FXFile::symlink (src.c_str (), dst.c_str ());
+ }
+-bool filelist_local::hardlink (std::string src, std::string dst)
++bool OSVfsLocal::hardlink (std::string src, std::string dst)
+ {
+     return FXFile::link (src.c_str (), dst.c_str ());
+ }
+ 
+ 
+-int filelist_local::quit (void)
++int OSVfsLocal::quit (void)
+ {
+     return 0;
+ }
+@@ -598,5 +596,5 @@
+ EXPORTFUNCTION OSVirtualFileSystemBase* get_filelist (void)
+ {
+     FXTRACE ((5, &quot;PLUGIN LOAD\n&quot;));
+-    return new filelist_local ();
++    return new OSVfsLocal ();
+ }
+
+Modified: branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsLocal.h
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsLocal.h	2006-02-11 21:53:06 UTC (rev 241)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsLocal.h	2006-02-11 23:06:27 UTC (rev 242)
+@@ -46,7 +46,7 @@
+  * 
+  * @todo This plugin will be reorganized/renamed.
+  */
+-class filelist_local: public OSVirtualFileSystemBase
++class OSVfsLocal: public OSVirtualFileSystemBase
+ {
+ private:
+ 
+
+Modified: branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsSearch.cpp
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsSearch.cpp	2006-02-11 21:53:06 UTC (rev 241)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsSearch.cpp	2006-02-11 23:06:27 UTC (rev 242)
+@@ -4,7 +4,7 @@
+ #define EXPORTFUNCTION extern &quot;C&quot;
+ #endif
+ 
+-#include &quot;filelist_search.h&quot;
++#include &quot;OSVfsSearch.h&quot;
+ 
+ #include &quot;../../OSVirtualFileSystemBase.h&quot;
+ #include &quot;../../OSVirtualFileSystemInfo.h&quot;
+@@ -16,7 +16,7 @@
+ #include &lt;string&gt;
+ #include &lt;vector&gt;
+ 
+-OSVirtualFileSystemInfo filelist_search::setup (void)
++OSVirtualFileSystemInfo OSVfsSearch::setup (void)
+ {
+ 	OSVirtualFileSystemInfo v;
+ 	
+@@ -29,13 +29,13 @@
+ }
+ 
+ 
+-int filelist_search::osopendir (std::string dir)
++int OSVfsSearch::osopendir (std::string dir)
+ {
+ 
+   iter=files.begin(); 
+ 
+ }
+-OSFile filelist_search::osreaddir (void)
++OSFile OSVfsSearch::osreaddir (void)
+ {
+     OSFile os_file;
+ 
+@@ -59,10 +59,10 @@
+ 
+ 
+ }
+-int filelist_search::mkdir (std::string dir, int mode)
++int OSVfsSearch::mkdir (std::string dir, int mode)
+ {
+ }
+-int filelist_search::copy (OSThreadExec * te)
++int OSVfsSearch::copy (OSThreadExec * te)
+ {
+ 
+ 	std::string::size_type pos = te-&gt;options.find (&quot;download&quot;);
+@@ -77,7 +77,7 @@
+ 	}
+ 
+ }
+-int filelist_search::move (OSThreadExec * te)
++int OSVfsSearch::move (OSThreadExec * te)
+ {
+ 
+ 	std::string::size_type pos = te-&gt;options.find (&quot;download&quot;);
+@@ -92,11 +92,11 @@
+ 	}
+ 
+ }
+-int filelist_search::remove (OSThreadExec * te)
++int OSVfsSearch::remove (OSThreadExec * te)
+ {
+ return fil_local-&gt;remove(te);
+ }
+-int filelist_search::rename (std::string orgname, std::string newname)
++int OSVfsSearch::rename (std::string orgname, std::string newname)
+ {
+ 
+ 	int ret=fil_local-&gt;rename(orgname,newname);
+@@ -111,9 +111,9 @@
+ 
+ 	return ret;
+ }
+-int filelist_search::init(std::vector&lt;std::string&gt;* vector_name, OSPathType pt, OSConfigure* conf)
++int OSVfsSearch::init(std::vector&lt;std::string&gt;* vector_name, OSPathType pt, OSConfigure* conf)
+ {
+-    fil_local=new filelist_local();
++    fil_local=new OSVfsLocal();
+ 
+     pipe = popen (pt.server.c_str(), &quot;r&quot;);
+ 
+@@ -137,53 +137,53 @@
+     
+ 
+ }
+-int filelist_search::mode (std::string file)
++int OSVfsSearch::mode (std::string file)
+ {
+ return fil_local-&gt;mode(file);
+ }
+-std::string filelist_search::owner (std::string file)
++std::string OSVfsSearch::owner (std::string file)
+ {
+ return fil_local-&gt;owner(file);
+ }
+-std::string filelist_search::group (std::string file)
++std::string OSVfsSearch::group (std::string file)
+ {
+ return fil_local-&gt;group(file);
+ }
+-bool filelist_search::mode (std::string file, unsigned int mod, bool recursive)
++bool OSVfsSearch::mode (std::string file, unsigned int mod, bool recursive)
+ {
+ return fil_local-&gt;mode(file,mod,recursive);
+ }
+-bool filelist_search::owner (std::string file, std::string ow, bool recursive)
++bool OSVfsSearch::owner (std::string file, std::string ow, bool recursive)
+ {
+ return fil_local-&gt;owner(file,ow,recursive);
+ }
+-bool filelist_search::group (std::string file, std::string gr, bool recursive)
++bool OSVfsSearch::group (std::string file, std::string gr, bool recursive)
+ {
+ return fil_local-&gt;group(file,gr,recursive);
+ }
+-std::string filelist_search::info (void)
++std::string OSVfsSearch::info (void)
+ {
+ return &quot;&quot;;
+ }
+-void filelist_search::totalsize (std::string path, unsigned long &amp;size)
++void OSVfsSearch::totalsize (std::string path, unsigned long &amp;size)
+ {
+ }
+-std::string filelist_search::symlink (std::string path)
++std::string OSVfsSearch::symlink (std::string path)
+ {
+ }
+-bool filelist_search::symlink (std::string src, std::string dst)
++bool OSVfsSearch::symlink (std::string src, std::string dst)
+ {
+ }
+-bool filelist_search::hardlink (std::string src, std::string dst)
++bool OSVfsSearch::hardlink (std::string src, std::string dst)
+ {
+ }
+ 
+-int filelist_search::quit (void)
++int OSVfsSearch::quit (void)
+ {
+ }
+ 
+ EXPORTFUNCTION OSVirtualFileSystemBase *get_filelist(void)
+ {
+     FXTRACE ((5, &quot;PLUGIN SEARCH LOAD\n&quot;));
+-    return new filelist_search ();
++    return new OSVfsSearch ();
+ }
+
+Modified: branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsSearch.h
+===================================================================
+--- branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsSearch.h	2006-02-11 21:53:06 UTC (rev 241)
++++ branches/mloskot-style-refactoring/src/plugins/filelist/OSVfsSearch.h	2006-02-11 23:06:27 UTC (rev 242)
+@@ -3,7 +3,7 @@
+ 
+ #include &quot;../../OSVirtualFileSystemBase.h&quot;
+ #include &quot;../../OSPathType.h&quot;
+-#include &quot;filelist_local.h&quot;
++#include &quot;OSVfsLocal.h&quot;
+ 
+ #include &lt;string&gt;
+ #include &lt;vector&gt;
+@@ -17,7 +17,7 @@
+  *
+  * @todo To rename.
+  */
+-class filelist_search : public OSVirtualFileSystemBase
++class OSVfsSearch : public OSVirtualFileSystemBase
+ {
+   
+ private:
+@@ -27,7 +27,7 @@
+   std::vector&lt;std::string&gt; files;
+   std::vector&lt;std::string&gt;::iterator iter;
+ 
+-  filelist_local *fil_local;
++  OSVfsLocal *fil_local;
+   
+ public:
+   
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000022.html">[Openspace-svn] r241 - in branches/mloskot-style-refactoring/src/plugins: cmddialog filelist
+</A></li>
+	<LI>Next message: <A HREF="000024.html">[Openspace-svn] r243 - branches/mloskot-style-refactoring/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#23">[ date ]</a>
+              <a href="thread.html#23">[ thread ]</a>
+              <a href="subject.html#23">[ subject ]</a>
+              <a href="author.html#23">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r266 - trunk/src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r266%20-%20trunk/src&In-Reply-To=%3C200603152302.k2FN29Vp003676%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000046.html">
+   <LINK REL="Next"  HREF="000048.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r266 - trunk/src</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r266%20-%20trunk/src&In-Reply-To=%3C200603152302.k2FN29Vp003676%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r266 - trunk/src">compbatant at berlios.de
+       </A><BR>
+    <I>Thu Mar 16 00:02:09 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000046.html">[Openspace-svn] r265 - trunk/src
+</A></li>
+        <LI>Next message: <A HREF="000048.html">[Openspace-svn] r267 - in trunk: . icons/big src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#47">[ date ]</a>
+              <a href="thread.html#47">[ thread ]</a>
+              <a href="subject.html#47">[ subject ]</a>
+              <a href="author.html#47">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-03-16 00:02:09 +0100 (Thu, 16 Mar 2006)
+New Revision: 266
+
+Modified:
+   trunk/src/Makefile
+   trunk/src/Makefile.am
+   trunk/src/Makefile.in
+Log:
+poprawka w makefile
+
+
+Modified: trunk/src/Makefile
+===================================================================
+--- trunk/src/Makefile	2006-03-15 22:16:12 UTC (rev 265)
++++ trunk/src/Makefile	2006-03-15 23:02:09 UTC (rev 266)
+@@ -14,7 +14,6 @@
+ 
+ 
+ 
+-
+ SOURCES = $(openspace_SOURCES)
+ 
+ srcdir = .
+@@ -40,8 +39,8 @@
+ host_triplet = i686-pc-linux-gnu
+ bin_PROGRAMS = openspace$(EXEEXT)
+ subdir = src
+-DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
+-	$(srcdir)/Makefile.in $(srcdir)/config.h.in
++DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
++	$(srcdir)/config.h.in
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+ am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
+@@ -108,7 +107,6 @@
+ 	install-recursive installcheck-recursive installdirs-recursive \
+ 	pdf-recursive ps-recursive uninstall-info-recursive \
+ 	uninstall-recursive
+-HEADERS = $(noinst_HEADERS)
+ ETAGS = etags
+ CTAGS = ctags
+ DIST_SUBDIRS = $(SUBDIRS)
+@@ -218,7 +216,7 @@
+ 	OSObjectManager.h OSPathType.cpp OSPathType.h OSPreferences.cpp OSPreferences.h \
+ 	OSShutter.cpp OSShutter.h OSThreadExec.cpp OSThreadExec.h OSUtils.cpp OSUtils.h \
+ 	OSVirtualFileSystemBase.h OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h \
+-	OSFrame.h OSFrame.cpp
++	OSFrame.h OSFrame.cpp OSFileListController.h
+ 
+ SUBDIRS = plugins
+ INCLUDES = -I$(top_srcdir)/src `WANT_FOX=&quot;1.4&quot; fox-config --cflags`  `xml2-config  --cflags`  \
+@@ -226,9 +224,6 @@
+ 	-DPATH_LIBDIR=\&quot;$(libdir)\&quot;
+ 
+ openspace_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs`  `xml2-config  --libs`  
+-noinst_HEADERS = OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h \
+-	OSFileTypeInfo.h
+-
+ all: config.h
+ 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
+ 
+@@ -535,7 +530,7 @@
+ 	done
+ check-am: all-am
+ check: check-recursive
+-all-am: Makefile $(PROGRAMS) $(HEADERS) config.h
++all-am: Makefile $(PROGRAMS) config.h
+ installdirs: installdirs-recursive
+ installdirs-am:
+ 	for dir in &quot;$(DESTDIR)$(bindir)&quot;; do \
+
+Modified: trunk/src/Makefile.am
+===================================================================
+--- trunk/src/Makefile.am	2006-03-15 22:16:12 UTC (rev 265)
++++ trunk/src/Makefile.am	2006-03-15 23:02:09 UTC (rev 266)
+@@ -9,7 +9,7 @@
+ 	OSObjectManager.h OSPathType.cpp OSPathType.h OSPreferences.cpp OSPreferences.h \
+ 	OSShutter.cpp OSShutter.h OSThreadExec.cpp OSThreadExec.h OSUtils.cpp OSUtils.h \
+ 	OSVirtualFileSystemBase.h OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h \
+-	OSFrame.h OSFrame.cpp
++	OSFrame.h OSFrame.cpp OSFileListController.h
+ 
+ SUBDIRS = plugins
+ 
+@@ -19,5 +19,4 @@
+ 
+ openspace_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs`  `xml2-config  --libs`  
+ 
+-noinst_HEADERS = OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h \
+-	OSFileTypeInfo.h
++
+
+Modified: trunk/src/Makefile.in
+===================================================================
+--- trunk/src/Makefile.in	2006-03-15 22:16:12 UTC (rev 265)
++++ trunk/src/Makefile.in	2006-03-15 23:02:09 UTC (rev 266)
+@@ -14,7 +14,6 @@
+ 
+ @SET_MAKE@
+ 
+-
+ SOURCES = $(openspace_SOURCES)
+ 
+ srcdir = @srcdir@
+@@ -40,8 +39,8 @@
+ host_triplet = @host@
+ bin_PROGRAMS = openspace$(EXEEXT)
+ subdir = src
+-DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
+-	$(srcdir)/Makefile.in $(srcdir)/config.h.in
++DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in \
++	$(srcdir)/config.h.in
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+ am__aclocal_m4_deps = $(top_srcdir)/configure.ac
+ am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
+@@ -108,7 +107,6 @@
+ 	install-recursive installcheck-recursive installdirs-recursive \
+ 	pdf-recursive ps-recursive uninstall-info-recursive \
+ 	uninstall-recursive
+-HEADERS = $(noinst_HEADERS)
+ ETAGS = etags
+ CTAGS = ctags
+ DIST_SUBDIRS = $(SUBDIRS)
+@@ -218,7 +216,7 @@
+ 	OSObjectManager.h OSPathType.cpp OSPathType.h OSPreferences.cpp OSPreferences.h \
+ 	OSShutter.cpp OSShutter.h OSThreadExec.cpp OSThreadExec.h OSUtils.cpp OSUtils.h \
+ 	OSVirtualFileSystemBase.h OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h \
+-	OSFrame.h OSFrame.cpp
++	OSFrame.h OSFrame.cpp OSFileListController.h
+ 
+ SUBDIRS = plugins
+ INCLUDES = -I$(top_srcdir)/src `WANT_FOX=&quot;1.4&quot; fox-config --cflags`  `xml2-config  --cflags`  \
+@@ -226,9 +224,6 @@
+ 	-DPATH_LIBDIR=\&quot;$(libdir)\&quot;
+ 
+ openspace_LDFLAGS = `WANT_FOX=&quot;1.4&quot; fox-config --libs`  `xml2-config  --libs`  
+-noinst_HEADERS = OSVirtualFileSystemHeader.h OSVirtualFileSystemInfo.h \
+-	OSFileTypeInfo.h
+-
+ all: config.h
+ 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
+ 
+@@ -535,7 +530,7 @@
+ 	done
+ check-am: all-am
+ check: check-recursive
+-all-am: Makefile $(PROGRAMS) $(HEADERS) config.h
++all-am: Makefile $(PROGRAMS) config.h
+ installdirs: installdirs-recursive
+ installdirs-am:
+ 	for dir in &quot;$(DESTDIR)$(bindir)&quot;; do \
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000046.html">[Openspace-svn] r265 - trunk/src
+</A></li>
+	<LI>Next message: <A HREF="000048.html">[Openspace-svn] r267 - in trunk: . icons/big src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#47">[ date ]</a>
+              <a href="thread.html#47">[ thread ]</a>
+              <a href="subject.html#47">[ subject ]</a>
+              <a href="author.html#47">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

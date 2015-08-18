@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r265 - trunk/src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r265%20-%20trunk/src&In-Reply-To=%3C200603152216.k2FMGDJB032117%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000045.html">
+   <LINK REL="Next"  HREF="000047.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r265 - trunk/src</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r265%20-%20trunk/src&In-Reply-To=%3C200603152216.k2FMGDJB032117%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r265 - trunk/src">compbatant at berlios.de
+       </A><BR>
+    <I>Wed Mar 15 23:16:13 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000045.html">[Openspace-svn] r264 - in trunk: icons/big icons/mini src
+</A></li>
+        <LI>Next message: <A HREF="000047.html">[Openspace-svn] r266 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#46">[ date ]</a>
+              <a href="thread.html#46">[ thread ]</a>
+              <a href="subject.html#46">[ subject ]</a>
+              <a href="author.html#46">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-03-15 23:16:12 +0100 (Wed, 15 Mar 2006)
+New Revision: 265
+
+Modified:
+   trunk/src/OSFileList.cpp
+Log:
+w zle miejsce zapisywane byly ustawienia widoku
+
+
+Modified: trunk/src/OSFileList.cpp
+===================================================================
+--- trunk/src/OSFileList.cpp	2006-03-15 22:02:38 UTC (rev 264)
++++ trunk/src/OSFileList.cpp	2006-03-15 22:16:12 UTC (rev 265)
+@@ -1118,21 +1118,21 @@
+     setFont (objmanager-&gt;captionfont3);
+     setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_MINI_ICONS | ICONLIST_COLUMNS);
+     refresh ();
+-    conf-&gt;saveonestring (&quot;/OpenspaceConfig/OSFileList/&quot; + this-&gt;type + &quot;/style&quot;,&quot;small icons&quot;);
++    conf-&gt;saveonestring (&quot;/OpenspaceConfig/filelist/&quot; + this-&gt;type + &quot;/style&quot;,&quot;small icons&quot;);
+         }
+         else if (command == &quot;change_view_big_icons&quot;)
+     {
+     setFont (objmanager-&gt;captionfont1);
+     setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_BIG_ICONS | ICONLIST_COLUMNS);
+     refresh ();
+-    conf-&gt;saveonestring (&quot;/OpenspaceConfig/OSFileList/&quot; + this-&gt;type + &quot;/style&quot;,&quot;big icons&quot;);
++    conf-&gt;saveonestring (&quot;/OpenspaceConfig/filelist/&quot; + this-&gt;type + &quot;/style&quot;,&quot;big icons&quot;);
+     }
+     else if (command == &quot;change_view_detailed&quot;)
+     {
+     setFont (objmanager-&gt;captionfont3);
+     setListStyle (ICONLIST_EXTENDEDSELECT | ICONLIST_DETAILED | ICONLIST_COLUMNS);
+     refresh ();
+-    conf-&gt;saveonestring (&quot;/OpenspaceConfig/OSFileList/&quot; + this-&gt;type + &quot;/style&quot;,&quot;detailed&quot;);
++    conf-&gt;saveonestring (&quot;/OpenspaceConfig/filelist/&quot; + this-&gt;type + &quot;/style&quot;,&quot;detailed&quot;);
+         }
+     else if(command == &quot;clipboard_copy&quot; || command == &quot;clipboard_cut&quot;)
+     {
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000045.html">[Openspace-svn] r264 - in trunk: icons/big icons/mini src
+</A></li>
+	<LI>Next message: <A HREF="000047.html">[Openspace-svn] r266 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#46">[ date ]</a>
+              <a href="thread.html#46">[ thread ]</a>
+              <a href="subject.html#46">[ subject ]</a>
+              <a href="author.html#46">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

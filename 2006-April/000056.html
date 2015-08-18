@@ -1,0 +1,96 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r275 - trunk/src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r275%20-%20trunk/src&In-Reply-To=%3C200604052143.k35LhHLu002003%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000055.html">
+   <LINK REL="Next"  HREF="000057.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r275 - trunk/src</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r275%20-%20trunk/src&In-Reply-To=%3C200604052143.k35LhHLu002003%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r275 - trunk/src">compbatant at berlios.de
+       </A><BR>
+    <I>Wed Apr  5 23:43:17 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000055.html">[Openspace-svn] r274 - trunk/src
+</A></li>
+        <LI>Next message: <A HREF="000057.html">[Openspace-svn] r276 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#56">[ date ]</a>
+              <a href="thread.html#56">[ thread ]</a>
+              <a href="subject.html#56">[ subject ]</a>
+              <a href="author.html#56">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-05 23:43:16 +0200 (Wed, 05 Apr 2006)
+New Revision: 275
+
+Modified:
+   trunk/src/OSMainWindow.cpp
+Log:
+rc3
+
+
+Modified: trunk/src/OSMainWindow.cpp
+===================================================================
+--- trunk/src/OSMainWindow.cpp	2006-04-05 21:15:04 UTC (rev 274)
++++ trunk/src/OSMainWindow.cpp	2006-04-05 21:43:16 UTC (rev 275)
+@@ -582,9 +582,11 @@
+         }
+         if ( canclose )
+         {
++	boxel-&gt;fr-&gt;hf-&gt;hide();
+ 	OSThreadExec *el = new OSThreadExec (boxel-&gt;fr-&gt;f-&gt;fb, &quot;close&quot;,string(&quot;none&quot;));
+ 	el-&gt;end=true;
+ 	el-&gt;filel=(void*)boxel-&gt;fr;
++	el-&gt;gui=NULL;
+ 	objmanager-&gt;thread_vec.push_back (el);
+  
+         }
+@@ -817,6 +819,7 @@
+                     telem-&gt;pane-&gt;popup ( NULL, this-&gt;getX (), this-&gt;getY (), lab-&gt;getWidth (), lab-&gt;getHeight () );
+                 }
+                 //cleanup
++		if(telem-&gt;gui)
+                 delete ( ( OSInfoPanel * ) telem-&gt;gui );
+                 telem-&gt;gui = NULL;
+                 infoframe-&gt;recalc ();
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000055.html">[Openspace-svn] r274 - trunk/src
+</A></li>
+	<LI>Next message: <A HREF="000057.html">[Openspace-svn] r276 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#56">[ date ]</a>
+              <a href="thread.html#56">[ thread ]</a>
+              <a href="subject.html#56">[ subject ]</a>
+              <a href="author.html#56">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

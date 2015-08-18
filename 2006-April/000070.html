@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r289 - in trunk/src: . plugins/filelist
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r289%20-%20in%20trunk/src%3A%20.%20plugins/filelist&In-Reply-To=%3C200604282028.k3SKSwfw012124%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000069.html">
+   <LINK REL="Next"  HREF="000071.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r289 - in trunk/src: . plugins/filelist</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r289%20-%20in%20trunk/src%3A%20.%20plugins/filelist&In-Reply-To=%3C200604282028.k3SKSwfw012124%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r289 - in trunk/src: . plugins/filelist">compbatant at berlios.de
+       </A><BR>
+    <I>Fri Apr 28 22:28:58 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000069.html">[Openspace-svn] r288 - trunk/src/plugins/filelist
+</A></li>
+        <LI>Next message: <A HREF="000071.html">[Openspace-svn] r290 - in trunk: . src src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#70">[ date ]</a>
+              <a href="thread.html#70">[ thread ]</a>
+              <a href="subject.html#70">[ subject ]</a>
+              <a href="author.html#70">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-28 22:28:58 +0200 (Fri, 28 Apr 2006)
+New Revision: 289
+
+Modified:
+   trunk/src/Makefile
+   trunk/src/OSFileList.cpp
+   trunk/src/plugins/filelist/OSVfsSftp.cpp
+Log:
+usuniety segfault przy zamykaniu panelu w ktorym wczesniej byl wywolowany cmddialog, dodane tworzenie katalogu w sftp
+
+
+Modified: trunk/src/Makefile
+===================================================================
+--- trunk/src/Makefile	2006-04-28 18:47:57 UTC (rev 288)
++++ trunk/src/Makefile	2006-04-28 20:28:58 UTC (rev 289)
+@@ -128,7 +128,7 @@
+ CXX = g++
+ CXXCPP = g++ -E
+ CXXDEPMODE = depmode=gcc3
+-CXXFLAGS = -O2
++CXXFLAGS = -g -O2
+ CYGPATH_W = echo
+ DEFS = -DHAVE_CONFIG_H
+ DEPDIR = .deps
+
+Modified: trunk/src/OSFileList.cpp
+===================================================================
+--- trunk/src/OSFileList.cpp	2006-04-28 18:47:57 UTC (rev 288)
++++ trunk/src/OSFileList.cpp	2006-04-28 20:28:58 UTC (rev 289)
+@@ -138,6 +138,8 @@
+     }
+ }
+ 
++dial=NULL;
++
+ objmanager=OSObjectManager::instance(getApp());
+  
+ FXScrollArea::vertical-&gt;setArrowColor(FXRGB(255, 255, 255));
+@@ -396,6 +398,9 @@
+     delete popupmenu;
+     }
+ 
++    if(dial)
++    delete dial;	
++    
+     fb-&gt;quit ();
+     delete sortpop;
+     FXTRACE ((5, &quot;destruct\n&quot;));
+@@ -1329,8 +1334,9 @@
+     {
+     
+ 
++	if(dial)
++	delete dial;
+ 
+-
+     string plugin_path = string(PATH_LIBDIR) + &quot;/openspace/plugins/cmddialog/lib&quot; + command + &quot;.so&quot;;
+ 
+     if(!FXFile::exists(plugin_path.c_str()))
+@@ -2010,7 +2016,7 @@
+ {
+ 
+     dial-&gt;hide ();
+-    delete dial;
++    //delete dial;
+ }
+ 
+ //update info about selected files
+
+Modified: trunk/src/plugins/filelist/OSVfsSftp.cpp
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-28 18:47:57 UTC (rev 288)
++++ trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-28 20:28:58 UTC (rev 289)
+@@ -452,11 +452,11 @@
+ 
+ std::string OSVfsSftp::owner (std::string file)
+ {
+-    
++return &quot;&quot;;   
+ }
+ std::string OSVfsSftp::group (std::string file)
+ {
+-  
++return &quot;&quot;;   
+ }
+ 
+ bool OSVfsSftp::owner (std::string file, std::string ownername, bool recursive)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000069.html">[Openspace-svn] r288 - trunk/src/plugins/filelist
+</A></li>
+	<LI>Next message: <A HREF="000071.html">[Openspace-svn] r290 - in trunk: . src src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#70">[ date ]</a>
+              <a href="thread.html#70">[ thread ]</a>
+              <a href="subject.html#70">[ subject ]</a>
+              <a href="author.html#70">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

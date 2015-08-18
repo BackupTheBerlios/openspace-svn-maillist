@@ -1,0 +1,934 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r256 - in trunk: . icons/default src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-March/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r256%20-%20in%20trunk%3A%20.%20icons/default%20src&In-Reply-To=%3C200603061749.k26HnIOJ009029%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000038.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r256 - in trunk: . icons/default src</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r256%20-%20in%20trunk%3A%20.%20icons/default%20src&In-Reply-To=%3C200603061749.k26HnIOJ009029%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r256 - in trunk: . icons/default src">compbatant at berlios.de
+       </A><BR>
+    <I>Mon Mar  6 18:49:18 CET 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000038.html">[Openspace-svn] r257 - in trunk: . icons icons/mini src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#37">[ date ]</a>
+              <a href="thread.html#37">[ thread ]</a>
+              <a href="subject.html#37">[ subject ]</a>
+              <a href="author.html#37">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-03-06 18:48:57 +0100 (Mon, 06 Mar 2006)
+New Revision: 256
+
+Added:
+   trunk/icons/default/about.png
+   trunk/icons/default/getdir.png
+   trunk/icons/default/goto.png
+   trunk/icons/default/mime-application-pdf.png
+   trunk/icons/default/mime-application-vnd.ms-powerpoint.png
+   trunk/icons/default/mime-application-vnd.sun.xml.calc.png
+   trunk/icons/default/mime-application-vnd.sun.xml.writer.png
+   trunk/icons/default/mime-application-x-compressed-tar.png
+   trunk/icons/default/mime-application-x-sharedlib.png
+   trunk/icons/default/mime-application-x-shellscript.png
+   trunk/icons/default/mime-audio.png
+   trunk/icons/default/mime-image.png
+   trunk/icons/default/mime-text-html.png
+   trunk/icons/default/mime-text-x-c++hdr.png
+   trunk/icons/default/mime-text-x-c++src.png
+   trunk/icons/default/mime-text.png
+   trunk/icons/default/mime-video.png
+   trunk/icons/default/run_shell.png
+Removed:
+   trunk/icons/default/big_calc.png
+   trunk/icons/default/big_compressed.png
+   trunk/icons/default/big_directory.png
+   trunk/icons/default/big_doc.png
+   trunk/icons/default/big_header.png
+   trunk/icons/default/big_html.png
+   trunk/icons/default/big_image.png
+   trunk/icons/default/big_library.png
+   trunk/icons/default/big_movie.png
+   trunk/icons/default/big_music.png
+   trunk/icons/default/big_other.png
+   trunk/icons/default/big_presentation.png
+   trunk/icons/default/big_run_shell.png
+   trunk/icons/default/big_script.png
+   trunk/icons/default/big_source.png
+   trunk/icons/default/big_txt.png
+   trunk/icons/default/big_unknown.png
+   trunk/icons/default/big_word.png
+   trunk/icons/default/calc.png
+   trunk/icons/default/compressed.png
+   trunk/icons/default/doc.png
+   trunk/icons/default/foxmini.png
+   trunk/icons/default/goback.png
+   trunk/icons/default/goforw.png
+   trunk/icons/default/header.png
+   trunk/icons/default/html.png
+   trunk/icons/default/image.png
+   trunk/icons/default/library.png
+   trunk/icons/default/max.png
+   trunk/icons/default/movie.png
+   trunk/icons/default/music.png
+   trunk/icons/default/presentation.png
+   trunk/icons/default/run_shell.png
+   trunk/icons/default/script.png
+   trunk/icons/default/source.png
+   trunk/icons/default/txt.png
+   trunk/icons/default/word.png
+Modified:
+   trunk/icons/default/bigicons.png
+   trunk/icons/default/close.png
+   trunk/icons/default/configure.png
+   trunk/icons/default/copy.png
+   trunk/icons/default/cut.png
+   trunk/icons/default/details.png
+   trunk/icons/default/directory.png
+   trunk/icons/default/dirup.png
+   trunk/icons/default/home.png
+   trunk/icons/default/left.png
+   trunk/icons/default/min.png
+   trunk/icons/default/network.png
+   trunk/icons/default/other.png
+   trunk/icons/default/paste.png
+   trunk/icons/default/pattern.png
+   trunk/icons/default/plus.png
+   trunk/icons/default/reload.png
+   trunk/icons/default/right.png
+   trunk/icons/default/search.png
+   trunk/icons/default/smallicons.png
+   trunk/icons/default/symlink.png
+   trunk/icons/default/unknown.png
+   trunk/openspacerc.in
+   trunk/src/Makefile
+   trunk/src/OSFileList.cpp
+   trunk/src/OSFileListItem.cpp
+   trunk/src/OSFileTypeSymbol.cpp
+   trunk/src/OSFileTypeSymbol.h
+   trunk/src/OSMainWindow.cpp
+   trunk/src/OSPreferences.cpp
+Log:
+przede wszystkim nowy wyglad, pozatym usuniety jeden segfault
+
+
+Added: trunk/icons/default/about.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/about.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Deleted: trunk/icons/default/big_calc.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/big_compressed.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/big_directory.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/big_doc.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/big_header.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/big_html.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/big_image.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/big_library.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/big_movie.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/big_music.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/big_other.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/big_presentation.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/big_run_shell.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/big_script.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/big_source.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/big_txt.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/big_unknown.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/big_word.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/bigicons.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/calc.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/close.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/compressed.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/configure.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/copy.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/cut.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/details.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/directory.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/dirup.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/doc.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/foxmini.png
+===================================================================
+(Binary files differ)
+
+Added: trunk/icons/default/getdir.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/getdir.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Deleted: trunk/icons/default/goback.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/goforw.png
+===================================================================
+(Binary files differ)
+
+Added: trunk/icons/default/goto.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/goto.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Deleted: trunk/icons/default/header.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/home.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/html.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/image.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/left.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/library.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/max.png
+===================================================================
+(Binary files differ)
+
+Added: trunk/icons/default/mime-application-pdf.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/mime-application-pdf.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Copied: trunk/icons/default/mime-application-vnd.ms-powerpoint.png (from rev 255, trunk/icons/default/presentation.png)
+===================================================================
+(Binary files differ)
+
+Copied: trunk/icons/default/mime-application-vnd.sun.xml.calc.png (from rev 255, trunk/icons/default/calc.png)
+===================================================================
+(Binary files differ)
+
+Copied: trunk/icons/default/mime-application-vnd.sun.xml.writer.png (from rev 255, trunk/icons/default/doc.png)
+===================================================================
+(Binary files differ)
+
+Copied: trunk/icons/default/mime-application-x-compressed-tar.png (from rev 255, trunk/icons/default/compressed.png)
+===================================================================
+(Binary files differ)
+
+Copied: trunk/icons/default/mime-application-x-sharedlib.png (from rev 255, trunk/icons/default/library.png)
+===================================================================
+(Binary files differ)
+
+Copied: trunk/icons/default/mime-application-x-shellscript.png (from rev 255, trunk/icons/default/script.png)
+===================================================================
+(Binary files differ)
+
+Copied: trunk/icons/default/mime-audio.png (from rev 255, trunk/icons/default/music.png)
+===================================================================
+(Binary files differ)
+
+Copied: trunk/icons/default/mime-image.png (from rev 255, trunk/icons/default/image.png)
+===================================================================
+(Binary files differ)
+
+Copied: trunk/icons/default/mime-text-html.png (from rev 255, trunk/icons/default/html.png)
+===================================================================
+(Binary files differ)
+
+Copied: trunk/icons/default/mime-text-x-c++hdr.png (from rev 255, trunk/icons/default/header.png)
+===================================================================
+(Binary files differ)
+
+Copied: trunk/icons/default/mime-text-x-c++src.png (from rev 255, trunk/icons/default/source.png)
+===================================================================
+(Binary files differ)
+
+Copied: trunk/icons/default/mime-text.png (from rev 255, trunk/icons/default/txt.png)
+===================================================================
+(Binary files differ)
+
+Copied: trunk/icons/default/mime-video.png (from rev 255, trunk/icons/default/movie.png)
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/min.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/movie.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/music.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/network.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/other.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/paste.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/pattern.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/plus.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/presentation.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/reload.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/right.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/run_shell.png
+===================================================================
+(Binary files differ)
+
+Added: trunk/icons/default/run_shell.png
+===================================================================
+(Binary files differ)
+
+
+Property changes on: trunk/icons/default/run_shell.png
+___________________________________________________________________
+Name: svn:mime-type
+   + application/octet-stream
+
+Deleted: trunk/icons/default/script.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/search.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/smallicons.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/source.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/symlink.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/txt.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/icons/default/unknown.png
+===================================================================
+(Binary files differ)
+
+Deleted: trunk/icons/default/word.png
+===================================================================
+(Binary files differ)
+
+Modified: trunk/openspacerc.in
+===================================================================
+--- trunk/openspacerc.in	2006-02-18 17:08:23 UTC (rev 255)
++++ trunk/openspacerc.in	2006-03-06 17:48:57 UTC (rev 256)
+@@ -15,7 +15,7 @@
+  	 &lt;/fonts&gt;
+ 	
+ 	&lt;colors&gt;
+-		  &lt;main&gt;#9186c9&lt;/main&gt;
++		  &lt;main&gt;#adaf9c&lt;/main&gt;
+   		  &lt;base&gt;#d6d7d6&lt;/base&gt;
+    		  &lt;border&gt;Black&lt;/border&gt;
+    		  &lt;fore&gt;Black&lt;/fore&gt;
+@@ -200,11 +200,13 @@
+ 		&lt;get_dir&gt;
+ 			&lt;type&gt;INTERNAL&lt;/type&gt;
+ 			&lt;text&gt;get&lt;/text&gt;
++			&lt;icon&gt;getdir&lt;/icon&gt;
+ 		&lt;/get_dir&gt;
+ 		
+ 		&lt;goto_dir&gt;
+ 			&lt;type&gt;INTERNAL&lt;/type&gt;
+ 			&lt;text&gt;go&lt;/text&gt;
++			&lt;icon&gt;goto&lt;/icon&gt;
+ 		&lt;/goto_dir&gt;
+ 		
+ 		&lt;filter_files&gt;
+@@ -278,73 +280,73 @@
+ 		
+ 		
+ 		&lt;image&gt;
+-			&lt;icon&gt;image&lt;/icon&gt;
++			&lt;icon&gt;mime-image&lt;/icon&gt;
+ 			&lt;types&gt;
+ 				&lt;png&gt;
+ 						&lt;commands&gt;
+ 							&lt;command&gt;edit_image&lt;/command&gt;
+ 							&lt;command&gt;view_image&lt;/command&gt;
+ 						&lt;/commands&gt;
+-					&lt;icon&gt;image&lt;/icon&gt;	
+ 					
+ 				&lt;/png&gt;
+ 			&lt;/types&gt;	
+ 		&lt;/image&gt;
+ 		
+ 		&lt;video&gt;
+-			&lt;icon&gt;movie&lt;/icon&gt;
++			&lt;icon&gt;mime-video&lt;/icon&gt;
+ 		&lt;/video&gt;
+ 		
+ 		&lt;audio&gt;
+-			&lt;icon&gt;music&lt;/icon&gt;
++			&lt;icon&gt;mime-audio&lt;/icon&gt;
+ 		&lt;/audio&gt;
+ 		
+ 		&lt;text&gt;
+ 			&lt;types&gt;
+ 				&lt;html&gt;
+-					&lt;icon&gt;html&lt;/icon&gt;
++					&lt;icon&gt;mime-text-html&lt;/icon&gt;
+ 				&lt;/html&gt;
+ 				&lt;x-cPPsrc&gt;
+-					&lt;icon&gt;source&lt;/icon&gt;
++					&lt;icon&gt;mime-text-x-c++src&lt;/icon&gt;
+ 				&lt;/x-cPPsrc&gt;
+ 				&lt;x-chdr&gt;
+-					&lt;icon&gt;header&lt;/icon&gt;
++					&lt;icon&gt;mime-text-x-c++hdr&lt;/icon&gt;
+ 				&lt;/x-chdr&gt;
+ 				&lt;x-cPPhdr&gt;
+-					&lt;icon&gt;header&lt;/icon&gt;
++					&lt;icon&gt;mime-text-x-c++hdr&lt;/icon&gt;
+ 				&lt;/x-cPPhdr&gt;
+ 			&lt;/types&gt;
++			&lt;icon&gt;mime-text&lt;/icon&gt;
+ 		&lt;/text&gt;
+ 		
+ 		&lt;application&gt;
+ 			&lt;types&gt;
+ 				&lt;pdf&gt;
+-					&lt;icon&gt;doc&lt;/icon&gt;	
++					&lt;icon&gt;mime-application-pdf&lt;/icon&gt;	
+ 					
+ 				&lt;/pdf&gt;
+ 				
+ 				&lt;vnd.sun.xml.writer&gt;
+-					&lt;icon&gt;word&lt;/icon&gt;	
++					&lt;icon&gt;mime-application-vnd.sun.xml.writer&lt;/icon&gt;	
+ 				&lt;/vnd.sun.xml.writer&gt;
+ 				
+ 				&lt;vnd.ms-powerpoint&gt;
+-					&lt;icon&gt;presentation&lt;/icon&gt;
++					&lt;icon&gt;mime-application-vnd.ms-powerpoint&lt;/icon&gt;
+ 				&lt;/vnd.ms-powerpoint&gt;
+ 				
+ 				&lt;msword&gt;
+-					&lt;icon&gt;word&lt;/icon&gt;	
++					&lt;icon&gt;mime-application-vnd.sun.xml.writer&lt;/icon&gt;	
+ 				&lt;/msword&gt;
+ 				&lt;vnd.sun.xml.calc&gt;
+-					&lt;icon&gt;word&lt;/icon&gt;	
++					&lt;icon&gt;mime-application-vnd.sun.xml.calc&lt;/icon&gt;	
+ 				&lt;/vnd.sun.xml.calc&gt;
+ 				&lt;vnd.ms-excel&gt;
+-					&lt;icon&gt;word&lt;/icon&gt;					
++					&lt;icon&gt;mime-application-vnd.sun.xml.calc&lt;/icon&gt;					
+ 				&lt;/vnd.ms-excel&gt;
+ 				&lt;x-sharedlib&gt;
+-					&lt;icon&gt;library&lt;/icon&gt;	
++					&lt;icon&gt;mime-application-x-sharedlib&lt;/icon&gt;	
+ 				&lt;/x-sharedlib&gt;
+ 				&lt;x-shellscript&gt;
+-					&lt;icon&gt;script&lt;/icon&gt;
++					&lt;icon&gt;mime-application-x-shellscript&lt;/icon&gt;
+ 				&lt;/x-shellscript&gt;
+ 				&lt;x-bzip-compressed-tar&gt;
+ 					&lt;default&gt;vfs_archive&lt;/default&gt;
+@@ -355,19 +357,19 @@
+ 				&lt;/x-bzip-compressed-tar&gt;
+ 				&lt;x-compressed-tar&gt;
+ 					&lt;default&gt;vfs_archive&lt;/default&gt;
+-					&lt;icon&gt;compressed&lt;/icon&gt;
++					&lt;icon&gt;mime-application-x-compressed-tar&lt;/icon&gt;
+ 					&lt;commands&gt;
+ 							&lt;command&gt;extract_tar_gz&lt;/command&gt;
+ 					&lt;/commands&gt;
+ 				&lt;/x-compressed-tar&gt;
+ 				&lt;x-rar&gt;
+-					&lt;icon&gt;compressed&lt;/icon&gt;
++					&lt;icon&gt;mime-application-x-compressed-tar&lt;/icon&gt;
+ 					&lt;commands&gt;
+ 							&lt;command&gt;unrar&lt;/command&gt;
+ 					&lt;/commands&gt;
+ 				&lt;/x-rar&gt;
+ 				&lt;zip&gt;
+-					&lt;icon&gt;compressed&lt;/icon&gt;
++					&lt;icon&gt;mime-application-x-compressed-tar&lt;/icon&gt;
+ 					&lt;commands&gt;
+ 							&lt;command&gt;unzip&lt;/command&gt;
+ 					&lt;/commands&gt;
+@@ -380,7 +382,7 @@
+ 		&lt;dir&gt;
+ 			&lt;icon&gt;directory&lt;/icon&gt;
+ 			&lt;color&gt;#000064&lt;/color&gt;
+-			&lt;backcolor&gt;#9186c9&lt;/backcolor&gt;
++		
+ 			&lt;commands&gt;
+ 					&lt;command&gt;umount&lt;/command&gt;
+ 			&lt;/commands&gt;
+
+Modified: trunk/src/Makefile
+===================================================================
+--- trunk/src/Makefile	2006-02-18 17:08:23 UTC (rev 255)
++++ trunk/src/Makefile	2006-03-06 17:48:57 UTC (rev 256)
+@@ -25,7 +25,7 @@
+ pkgincludedir = $(includedir)/openspace
+ top_builddir = ..
+ am__cd = CDPATH=&quot;$${ZSH_VERSION+.}$(PATH_SEPARATOR)&quot; &amp;&amp; cd
+-INSTALL = /bin/install -c
++INSTALL = /usr/bin/install -c
+ install_sh_DATA = $(install_sh) -c -m 644
+ install_sh_PROGRAM = $(install_sh) -c
+ install_sh_SCRIPT = $(install_sh) -c
+@@ -113,14 +113,14 @@
+ CTAGS = ctags
+ DIST_SUBDIRS = $(SUBDIRS)
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+-ACLOCAL = ${SHELL} /root/opentrunk2/missing --run aclocal-1.8
++ACLOCAL = ${SHELL} /root/openspace/missing --run aclocal-1.8
+ AMDEP_FALSE = #
+ AMDEP_TRUE = 
+-AMTAR = ${SHELL} /root/opentrunk2/missing --run tar
++AMTAR = ${SHELL} /root/openspace/missing --run tar
+ AR = ar
+-AUTOCONF = ${SHELL} /root/opentrunk2/missing --run autoconf
+-AUTOHEADER = ${SHELL} /root/opentrunk2/missing --run autoheader
+-AUTOMAKE = ${SHELL} /root/opentrunk2/missing --run automake-1.8
++AUTOCONF = ${SHELL} /root/openspace/missing --run autoconf
++AUTOHEADER = ${SHELL} /root/openspace/missing --run autoheader
++AUTOMAKE = ${SHELL} /root/openspace/missing --run automake-1.8
+ AWK = gawk
+ CC = gcc
+ CCDEPMODE = depmode=gcc3
+@@ -140,8 +140,8 @@
+ ECHO_T = 
+ EGREP = grep -E
+ EXEEXT = 
+-F77 = 
+-FFLAGS = 
++F77 = g77
++FFLAGS = -g -O2
+ FOX_CONFIG = yes
+ INSTALL_DATA = ${INSTALL} -m 644
+ INSTALL_PROGRAM = ${INSTALL}
+@@ -153,7 +153,7 @@
+ LIBTOOL = $(SHELL) $(top_builddir)/libtool
+ LN_S = ln -s
+ LTLIBOBJS = 
+-MAKEINFO = ${SHELL} /root/opentrunk2/missing --run makeinfo
++MAKEINFO = ${SHELL} /root/openspace/missing --run makeinfo
+ OBJEXT = o
+ PACKAGE = openspace
+ PACKAGE_BUGREPORT = <A HREF="http://openspace.linux.pl">http://openspace.linux.pl</A>
+@@ -171,7 +171,7 @@
+ ac_ct_AR = ar
+ ac_ct_CC = gcc
+ ac_ct_CXX = g++
+-ac_ct_F77 = 
++ac_ct_F77 = g77
+ ac_ct_RANLIB = ranlib
+ ac_ct_STRIP = strip
+ am__fastdepCC_FALSE = #
+@@ -196,7 +196,7 @@
+ host_vendor = pc
+ includedir = ${prefix}/include
+ infodir = ${prefix}/info
+-install_sh = /root/opentrunk2/install-sh
++install_sh = /root/openspace/install-sh
+ libdir = ${exec_prefix}/lib
+ libexecdir = ${exec_prefix}/libexec
+ localstatedir = ${prefix}/var
+
+Modified: trunk/src/OSFileList.cpp
+===================================================================
+--- trunk/src/OSFileList.cpp	2006-02-18 17:08:23 UTC (rev 255)
++++ trunk/src/OSFileList.cpp	2006-03-06 17:48:57 UTC (rev 256)
+@@ -661,15 +661,13 @@
+     FXColor color;
+     FXColor backcolor;
+     FXIcon *icon = NULL;
+-    FXIcon *icon2 = NULL;
+ 
+     
+     if (os_file.type &amp; FOLDER)
+     {
+         color = readcolor (conf-&gt;readonestring (&quot;/OpenspaceConfig/file_types/COMMON/types/dir/color&quot;));
+         backcolor = readcolor2 (conf-&gt;readonestring (&quot;/OpenspaceConfig/file_types/COMMON/types/dir/backcolor&quot;));
+-        icon = specialicons[1];
+-        icon2 = specialicons[0];
++        icon = specialicons[0];
+     }
+     else
+     {
+@@ -693,16 +691,14 @@
+ 
+         if (filet)
+         {
+-        icon2 = filet-&gt;icon;
+-        icon = filet-&gt;bigicon;
++        icon = filet-&gt;icon;
+         color = filet-&gt;color;
+         backcolor = filet-&gt;backcolor;
+         }
+         else
+         {
+       
+-        icon = specialicons[3];
+-        icon2 = specialicons[2];
++        icon = specialicons[1];
+         color = readcolor (conf-&gt;readonestring (&quot;/OpenspaceConfig/file_types/COMMON/types/all/color&quot;));
+         backcolor = readcolor2 (conf-&gt;readonestring (&quot;/OpenspaceConfig/file_types/COMMON/types/all/backcolor&quot;));
+         }
+@@ -725,7 +721,6 @@
+             ico-&gt;create ();
+             icon_vec.push_back (ico);
+             icon = ico;
+-            icon2 = ico;
+         }
+     
+         
+@@ -741,7 +736,7 @@
+     }
+ 
+ 
+-    appendItem (new OSFileListItem (this, os_file, color, backcolor, icon, icon2));
++    appendItem (new OSFileListItem (this, os_file, color, backcolor, icon, icon));
+ 
+ 
+     }
+
+Modified: trunk/src/OSFileListItem.cpp
+===================================================================
+--- trunk/src/OSFileListItem.cpp	2006-02-18 17:08:23 UTC (rev 255)
++++ trunk/src/OSFileListItem.cpp	2006-03-06 17:48:57 UTC (rev 256)
+@@ -248,11 +248,11 @@
+         }
+         if ( osf.type &amp; EXECUTABLE &amp;&amp; !( osf.type &amp; FOLDER ) )
+         {
+-            dc.drawIcon( ( ( OSFileList* ) list ) -&gt;specialicons[ 4 ], xi, y + 4 + font-&gt;getFontHeight() );
++            dc.drawIcon( ( ( OSFileList* ) list ) -&gt;specialicons[ 2 ], xi, y + 4 + font-&gt;getFontHeight() );
+         }
+         else if ( osf.type &amp; SYMLINK )
+         {
+-            dc.drawIcon( ( ( OSFileList* ) list ) -&gt;specialicons[ 5 ], xi, y + 4 + font-&gt;getFontHeight() );
++            dc.drawIcon( ( ( OSFileList* ) list ) -&gt;specialicons[ 3 ], xi, y + 4 + font-&gt;getFontHeight() );
+         }
+ 
+         if ( osf.content != &quot;&quot; )
+
+Modified: trunk/src/OSFileTypeSymbol.cpp
+===================================================================
+--- trunk/src/OSFileTypeSymbol.cpp	2006-02-18 17:08:23 UTC (rev 255)
++++ trunk/src/OSFileTypeSymbol.cpp	2006-03-06 17:48:57 UTC (rev 256)
+@@ -33,15 +33,9 @@
+     // construction
+ }
+ 
+-OSFileTypeSymbol::OSFileTypeSymbol ( FXIcon * ic, FXIcon*ic2, FXColor col, FXColor backcol )
++OSFileTypeSymbol::OSFileTypeSymbol ( FXIcon * ic, FXColor col, FXColor backcol )
+ {
+-    icon = ic;
+-    
+-    if ( ic2 != NULL )
+-        bigicon = ic2;
+-    else
+-        bigicon = ic;
+-
++    icon = ic;    
+     color = col;
+     backcolor = backcol;
+ }
+
+Modified: trunk/src/OSFileTypeSymbol.h
+===================================================================
+--- trunk/src/OSFileTypeSymbol.h	2006-02-18 17:08:23 UTC (rev 255)
++++ trunk/src/OSFileTypeSymbol.h	2006-03-06 17:48:57 UTC (rev 256)
+@@ -47,12 +47,11 @@
+     /**
+      * Constructor.
+      */
+-    OSFileTypeSymbol( FXIcon* ic, FXIcon* ic2, FXColor col, FXColor backcol );
++    OSFileTypeSymbol( FXIcon* ic, FXColor col, FXColor backcol );
+ 
+ public:
+     
+     FXIcon* icon;
+-    FXIcon* bigicon;
+     FXColor color;
+     FXColor backcolor;
+ };
+
+Modified: trunk/src/OSMainWindow.cpp
+===================================================================
+--- trunk/src/OSMainWindow.cpp	2006-02-18 17:08:23 UTC (rev 255)
++++ trunk/src/OSMainWindow.cpp	2006-03-06 17:48:57 UTC (rev 256)
+@@ -162,7 +162,7 @@
+             new FXSeparator ( toolbar, SEPARATOR_NONE );
+ 
+             new FXButton ( toolbar, &quot;\tconfiguration&quot;, objmanager-&gt;osicons[ &quot;configure&quot; ], this, OSMainWindow::ID_CONFIGURE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
+-            new FXButton ( toolbar, &quot;\tabout&quot;, objmanager-&gt;osicons[ &quot;foxmini&quot; ], this, OSMainWindow::ID_ABOUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
++            new FXButton ( toolbar, &quot;\tabout&quot;, objmanager-&gt;osicons[ &quot;about&quot; ], this, OSMainWindow::ID_ABOUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
+             toolbar-&gt;dock( rightdock );
+ 
+             string dir = parseDir ( conf-&gt;readonestring ( &quot;/OpenspaceConfig/leftdir/dir&quot; ) );
+@@ -556,7 +556,7 @@
+         path = &quot;/&quot;;
+ 
+     boxbackup-&gt;fr-&gt;openDir ( path );
+-    boxbackup-&gt;fr-&gt;generateMenu( path, this );
++   // boxbackup-&gt;fr-&gt;generateMenu( path, this );
+ }
+ 
+ 
+@@ -902,27 +902,31 @@
+     FXString name = fil + conf-&gt;readonestring ( &quot;/OpenspaceConfig/file_types/COMMON/types/dir/icon&quot; ).c_str() + &quot;.png&quot;;
+     objmanager-&gt;specialicons[ 0 ] = source-&gt;loadIcon ( name );
+     if ( objmanager-&gt;specialicons[ 0 ] )
++    {
++        objmanager-&gt;specialicons[ 0 ] -&gt;blend(objmanager-&gt;specialicons[ 0 ]-&gt;getTransparentColor());
+         objmanager-&gt;specialicons[ 0 ] -&gt;create();
+-    name = fil + &quot;big_&quot; + conf-&gt;readonestring ( &quot;/OpenspaceConfig/file_types/COMMON/types/dir/icon&quot; ).c_str() + &quot;.png&quot;;
++    }	
++    name = fil + conf-&gt;readonestring ( &quot;/OpenspaceConfig/file_types/COMMON/types/all/icon&quot; ).c_str() + &quot;.png&quot;;
+     objmanager-&gt;specialicons[ 1 ] = source-&gt;loadIcon ( name );
+     if ( objmanager-&gt;specialicons[ 1 ] )
++    {
++        objmanager-&gt;specialicons[ 1 ] -&gt;blend(objmanager-&gt;specialicons[ 1 ]-&gt;getTransparentColor());
+         objmanager-&gt;specialicons[ 1 ] -&gt;create();
+-    name = fil + conf-&gt;readonestring ( &quot;/OpenspaceConfig/file_types/COMMON/types/all/icon&quot; ).c_str() + &quot;.png&quot;;
++    }
++    name = fil + conf-&gt;readonestring ( &quot;/OpenspaceConfig/file_types/COMMON/types/executable/icon&quot; ).c_str() + &quot;.png&quot;;
+     objmanager-&gt;specialicons[ 2 ] = source-&gt;loadIcon ( name );
+     if ( objmanager-&gt;specialicons[ 2 ] )
++    {
++        objmanager-&gt;specialicons[ 2 ] -&gt;blend(objmanager-&gt;specialicons[ 2 ]-&gt;getTransparentColor());
+         objmanager-&gt;specialicons[ 2 ] -&gt;create();
+-    name = fil + &quot;big_&quot; + conf-&gt;readonestring ( &quot;/OpenspaceConfig/file_types/COMMON/types/all/icon&quot; ).c_str() + &quot;.png&quot;;
++    }	
++    name = fil + conf-&gt;readonestring ( &quot;/OpenspaceConfig/file_types/COMMON/types/symlink/icon&quot; ).c_str() + &quot;.png&quot;;
+     objmanager-&gt;specialicons[ 3 ] = source-&gt;loadIcon ( name );
+     if ( objmanager-&gt;specialicons[ 3 ] )
++    {
++        objmanager-&gt;specialicons[ 3 ] -&gt;blend(objmanager-&gt;specialicons[ 3 ]-&gt;getTransparentColor());
+         objmanager-&gt;specialicons[ 3 ] -&gt;create();
+-    name = fil + conf-&gt;readonestring ( &quot;/OpenspaceConfig/file_types/COMMON/types/executable/icon&quot; ).c_str() + &quot;.png&quot;;
+-    objmanager-&gt;specialicons[ 4 ] = source-&gt;loadIcon ( name );
+-    if ( objmanager-&gt;specialicons[ 4 ] )
+-        objmanager-&gt;specialicons[ 4 ] -&gt;create();
+-    name = fil + conf-&gt;readonestring ( &quot;/OpenspaceConfig/file_types/COMMON/types/symlink/icon&quot; ).c_str() + &quot;.png&quot;;
+-    objmanager-&gt;specialicons[ 5 ] = source-&gt;loadIcon ( name );
+-    if ( objmanager-&gt;specialicons[ 5 ] )
+-        objmanager-&gt;specialicons[ 5 ] -&gt;create();
++    }	
+ 
+     struct stat status;
+     struct dirent *dp;
+@@ -945,7 +949,9 @@
+                     string shortname = name.substr ( 0, name.length () - 4 );
+                     FXString fil_name = file.c_str();
+                     objmanager-&gt;osicons[ shortname ] = source-&gt;loadIcon ( fil_name );
++		    objmanager-&gt;osicons[ shortname ] -&gt;blend(objmanager-&gt;osicons[ shortname ]-&gt;getTransparentColor());
+                     objmanager-&gt;osicons[ shortname ] -&gt;create ();
++		    
+                 }
+ 
+             }
+@@ -992,7 +998,7 @@
+     string backcolorstr = conf-&gt;readonestring ( path + &quot;/backcolor&quot; );
+     FXColor backcolor = readcolor2 ( backcolorstr );
+     if ( res2 != &quot;&quot; )
+-        objmanager-&gt;file_type_settings[ type ] = new OSFileTypeSymbol ( objmanager-&gt;osicons[ res2 ], objmanager-&gt;osicons[ &quot;big_&quot; + res2 ], color, backcolor );
++        objmanager-&gt;file_type_settings[ type ] = new OSFileTypeSymbol ( objmanager-&gt;osicons[ res2 ], color, backcolor );
+     else
+         return false;
+ 
+
+Modified: trunk/src/OSPreferences.cpp
+===================================================================
+--- trunk/src/OSPreferences.cpp	2006-02-18 17:08:23 UTC (rev 255)
++++ trunk/src/OSPreferences.cpp	2006-03-06 17:48:57 UTC (rev 256)
+@@ -877,8 +877,7 @@
+         for ( iter2 = objmanager-&gt;osicons.begin (); iter2 != objmanager-&gt;osicons.end (); iter2++ )
+         {
+             FXIcon *icon = iter2-&gt;second;
+-            if ( icon != NULL &amp;&amp; ( iter2-&gt;first.length() &lt; 4 || iter2-&gt;first.substr( 0, 4 ) != &quot;big_&quot; ) )
+-                iconsList2-&gt;appendItem( iter2-&gt;first.c_str(), icon );
++            iconsList2-&gt;appendItem( iter2-&gt;first.c_str(), icon );
+         }
+         if ( ctlast-&gt;icon != &quot;&quot; )
+             iconsList2-&gt;setCurrentItem( iconsList2-&gt;findItem( ctlast-&gt;icon.c_str() ) );
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000038.html">[Openspace-svn] r257 - in trunk: . icons icons/mini src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#37">[ date ]</a>
+              <a href="thread.html#37">[ thread ]</a>
+              <a href="subject.html#37">[ subject ]</a>
+              <a href="author.html#37">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

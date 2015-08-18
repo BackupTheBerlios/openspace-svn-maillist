@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r293 - in trunk: . src/plugins/filelist
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r293%20-%20in%20trunk%3A%20.%20src/plugins/filelist&In-Reply-To=%3C200604291422.k3TEMPGN015171%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000073.html">
+   <LINK REL="Next"  HREF="000075.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r293 - in trunk: . src/plugins/filelist</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r293%20-%20in%20trunk%3A%20.%20src/plugins/filelist&In-Reply-To=%3C200604291422.k3TEMPGN015171%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r293 - in trunk: . src/plugins/filelist">compbatant at berlios.de
+       </A><BR>
+    <I>Sat Apr 29 16:22:25 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000073.html">[Openspace-svn] r292 - in trunk: . src src/plugins/filelist
+</A></li>
+        <LI>Next message: <A HREF="000075.html">[Openspace-svn] r294 - trunk/src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#74">[ date ]</a>
+              <a href="thread.html#74">[ thread ]</a>
+              <a href="subject.html#74">[ subject ]</a>
+              <a href="author.html#74">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-29 16:22:21 +0200 (Sat, 29 Apr 2006)
+New Revision: 293
+
+Modified:
+   trunk/openspacerc.in
+   trunk/src/plugins/filelist/OSVfsSftp.cpp
+Log:
+grupa i owner pliku w sftp, narazie tyko uid i gid
+
+
+Modified: trunk/openspacerc.in
+===================================================================
+--- trunk/openspacerc.in	2006-04-29 13:30:00 UTC (rev 292)
++++ trunk/openspacerc.in	2006-04-29 14:22:21 UTC (rev 293)
+@@ -627,10 +627,12 @@
+ 		&lt;/ftp&gt;
+ 		&lt;sftp&gt;
+ 			&lt;type&gt;network&lt;/type&gt;
+-			&lt;style&gt;small icons&lt;/style&gt;
++			&lt;style&gt;big icons&lt;/style&gt;
+ 			&lt;headers&gt;
+ 				&lt;header&gt;size&lt;/header&gt;
+ 				&lt;header&gt;mode&lt;/header&gt;
++				&lt;header&gt;owner&lt;/header&gt;
++				&lt;header&gt;group&lt;/header&gt;
+ 				&lt;header&gt;modified&lt;/header&gt;
+ 			&lt;/headers&gt;
+ 			&lt;properties&gt;
+@@ -653,6 +655,12 @@
+ 				&lt;mode&gt;
+ 					&lt;width&gt;80&lt;/width&gt;
+ 				&lt;/mode&gt;
++				&lt;owner&gt;
++					&lt;width&gt;80&lt;/width&gt;
++				&lt;/owner&gt;
++				&lt;group&gt;
++					&lt;width&gt;80&lt;/width&gt;
++				&lt;/group&gt;
+ 			&lt;/properties&gt;	
+ 		&lt;/sftp&gt;
+ 		&lt;search&gt;
+
+Modified: trunk/src/plugins/filelist/OSVfsSftp.cpp
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-29 13:30:00 UTC (rev 292)
++++ trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-29 14:22:21 UTC (rev 293)
+@@ -47,6 +47,8 @@
+ 	
+ 	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;name&quot;));
+ 	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;mode&quot;));
++	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;owner&quot;));
++	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;group&quot;));
+ 	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;size&quot;,&quot;size&quot;));
+ 	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;accessed&quot;,&quot;date&quot;));
+ 	v.vfsheaders.push_back(OSVirtualFileSystemHeader(&quot;modified&quot;,&quot;date&quot;));	
+@@ -242,10 +244,7 @@
+ 	version=sftp-&gt;server_version;
+ 	
+ 	
+-	char chstr[ 20 ] = { 0 };
+-        sprintf ( chstr, &quot;%d&quot;, version );
+-	
+-	string info=&quot;version &quot; + string(chstr);
++	string info=&quot;version &quot; + ntos(version);
+ 	fxmessage(&quot;%s\n&quot;,info.c_str());
+ 
+ 
+@@ -278,6 +277,10 @@
+ 
+ 	if (fields[i + 1] == &quot;size&quot;)
+ 	    os_file.attrib.push_back(numtostring (os_file.size));
++	else if (fields[i + 1] == &quot;owner&quot;)
++	    os_file.attrib.push_back(ntos(file-&gt;uid));
++	else if (fields[i + 1] == &quot;group&quot;)
++	    os_file.attrib.push_back(ntos(file-&gt;gid));       
+ 	else if (fields[i + 1] == &quot;accessed&quot;)
+ 	    os_file.attrib.push_back(FXFile::time (&quot;%H:%M %d/%m/%y&quot;, file-&gt;atime).text());
+ 	else if (fields[i + 1] == &quot;modified&quot;)
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000073.html">[Openspace-svn] r292 - in trunk: . src src/plugins/filelist
+</A></li>
+	<LI>Next message: <A HREF="000075.html">[Openspace-svn] r294 - trunk/src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#74">[ date ]</a>
+              <a href="thread.html#74">[ thread ]</a>
+              <a href="subject.html#74">[ subject ]</a>
+              <a href="author.html#74">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

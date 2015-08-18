@@ -1,0 +1,166 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r269 - in trunk: . src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r269%20-%20in%20trunk%3A%20.%20src&In-Reply-To=%3C200604021850.k32IoOuS009859%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   
+   <LINK REL="Next"  HREF="000051.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r269 - in trunk: . src</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r269%20-%20in%20trunk%3A%20.%20src&In-Reply-To=%3C200604021850.k32IoOuS009859%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r269 - in trunk: . src">compbatant at berlios.de
+       </A><BR>
+    <I>Sun Apr  2 20:50:24 CEST 2006</I>
+    <P><UL>
+        
+        <LI>Next message: <A HREF="000051.html">[Openspace-svn] r270 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#50">[ date ]</a>
+              <a href="thread.html#50">[ thread ]</a>
+              <a href="subject.html#50">[ subject ]</a>
+              <a href="author.html#50">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-02 20:50:17 +0200 (Sun, 02 Apr 2006)
+New Revision: 269
+
+Modified:
+   trunk/openspacerc.in
+   trunk/src/OSFileList.cpp
+   trunk/src/OSMainWindow.cpp
+Log:
+zmiany kosmetyczne;)
+
+
+Modified: trunk/openspacerc.in
+===================================================================
+--- trunk/openspacerc.in	2006-03-31 14:42:44 UTC (rev 268)
++++ trunk/openspacerc.in	2006-04-02 18:50:17 UTC (rev 269)
+@@ -45,8 +45,8 @@
+ 	&lt;/speed_delay&gt;
+ 	
+  	&lt;mainwindow&gt;
+-		&lt;width&gt;898&lt;/width&gt;
+-		&lt;height&gt;600&lt;/height&gt;
++		&lt;width&gt;704&lt;/width&gt;
++		&lt;height&gt;450&lt;/height&gt;
+ 	&lt;/mainwindow&gt;
+   
+   	&lt;defaultdir&gt;
+
+Modified: trunk/src/OSFileList.cpp
+===================================================================
+--- trunk/src/OSFileList.cpp	2006-03-31 14:42:44 UTC (rev 268)
++++ trunk/src/OSFileList.cpp	2006-04-02 18:50:17 UTC (rev 269)
+@@ -270,7 +270,7 @@
+ 
+     info = new FXLabel (p, fb-&gt;info ().c_str ());
+ 
+-    textfield = new FXTextField (toolbar, 30, this, OSFileList::ID_TEXTFIELD_RUN);
++    textfield = new FXTextField (toolbar, 21, this, OSFileList::ID_TEXTFIELD_RUN);
+ 
+     dial = NULL;
+     processing = false;
+@@ -784,7 +784,7 @@
+ long OSFileList::lostFocus (FXObject * obj, FXSelector sel, void *ptr)
+ {
+ //active=false;
+-    setBackColor (FXRGB (220, 220, 220));
++  //  setBackColor (FXRGB (220, 220, 220));
+ 
+ 
+ }
+
+Modified: trunk/src/OSMainWindow.cpp
+===================================================================
+--- trunk/src/OSMainWindow.cpp	2006-03-31 14:42:44 UTC (rev 268)
++++ trunk/src/OSMainWindow.cpp	2006-04-02 18:50:17 UTC (rev 269)
+@@ -40,7 +40,7 @@
+ 
+ 
+ //-----MAIN WINDOW---------------------------------------------------------------------------------------------------------------------------
+-OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, &quot;openspace&quot;, NULL, NULL, DECOR_ALL | LAYOUT_FIX_WIDTH, 0, 0, 600, 400, 0, 0 )
++OSMainWindow::OSMainWindow ( FXApp * a ) : FXMainWindow ( a, &quot;openspace&quot;, NULL, NULL, DECOR_ALL | LAYOUT_FIX_WIDTH, 0, 0, 600, 400, 0, 0, 0, 0, 0, 0)
+ {
+     conf = new OSConfigure ();
+ 
+@@ -141,28 +141,28 @@
+             new FXToolBarGrip ( toolbar, toolbar, FXToolBar::ID_TOOLBARGRIP, TOOLBARGRIP_SINGLE );
+ 
+             FXVerticalFrame *ff = new FXVerticalFrame ( this, LAYOUT_FILL_X | LAYOUT_FILL_Y| FRAME_NONE, 0, 0, 0, 0, 0, 0, 0, 0 );
+-            controlframe = new FXVerticalFrame ( ff, LAYOUT_FILL_X | FRAME_NONE, 0, 0, 0, 0, 0, 0, 0, 0 );
++            controlframe = new FXVerticalFrame ( ff, LAYOUT_FILL_X | FRAME_NONE, 0, 0, 0, 0, 5, 5, 0, 0 );
+             splitter = new FXSplitter ( ff, LAYOUT_FILL_X | SPLITTER_TRACKING | LAYOUT_FILL_Y );
+-            left = new FXVerticalFrame ( splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_NONE, 0, 0, w / 2, 0, 0, 0, 0 );
+-            right = new FXVerticalFrame ( splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_NONE, 0, 0, w / 2, 0, 0, 0, 0 );
++            left = new FXVerticalFrame ( splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_NONE, 0, 0, w / 2, 0, 5, 0, 0, 0 );
++            right = new FXVerticalFrame ( splitter, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_NONE, 0, 0, w / 2, 0, 0, 5, 0, 0 );
+ 	    
+      		
+-            leftcontrolframe = new FXVerticalFrame ( left, LAYOUT_FILL_X );
+-            leftframe = new FXVerticalFrame ( left, LAYOUT_FILL_X | LAYOUT_FILL_Y );
+-            rightcontrolframe = new FXVerticalFrame ( right, LAYOUT_FILL_X );
+-            rightframe = new FXVerticalFrame ( right, LAYOUT_FILL_X | LAYOUT_FILL_Y );
++            leftcontrolframe = new FXVerticalFrame ( left, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0 );
++            leftframe = new FXVerticalFrame ( left, LAYOUT_FILL_X | LAYOUT_FILL_Y , 0, 0, 0, 0, 0, 0, 0, 0 );
++            rightcontrolframe = new FXVerticalFrame ( right, LAYOUT_FILL_X , 0, 0, 0, 0, 0, 0, 0, 0 );
++            rightframe = new FXVerticalFrame ( right, LAYOUT_FILL_X | LAYOUT_FILL_Y, 0, 0, 0, 0, 0, 0, 0, 0 );
+ 
+-            new FXButton ( toolbar, &quot;\thide/show copy/move progress&quot;, objmanager-&gt;osicons[ &quot;plus&quot; ], this, OSMainWindow::ID_COMMANDS_SHOW, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
+-            new FXButton ( toolbar, &quot;\topen new panel&quot;, objmanager-&gt;osicons[ &quot;folder&quot; ], this, OSMainWindow::ID_NEWFRAME, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
+-            new FXButton ( toolbar, &quot;\tconnect&quot;, objmanager-&gt;osicons[ &quot;network&quot; ], this, OSMainWindow::ID_NEW_NETWORK, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
+-            new FXButton ( toolbar, &quot;\tsearch&quot;, objmanager-&gt;osicons[ &quot;search&quot; ], this, OSMainWindow::ID_NEW_SEARCH, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
++            new FXButton ( toolbar, &quot;\thide/show copy/move progress&quot;, objmanager-&gt;osicons[ &quot;plus&quot; ], this, OSMainWindow::ID_COMMANDS_SHOW, FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
++            new FXButton ( toolbar, &quot;\topen new panel&quot;, objmanager-&gt;osicons[ &quot;folder&quot; ], this, OSMainWindow::ID_NEWFRAME,FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
++            new FXButton ( toolbar, &quot;\tconnect&quot;, objmanager-&gt;osicons[ &quot;network&quot; ], this, OSMainWindow::ID_NEW_NETWORK, FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
++            new FXButton ( toolbar, &quot;\tsearch&quot;, objmanager-&gt;osicons[ &quot;search&quot; ], this, OSMainWindow::ID_NEW_SEARCH, FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+ 
+             new FXSeparator ( toolbar, SEPARATOR_NONE );
+             new FXSeparator ( toolbar, SEPARATOR_GROOVE );
+             new FXSeparator ( toolbar, SEPARATOR_NONE );
+ 
+-            new FXButton ( toolbar, &quot;\tconfiguration&quot;, objmanager-&gt;osicons[ &quot;configure&quot; ], this, OSMainWindow::ID_CONFIGURE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
+-            new FXButton ( toolbar, &quot;\tabout&quot;, objmanager-&gt;osicons[ &quot;about&quot; ], this, OSMainWindow::ID_ABOUT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
++            new FXButton ( toolbar, &quot;\tconfiguration&quot;, objmanager-&gt;osicons[ &quot;configure&quot; ], this, OSMainWindow::ID_CONFIGURE, FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
++            new FXButton ( toolbar, &quot;\tabout&quot;, objmanager-&gt;osicons[ &quot;about&quot; ], this, OSMainWindow::ID_ABOUT,FRAME_RAISED | LAYOUT_TOP | LAYOUT_LEFT | BUTTON_TOOLBAR, 0, 0, 0, 0, 0, 0, 0, 0);
+             toolbar-&gt;dock( rightdock );
+ 
+             string dir = parseDir ( conf-&gt;readonestring ( &quot;/OpenspaceConfig/leftdir/dir&quot; ) );
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	
+	<LI>Next message: <A HREF="000051.html">[Openspace-svn] r270 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#50">[ date ]</a>
+              <a href="thread.html#50">[ thread ]</a>
+              <a href="subject.html#50">[ subject ]</a>
+              <a href="author.html#50">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

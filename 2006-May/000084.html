@@ -1,0 +1,682 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r303 - in trunk: . src src/plugins/filelist
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-May/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r303%20-%20in%20trunk%3A%20.%20src%20src/plugins/filelist&In-Reply-To=%3C200605131019.k4DAJdeU023734%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000083.html">
+   <LINK REL="Next"  HREF="000085.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r303 - in trunk: . src src/plugins/filelist</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r303%20-%20in%20trunk%3A%20.%20src%20src/plugins/filelist&In-Reply-To=%3C200605131019.k4DAJdeU023734%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r303 - in trunk: . src src/plugins/filelist">compbatant at berlios.de
+       </A><BR>
+    <I>Sat May 13 12:19:39 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000083.html">[Openspace-svn] r302 - in trunk: . icons/big icons/default icons/mini src src/plugins/cmddialog src/plugins/filelist templates
+</A></li>
+        <LI>Next message: <A HREF="000085.html">[Openspace-svn] r304 - in trunk: . src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#84">[ date ]</a>
+              <a href="thread.html#84">[ thread ]</a>
+              <a href="subject.html#84">[ subject ]</a>
+              <a href="author.html#84">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-05-13 12:19:38 +0200 (Sat, 13 May 2006)
+New Revision: 303
+
+Modified:
+   trunk/doxygen.conf
+   trunk/src/OSCMDDialogBox.cpp
+   trunk/src/OSCommandTypeInfo.cpp
+   trunk/src/OSConfigure.cpp
+   trunk/src/OSFileList.cpp
+   trunk/src/OSFileListItem.cpp
+   trunk/src/OSFileTypeInfo.cpp
+   trunk/src/OSFileTypeSymbol.cpp
+   trunk/src/OSFirstRunDialogBox.cpp
+   trunk/src/OSInfoPanel.cpp
+   trunk/src/OSMimeApp.cpp
+   trunk/src/OSMimeType.cpp
+   trunk/src/OSObjectManager.cpp
+   trunk/src/OSPathType.cpp
+   trunk/src/OSPreferences.cpp
+   trunk/src/OSShutter.cpp
+   trunk/src/OSThreadExec.cpp
+   trunk/src/OSUtils.cpp
+   trunk/src/main.cpp
+   trunk/src/plugins/filelist/OSVfsFtp.cpp
+Log:
+cd
+
+
+Modified: trunk/doxygen.conf
+===================================================================
+--- trunk/doxygen.conf	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/doxygen.conf	2006-05-13 10:19:38 UTC (rev 303)
+@@ -30,7 +30,7 @@
+ # If a relative path is entered, it will be relative to the location 
+ # where doxygen was started. If left blank the current directory will be used.
+ 
+-# OpenSpace settings: REQUIRED
++# nao file manager settings: REQUIRED
+ OUTPUT_DIRECTORY       = ./doc/dev
+ 
+ # The OUTPUT_LANGUAGE tag is used to specify the language in which all 
+@@ -172,7 +172,7 @@
+ # comments  will behave just like the Qt-style comments (thus requiring an 
+ # explict @brief command for a brief description.
+ 
+-# OpenSpace setting: REQUIRED
++# ao file manager setting: REQUIRED
+ JAVADOC_AUTOBRIEF      = YES
+ 
+ # If the INHERIT_DOCS tag is set to YES (the default) then an undocumented 
+@@ -203,7 +203,7 @@
+ # The TAB_SIZE tag can be used to set the number of spaces in a tab. 
+ # Doxygen uses this value to replace tabs by spaces in code fragments.
+ 
+-# OpenSpace settings: REQUIRED
++# ao file manager settings: REQUIRED
+ TAB_SIZE               = 4
+ 
+ # The GENERATE_TODOLIST tag can be used to enable (YES) or 
+
+Modified: trunk/src/OSCMDDialogBox.cpp
+===================================================================
+--- trunk/src/OSCMDDialogBox.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/OSCMDDialogBox.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/OSCommandTypeInfo.cpp
+===================================================================
+--- trunk/src/OSCommandTypeInfo.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/OSCommandTypeInfo.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/OSConfigure.cpp
+===================================================================
+--- trunk/src/OSConfigure.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/OSConfigure.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/OSFileList.cpp
+===================================================================
+--- trunk/src/OSFileList.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/OSFileList.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/OSFileListItem.cpp
+===================================================================
+--- trunk/src/OSFileListItem.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/OSFileListItem.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/OSFileTypeInfo.cpp
+===================================================================
+--- trunk/src/OSFileTypeInfo.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/OSFileTypeInfo.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/OSFileTypeSymbol.cpp
+===================================================================
+--- trunk/src/OSFileTypeSymbol.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/OSFileTypeSymbol.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/OSFirstRunDialogBox.cpp
+===================================================================
+--- trunk/src/OSFirstRunDialogBox.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/OSFirstRunDialogBox.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/OSInfoPanel.cpp
+===================================================================
+--- trunk/src/OSInfoPanel.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/OSInfoPanel.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/OSMimeApp.cpp
+===================================================================
+--- trunk/src/OSMimeApp.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/OSMimeApp.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/OSMimeType.cpp
+===================================================================
+--- trunk/src/OSMimeType.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/OSMimeType.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/OSObjectManager.cpp
+===================================================================
+--- trunk/src/OSObjectManager.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/OSObjectManager.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/OSPathType.cpp
+===================================================================
+--- trunk/src/OSPathType.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/OSPathType.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/OSPreferences.cpp
+===================================================================
+--- trunk/src/OSPreferences.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/OSPreferences.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/OSShutter.cpp
+===================================================================
+--- trunk/src/OSShutter.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/OSShutter.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/OSThreadExec.cpp
+===================================================================
+--- trunk/src/OSThreadExec.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/OSThreadExec.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/OSUtils.cpp
+===================================================================
+--- trunk/src/OSUtils.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/OSUtils.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/main.cpp
+===================================================================
+--- trunk/src/main.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/main.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+
+Modified: trunk/src/plugins/filelist/OSVfsFtp.cpp
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsFtp.cpp	2006-05-13 10:16:19 UTC (rev 302)
++++ trunk/src/plugins/filelist/OSVfsFtp.cpp	2006-05-13 10:19:38 UTC (rev 303)
+@@ -1,19 +1,19 @@
+ // $Id$
+ /////////////////////////////////////////////////////////////////////////////
+-// This file is part of OpenSpace project.
++// This file is part of nao file manager project.
+ //
+-// OpenSpace is free software; you can redistribute it and/or modify
++// nao file manager is free software; you can redistribute it and/or modify
+ // it under the terms of the GNU General Public License as published by
+ // the Free Software Foundation; either version 2 of the License, or
+ // (at your option) any later version.
+ //
+-// OpenSpace is distributed in the hope that it will be useful,
++// nao file manager is distributed in the hope that it will be useful,
+ // but WITHOUT ANY WARRANTY; without even the implied warranty of
+ // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ // GNU General Public License for more details.
+ //
+ // You should have received a copy of the GNU General Public License
+-// along with OpenSpace; if not, write to the Free Software
++// along with nao file manager; if not, write to the Free Software
+ // Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+ /////////////////////////////////////////////////////////////////////////////
+ //
+@@ -22,7 +22,7 @@
+ // Author: Mateusz Dworak &lt;<A HREF="http://nao.linux.pl">http://nao.linux.pl</A>&gt;, (C) 2005
+ //
+ // Description:
+-//  FTP plugin derived from OpenSpace file list VFS plugin.
++//  FTP plugin derived from nao file manager file list VFS plugin.
+ //
+ /////////////////////////////////////////////////////////////////////////////
+ 
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000083.html">[Openspace-svn] r302 - in trunk: . icons/big icons/default icons/mini src src/plugins/cmddialog src/plugins/filelist templates
+</A></li>
+	<LI>Next message: <A HREF="000085.html">[Openspace-svn] r304 - in trunk: . src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#84">[ date ]</a>
+              <a href="thread.html#84">[ thread ]</a>
+              <a href="subject.html#84">[ subject ]</a>
+              <a href="author.html#84">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

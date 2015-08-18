@@ -1,0 +1,422 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r295 - trunk/src/plugins/filelist
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r295%20-%20trunk/src/plugins/filelist&In-Reply-To=%3C200604301403.k3UE3YrJ012711%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000075.html">
+   <LINK REL="Next"  HREF="000077.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r295 - trunk/src/plugins/filelist</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r295%20-%20trunk/src/plugins/filelist&In-Reply-To=%3C200604301403.k3UE3YrJ012711%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r295 - trunk/src/plugins/filelist">compbatant at berlios.de
+       </A><BR>
+    <I>Sun Apr 30 16:03:34 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000075.html">[Openspace-svn] r294 - trunk/src/plugins/filelist
+</A></li>
+        <LI>Next message: <A HREF="000077.html">[Openspace-svn] r296 - trunk/src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#76">[ date ]</a>
+              <a href="thread.html#76">[ thread ]</a>
+              <a href="subject.html#76">[ subject ]</a>
+              <a href="author.html#76">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-30 16:03:32 +0200 (Sun, 30 Apr 2006)
+New Revision: 295
+
+Modified:
+   trunk/src/plugins/filelist/OSVfsSftp.cpp
+   trunk/src/plugins/filelist/OSVfsSftp.h
+Log:
+sftp-rekurencyjne uploadowanie plikow
+
+
+Modified: trunk/src/plugins/filelist/OSVfsSftp.cpp
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-29 18:14:50 UTC (rev 294)
++++ trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-30 14:03:32 UTC (rev 295)
+@@ -308,16 +308,7 @@
+     }
+ 	
+ 	
+-	
+-	
+-	
+-	
+-	
+-	
+-	
+     
+-    //fxmessage(&quot;name=%s type=%x\n&quot;,file-&gt;name,file-&gt;permissions);
+-    
+     sftp_attributes_free(file);
+     return os_file;
+     }
+@@ -350,11 +341,6 @@
+ 
+ int OSVfsSftp::osopendir (std::string dir)
+ {
+-  
+-    //if(dirsftp)
+-    //sftp_dir_close(dirsftp);   
+-
+-
+     
+     /* opening a directory */
+   
+@@ -388,7 +374,7 @@
+ 
+ int OSVfsSftp::move (OSThreadExec* te)
+ {
+-
++copymove(te,false);
+ }
+ 
+ 
+@@ -405,32 +391,26 @@
+ }
+ 
+ 
+-int OSVfsSftp::copymove (OSThreadExec* te, bool copy)
++
++
++int OSVfsSftp::uploadFile (string from, string to, OSThreadExec* te)
+ {
+ 
++fxmessage(&quot;from %s to %s\n&quot;,from.c_str(),to.c_str());
+ 
+-std::vector &lt; std::string &gt;::iterator iter;
+ 
+-std::string::size_type pos = te-&gt;options.find ( &quot;upload&quot; );
+-    if ( pos == std::string::npos )
+-    {
++te-&gt;act_file_name=from;
++te-&gt;act_file_size=0;
++te-&gt;file_size=FXFile::size(from.c_str());
+ 
+-	for (iter = te-&gt;src.begin (); iter != te-&gt;src.end(); iter++)
+-  	{
+-	
+-		
+ 		SFTP_FILE *dst;
+ 		int src;
+ 		int len=1;
+     		char data[1024];
++						
++		src=open(from.c_str(),O_RDONLY,NULL);
+ 		
+-		std::string ds = te-&gt;dst;
+-	   	ds.append (SEPARATOR);
+-	  	ds.append (FXFile::name (iter-&gt;c_str ()).text ());
+-				
+-		src=open(iter-&gt;c_str(),O_RDONLY,NULL);
+-		
+-    		dst=sftp_open(sftp,(char*)ds.c_str(),O_WRONLY|O_CREAT,NULL);
++    		dst=sftp_open(sftp,(char*)to.c_str(),O_WRONLY|O_CREAT,NULL);
+ 		if(dst)
+ 		{
+ 		
+@@ -443,34 +423,30 @@
+             			ssh_say(0,&quot;error writing %d bytes : %s\n&quot;,len,ssh_get_error(session));
+             			return -1;
+         			}
+-		
++			te-&gt;act_total_size+=len;
++			te-&gt;act_file_size+=len;
++			
+ 			}
+ 		sftp_file_close(dst);
+ 		close(src);
+     		}	
+-	
+-    
+-    	}
+-    }
+-    else
+-    {
+-    	for (iter = te-&gt;src.begin (); iter != te-&gt;src.end(); iter++)
+-  	{
++}
++
++
++int OSVfsSftp::downloadFile (string from, string to, OSThreadExec* te)
++{
++
+ 		SFTP_FILE *src;
+ 		int dst;
+ 		int len=1;
+     		char data[1024];
+ 		
+-    		src=sftp_open(sftp,(char*)iter-&gt;c_str(),O_RDONLY,NULL);
++    		src=sftp_open(sftp,(char*)from.c_str(),O_RDONLY,NULL);
+ 		if(src)
+ 		{
++				
++		dst=open(to.c_str(),O_WRONLY | O_CREAT | O_TRUNC,S_IRUSR+S_IWUSR);
+ 		
+-		std::string ds = te-&gt;dst;
+-	   	ds.append (SEPARATOR);
+-	  	ds.append (FXFile::name (iter-&gt;c_str ()).text ());
+-		
+-		dst=open(ds.c_str(),O_WRONLY | O_CREAT | O_TRUNC,S_IRUSR+S_IWUSR);
+-		
+ 			while((len=sftp_read(src,data,1024)) &gt; 0)
+ 			{
+        				if(write(dst,data,len)!=len)
+@@ -482,8 +458,58 @@
+ 			}
+ 		sftp_file_close(src);
+ 		close(dst);
+-    		}	
++  		}	
++	
++}
++
++
++
++
++int OSVfsSftp::copymove (OSThreadExec* te, bool copy)
++{
++
++unsigned long size = 0;
++
++std::vector &lt; std::string &gt;::iterator iter;
++
++fxmessage(te-&gt;options.c_str());
++
++std::string::size_type pos = te-&gt;options.find ( &quot;upload&quot; );
++    if ( pos == std::string::npos )
++    {
++
++
++	for ( iter = te-&gt;src.begin (); iter != te-&gt;src.end(); iter++ )
++        {
++            std::string sr = ( *iter );
++            if ( FXFile::isDirectory ( sr.c_str () ) )
++                sr.append ( &quot;/&quot; );
++            local_totalsize ( sr, size );
++        }
++
++        te-&gt;total_size = size;
++
++
++	for (iter = te-&gt;src.begin (); iter != te-&gt;src.end(); iter++)
++  	{
++	
++	goLocalRecursive( *iter, this-&gt;dir, te );	
++		
++	
++    
+     	}
++    }
++    else
++    {
++    	for (iter = te-&gt;src.begin (); iter != te-&gt;src.end(); iter++)
++  	{
++		
++		
++		//std::string ds = te-&gt;dst;
++	   	//ds.append (SEPARATOR);
++	  	//ds.append (FXFile::name (iter-&gt;c_str ()).text ());
++		
++    	}
+     }	
+ 
+ 
+@@ -496,9 +522,10 @@
+ void OSVfsSftp::totalsize (std::string path, unsigned long &amp;size)
+ {
+ 
+-fxmessage(&quot;%s\n&quot;,path.c_str());
++//fxmessage(&quot;%s\n&quot;,path.c_str());
+ 
+ SFTP_ATTRIBUTES * attr=sftp_stat (sftp,(char*)path.c_str ());
++SFTP_DIR *dirsftp;
+ 
+  if(attr) 
+  {
+@@ -534,11 +561,127 @@
+   size += (unsigned int) attr-&gt;size;
+   }    
+  sftp_attributes_free(attr);
+- }
++ } 
+ 
+ 
+ }
+ 
++void OSVfsSftp::goLocalRecursive ( std::string path, std::string dstdir, OSThreadExec *te )
++{
++
++    if ( te-&gt;cancel == true )
++        return ;
++
++    if ( FXFile::isDirectory ( path.c_str () ) )
++    {
++        struct stat status;
++        struct dirent *dp;
++        DIR *dirp;
++
++        
++	
++        
++
++
++        dirp = opendir ( path.c_str () );
++	
++	this-&gt;dir=dstdir;
++	
++	dstdir = dstdir +&quot;/&quot;+ FXFile::name( path.c_str() ).text();
++	this-&gt;mkdir( FXFile::name( path.c_str() ).text(),0);
++
++	fxmessage(&quot;MKDIR = %s\n&quot;,dstdir.c_str());
++
++        while ( ( dp = readdir ( dirp ) ) != NULL )
++        {
++            if ( dp-&gt;d_name[ 0 ] != '.' || ( dp-&gt;d_name[ 1 ] != '\0' &amp;&amp; ( dp-&gt;d_name[ 1 ] != '.' || dp-&gt;d_name[ 2 ] != '\0' ) ) )
++            {
++
++                std::string file = path + &quot;/&quot;;
++                file.append ( dp-&gt;d_name );
++                goLocalRecursive( file, dstdir, te );
++            }
++        }
++
++        closedir ( dirp );
++    }
++    else
++    {
++        
++		std::string ds = dstdir;
++	   	ds.append (SEPARATOR);
++	  	ds.append (FXFile::name (path.c_str()).text ());
++		uploadFile(path,ds,te);
++
++    }
++
++}
++
++
++
++
++
++
++void OSVfsSftp::local_totalsize ( std::string path, unsigned long &amp;size )
++{
++
++//fxmessage(&quot;%s\n&quot;,path.c_str());
++
++    if ( FXFile::isDirectory ( path.c_str () ) )
++    {
++        struct stat status;
++        struct dirent *dp;
++        DIR *dirp;
++
++
++        dirp = opendir ( path.c_str () );
++
++        while ( ( dp = readdir ( dirp ) ) != NULL )
++        {
++            if ( dp-&gt;d_name[ 0 ] != '.' || ( dp-&gt;d_name[ 1 ] != '\0' &amp;&amp; ( dp-&gt;d_name[ 1 ] != '.' || dp-&gt;d_name[ 2 ] != '\0' ) ) )
++            {
++
++                std::string file = path;
++                file.append ( dp-&gt;d_name );
++#ifndef WIN32
++                lstat ( file.c_str (), &amp;status );
++#else
++                stat ( file.c_str (), &amp;status );
++#endif
++                if ( S_ISDIR ( status.st_mode ) )
++                {
++                    size = size + ( unsigned int ) status.st_size;
++                    file.append ( &quot;/&quot; );
++                    totalsize ( file, size );
++
++                }
++                else
++                {
++                    size = size + status.st_size;
++                }
++            }
++        }
++
++        closedir ( dirp );
++    }
++    else
++    {
++        size += FXFile::size ( path.c_str () );
++
++    }
++
++}
++
++
++
++
++
++
++
++
++
++
++
+ std::string OSVfsSftp::info (void)
+ {
+ string info=&quot;&quot;;
+
+Modified: trunk/src/plugins/filelist/OSVfsSftp.h
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsSftp.h	2006-04-29 18:14:50 UTC (rev 294)
++++ trunk/src/plugins/filelist/OSVfsSftp.h	2006-04-30 14:03:32 UTC (rev 295)
+@@ -86,6 +86,10 @@
+     bool hardlink ( std::string src, std::string dst );
+     OSVirtualFileSystemInfo setup ( void );
+     void totalsize ( std::string path, unsigned long &amp;size );
++    void local_totalsize ( std::string path, unsigned long &amp;size );
++    void goLocalRecursive ( std::string path, std::string prefix, OSThreadExec *te );
++    int  uploadFile (std::string from, std::string to, OSThreadExec* te);
++    int  downloadFile (std::string from, std::string to, OSThreadExec* te);
+     std::string getinitialdir( void );
+ 
+ };
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000075.html">[Openspace-svn] r294 - trunk/src/plugins/filelist
+</A></li>
+	<LI>Next message: <A HREF="000077.html">[Openspace-svn] r296 - trunk/src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#76">[ date ]</a>
+              <a href="thread.html#76">[ thread ]</a>
+              <a href="subject.html#76">[ subject ]</a>
+              <a href="author.html#76">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

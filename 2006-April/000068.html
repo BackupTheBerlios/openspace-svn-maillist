@@ -1,0 +1,209 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r287 - trunk/src/plugins/filelist
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-April/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r287%20-%20trunk/src/plugins/filelist&In-Reply-To=%3C200604281803.k3SI33iI024216%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000067.html">
+   <LINK REL="Next"  HREF="000069.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r287 - trunk/src/plugins/filelist</H1>
+    <B>compbatant at BerliOS</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r287%20-%20trunk/src/plugins/filelist&In-Reply-To=%3C200604281803.k3SI33iI024216%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r287 - trunk/src/plugins/filelist">compbatant at berlios.de
+       </A><BR>
+    <I>Fri Apr 28 20:03:03 CEST 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000067.html">[Openspace-svn] r286 - in trunk: . src/plugins/filelist
+</A></li>
+        <LI>Next message: <A HREF="000069.html">[Openspace-svn] r288 - trunk/src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#68">[ date ]</a>
+              <a href="thread.html#68">[ thread ]</a>
+              <a href="subject.html#68">[ subject ]</a>
+              <a href="author.html#68">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-04-28 20:03:00 +0200 (Fri, 28 Apr 2006)
+New Revision: 287
+
+Modified:
+   trunk/src/plugins/filelist/OSVfsSftp.cpp
+Log:
+dziala logownie i chodzenie po katalogach sftp
+
+
+Modified: trunk/src/plugins/filelist/OSVfsSftp.cpp
+===================================================================
+--- trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-28 16:25:45 UTC (rev 286)
++++ trunk/src/plugins/filelist/OSVfsSftp.cpp	2006-04-28 18:03:00 UTC (rev 287)
+@@ -135,30 +135,82 @@
+         printf(&quot;%s\n&quot;,banner);
+         free(banner);
+     }
++    
++    
+     if(auth!=SSH_AUTH_SUCCESS){
+-        //M auth=auth_kbdint(session);
++      
++      
++      
++      
++    auth=ssh_userauth_kbdint(session,NULL,NULL);
++    char *name,*instruction,*prompt,*ptr;
++    char buffer[128];
++    int i,n;
++    char echo;
++    while (auth==SSH_AUTH_INFO){
++        name=ssh_userauth_kbdint_getname(session);
++        instruction=ssh_userauth_kbdint_getinstruction(session);
++        n=ssh_userauth_kbdint_getnprompts(session);
++        if(strlen(name)&gt;0)
++            printf(&quot;%s\n&quot;,name);
++        if(strlen(instruction)&gt;0)
++            printf(&quot;%s\n&quot;,instruction);
++        for(i=0;i&lt;n;++i){
++            prompt=ssh_userauth_kbdint_getprompt(session,i,&amp;echo);
++            if(echo){
++                printf(&quot;%s&quot;,prompt);
++                fgets(buffer,sizeof(buffer),stdin);
++                buffer[sizeof(buffer)-1]=0;
++                if((ptr=strchr(buffer,'\n')))
++                    *ptr=0;
++                ssh_userauth_kbdint_setanswer(session,i,buffer);
++                memset(buffer,0,strlen(buffer));
++            } else {
++                //ptr=getpass(prompt);
++                ssh_userauth_kbdint_setanswer(session,i,(char*)pt.password.c_str());
++            }
++        }
++        auth=ssh_userauth_kbdint(session,NULL,NULL);
++    }
++      
++      
++      
++      
++      
+         if(auth==SSH_AUTH_ERROR){
+             fprintf(stderr,&quot;authenticating with keyb-interactive: %s\n&quot;,
+                     ssh_get_error(session));
+             return -1;
+         }
+     }
++    
++    
++    
++    
++    
++    
++    
++    
+     if(auth!=SSH_AUTH_SUCCESS){
+-        password=getpass(&quot;Password : &quot;);
+-        if(ssh_userauth_password(session,NULL,password) != SSH_AUTH_SUCCESS){
++ cout&lt;&lt;pt.password&lt;&lt;endl;
++         if(ssh_userauth_password(session,NULL,(char*)pt.password.c_str()) != SSH_AUTH_SUCCESS){
+             fprintf(stderr,&quot;Authentication failed: %s\n&quot;,ssh_get_error(session));
+             ssh_disconnect(session);
+             return -1;
+         }
+-        memset(password,0,strlen(password));
++        //memset(password,0,strlen(password));
+     }
++    
++    
++    
++    
++    
++    
++    
+     ssh_say(1,&quot;Authentication success\n&quot;);
+ 
+ 
+-     //do_sftp(session);    
+-    //if(!sftp)
+-        //do_cleanup();
+-    
++   
+ 
+     sftp=sftp_new(session);
+     
+@@ -211,6 +263,7 @@
+ 
+ std::string OSVfsSftp::getinitialdir( void )
+ {
++
+        char* path=&quot;./&quot;;    
+        return string(sftp_canonicalize_path(sftp, path));
+ }
+@@ -235,25 +288,6 @@
+     }
+ 
+ 
+-    /*
+-    
+-     reading the whole directory, file by file 
+-    while((file=sftp_readdir(sftp,dir))){
+-        ssh_say(0,&quot;%30s(%.8lo) : %.5d.%.5d : %.10lld bytes\n&quot;,file-&gt;name,file-&gt;permissions,file-&gt;uid,file-&gt;gid,file-&gt;size);
+-        sftp_attributes_free(file);
+-    }
+-     when file=NULL, an error has occured OR the directory listing is end of file 
+-    if(!sftp_dir_eof(dir)){
+-        ssh_say(0,&quot;error : %s\n&quot;,ssh_get_error(session));
+-        return -1;
+-    }
+-    if(sftp_dir_close(dir)){
+-        ssh_say(0,&quot;Error : %s\n&quot;,ssh_get_error(session));
+-        return -1;
+-    }
+-
+-*/
+-
+ }
+ 
+ int OSVfsSftp::mkdir (std::string dir, int mode)
+@@ -350,6 +384,7 @@
+ 
+ int OSVfsSftp::quit (void)
+ {
++    if(dirsftp)
+     ssh_disconnect(session);
+     return 0;
+ }
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000067.html">[Openspace-svn] r286 - in trunk: . src/plugins/filelist
+</A></li>
+	<LI>Next message: <A HREF="000069.html">[Openspace-svn] r288 - trunk/src/plugins/filelist
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#68">[ date ]</a>
+              <a href="thread.html#68">[ thread ]</a>
+              <a href="subject.html#68">[ subject ]</a>
+              <a href="author.html#68">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>

@@ -1,0 +1,601 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<HTML>
+ <HEAD>
+   <TITLE> [Openspace-svn] r252 - trunk/src
+   </TITLE>
+   <LINK REL="Index" HREF="http://lists.berlios.de/pipermail/openspace-svn/2006-February/index.html" >
+   <LINK REL="made" HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r252%20-%20trunk/src&In-Reply-To=%3C200602122349.k1CNnCtk017528%40sheep.berlios.de%3E">
+   <META NAME="robots" CONTENT="index,nofollow">
+   <style type="text/css">
+       pre {
+           white-space: pre-wrap;       /* css-2.1, curent FF, Opera, Safari */
+           }
+   </style>
+   <META http-equiv="Content-Type" content="text/html; charset=us-ascii">
+   <LINK REL="Previous"  HREF="000032.html">
+   <LINK REL="Next"  HREF="000034.html">
+ </HEAD>
+ <BODY BGCOLOR="#ffffff">
+   <H1>[Openspace-svn] r252 - trunk/src</H1>
+    <B>compbatant at berlios.de</B> 
+    <A HREF="mailto:openspace-svn%40lists.berlios.de?Subject=Re%3A%20%5BOpenspace-svn%5D%20r252%20-%20trunk/src&In-Reply-To=%3C200602122349.k1CNnCtk017528%40sheep.berlios.de%3E"
+       TITLE="[Openspace-svn] r252 - trunk/src">compbatant at berlios.de
+       </A><BR>
+    <I>Mon Feb 13 00:49:12 CET 2006</I>
+    <P><UL>
+        <LI>Previous message: <A HREF="000032.html">[Openspace-svn] r251 - trunk/src
+</A></li>
+        <LI>Next message: <A HREF="000034.html">[Openspace-svn] r253 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#33">[ date ]</a>
+              <a href="thread.html#33">[ thread ]</a>
+              <a href="subject.html#33">[ subject ]</a>
+              <a href="author.html#33">[ author ]</a>
+         </LI>
+       </UL>
+    <HR>  
+<!--beginarticle-->
+<PRE>Author: compbatant
+Date: 2006-02-13 00:48:56 +0100 (Mon, 13 Feb 2006)
+New Revision: 252
+
+Added:
+   trunk/src/OSFileListController.h
+   trunk/src/OSFrame.cpp
+   trunk/src/OSFrame.h
+Modified:
+   trunk/src/OSFileList.cpp
+   trunk/src/OSFileList.h
+   trunk/src/OSMainWindow.cpp
+   trunk/src/OSMainWindow.h
+Log:
+refactoring :]
+
+
+Modified: trunk/src/OSFileList.cpp
+===================================================================
+--- trunk/src/OSFileList.cpp	2006-02-12 22:21:00 UTC (rev 251)
++++ trunk/src/OSFileList.cpp	2006-02-12 23:48:56 UTC (rev 252)
+@@ -110,7 +110,7 @@
+ 
+ 
+ 
+-OSFileList::OSFileList (FXComposite * p, OSPathType pt):
++OSFileList::OSFileList (FXComposite * p, OSPathType pt,long id,OSFileListController* controller):
+ FXIconList (p, this, ID_ICO, LAYOUT_FILL_X | LAYOUT_FILL_Y | ICONLIST_EXTENDEDSELECT | ICONLIST_COLUMNS)
+ {
+ objmanager=OSObjectManager::instance(getApp());
+@@ -126,6 +126,7 @@
+ FXScrollArea::horizontal-&gt;setHiliteColor(FXRGB(255, 255, 255));
+ FXScrollArea::horizontal-&gt;setBorderColor(FXRGB(255, 255, 255));
+ FXScrollArea::horizontal-&gt;setBackColor(objmanager-&gt;maincolor);
++this-&gt;id=id;
+ 
+     flags |= FLAG_ENABLED | FLAG_DROPTARGET;
+     popupmenu = NULL;
+@@ -171,6 +172,8 @@
+ 
+ 
+     notifyparent = getShell ();
++    
++    this-&gt;controller=controller;
+ 
+     active = false;
+ 
+@@ -656,7 +659,8 @@
+     return false;
+     }
+ path=dir;    
+-       
++controller-&gt;dirChange(id);  
++    
+ clearItems ();
+ 
+ 
+@@ -1082,7 +1086,6 @@
+     if (command == &quot;other&quot;)
+     {
+         openDir (filelist_opposite-&gt;path);
+-	notifyparent-&gt;handle (this, FXSEL (SEL_COMMAND, 666), NULL);
+     }
+     else if (command == &quot;copy&quot; || command == &quot;move&quot; || command == &quot;remove&quot;)
+     {
+@@ -1139,7 +1142,6 @@
+     else if (command == &quot;home&quot;)
+     {
+          openDir(FXFile::getHomeDirectory ().text ());
+-         notifyparent-&gt;handle (this, FXSEL (SEL_COMMAND, 666), NULL);
+     } 
+     else if (command == &quot;dirup&quot;)
+     {
+@@ -1258,8 +1260,7 @@
+        }
+        else if(command == &quot;goto_dir&quot;)
+        {
+-    openDir (textfield-&gt;getText ().text ());
+-    notifyparent-&gt;handle (this, FXSEL (SEL_COMMAND, 666), NULL);
++   	 openDir (textfield-&gt;getText ().text ());
+        }
+        else if (command == &quot;get_dir&quot;)
+        {
+@@ -1379,10 +1380,8 @@
+     ;
+     //label-&gt;setText(path.c_str());
+     
+-    if(openDir (dir))
+-    {
+-    notifyparent-&gt;handle (this, FXSEL (SEL_COMMAND, 666), NULL);
+-    }  
++    openDir (dir);
++  
+     }
+     else
+     {    
+@@ -1416,11 +1415,8 @@
+ 
+    string pathnew = FXFile::upLevel (path.c_str ()).text ();
+     
+-    if(openDir (pathnew));
+-    {
+-    notifyparent-&gt;handle (this, FXSEL (SEL_COMMAND, 666), NULL);
+-    
+-    }
++    openDir (pathnew);
++
+ }
+ 
+ 
+
+Modified: trunk/src/OSFileList.h
+===================================================================
+--- trunk/src/OSFileList.h	2006-02-12 22:21:00 UTC (rev 251)
++++ trunk/src/OSFileList.h	2006-02-12 23:48:56 UTC (rev 252)
+@@ -35,7 +35,9 @@
+ #include &lt;string&gt;
+ #include &lt;map&gt;
+ #include &quot;OSPreferences.h&quot;
++#include &quot;OSFileListController.h&quot;
+ 
++
+ //OSFileList
+ class OSFileList: public FXIconList
+ {
+@@ -48,6 +50,9 @@
+     string previous_path;
+     string type;
+     OSPathType *pt;
++    long id;
++    
++    OSFileListController *controller;  
+ 
+     FXWindow *notifyparent;
+     FXLabel *label;
+@@ -112,7 +117,7 @@
+     virtual ~OSFileList( void );
+ 
+     //==============================================
+-    OSFileList ( FXComposite * p, OSPathType pt );
++    OSFileList ( FXComposite * p, OSPathType pt ,long id,OSFileListController* controller);
+     //==============================================
+ 
+ 
+
+Added: trunk/src/OSFileListController.h
+===================================================================
+--- trunk/src/OSFileListController.h	2006-02-12 22:21:00 UTC (rev 251)
++++ trunk/src/OSFileListController.h	2006-02-12 23:48:56 UTC (rev 252)
+@@ -0,0 +1,13 @@
++#ifndef __OSFILELISTCONTROLLER_H__
++#define __OSFILELISTCONTROLLER_H__
++
++class OSFileListController
++{
++public:
++	virtual void dirChange(long id)=0;
++	virtual void getFocus(long id)=0;
++
++};
++
++
++#endif
+
+Added: trunk/src/OSFrame.cpp
+===================================================================
+--- trunk/src/OSFrame.cpp	2006-02-12 22:21:00 UTC (rev 251)
++++ trunk/src/OSFrame.cpp	2006-02-12 23:48:56 UTC (rev 252)
+@@ -0,0 +1,171 @@
++#include &quot;OSFrame.h&quot; 
++#include &quot;OSMainWindow.h&quot; 
++
++OSFrame::OSFrame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt,FXDockSite* dock1,FXDockSite* dock2,long id,OSFileListController* controller)
++{
++    this-&gt;pathdir = pt.dir;
++    this-&gt;type = pt.type;
++    this-&gt;id=id;
++    string path = pathdir;
++    hf = new FXHorizontalFrame ( cp, LAYOUT_FILL_X | FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
++    pathdir = path;
++    firstbutton=NULL;
++    
++    this-&gt;dock1=dock1;
++    this-&gt;dock2=dock2;
++    
++    FXButton *prebutton = NULL;
++    FXButton *nextbutton = NULL;
++
++    OSObjectManager*objmanager = OSObjectManager::instance( cp-&gt;getApp() );
++
++    toleft = new FXButton ( hf, &quot;&quot;, objmanager-&gt;osicons[ &quot;left&quot; ], tgt, OSMainWindow::ID_TOLEFT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
++    toleft-&gt;setUserData ( new box ( this, NULL, NULL, NULL ) );
++    toclose = new FXButton ( hf, &quot;&quot;, objmanager-&gt;osicons[ &quot;close&quot; ], tgt, OSMainWindow::ID_TOCLOSE, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
++    toclose-&gt;setUserData ( new box ( this, NULL, NULL, NULL ) );
++    toright = new FXButton ( hf, &quot;&quot;, objmanager-&gt;osicons[ &quot;right&quot; ], tgt, OSMainWindow::ID_TORIGHT, FRAME_THICK, 0, 0, 0, 0, 0, 0, 0, 0 );
++    toright-&gt;setUserData ( new box ( this, NULL, NULL, NULL ) );
++    if ( pt.server != &quot;&quot; )
++    {
++        string lab = pt.server + &quot;: &quot;;
++        new FXLabel( hf, lab.c_str() );
++    }
++
++   
++    generateMenu(pathdir,tgt);
++
++    frame = new FXVerticalFrame ( p, LAYOUT_FILL_X | LAYOUT_FILL_Y | FRAME_SUNKEN, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 );
++    f = new OSFileList ( frame, pt, id, controller );
++  
++
++}
++
++void OSFrame::create(void)
++{
++    frame-&gt;create ();
++    hf-&gt;create ();
++}
++
++
++
++//generate buttons path for given path
++void OSFrame::generateMenu ( string path, FXObject * tgt )
++{
++    OSObjectManager * objmanager = OSObjectManager::instance( hf-&gt;getApp() );
++
++    if (path.length()&gt;1 &amp;&amp; path[ 0 ] == '/' &amp;&amp; path[ 1 ] == '/' )
++        path.erase ( 0, 1 );
++	
++    	if(firstbutton!=NULL)
++	{	
++    	box *boxel = ( box * ) firstbutton-&gt;getUserData ();
++    	box *boxbackup = boxel;
++    		while ( boxel )
++    		{
++        		box * boxel_del = boxel;
++       			if ( boxel-&gt;nextbutton != NULL )
++            		boxel = ( box * ) boxel-&gt;nextbutton-&gt;getUserData ();
++        		else
++            		boxel = NULL;
++			
++       		delete boxel_del-&gt;bt;
++        	delete boxel_del;
++       		boxel_del-&gt;bt = NULL;
++        	boxel_del = NULL;
++    		}
++    	}
++	
++    this-&gt;pathdir = path;
++    int z = 0;
++    FXButton *prebutton = NULL;
++    FXButton *nextbutton = NULL;
++    while ( z != -1 )
++    {
++        string path_element = &quot;&quot;;
++        z = path.find ( SEPARATOR, 1 );
++        if ( z == -1 )
++            path_element.append ( path );
++
++        else
++            path_element.append ( path.substr ( 0, z ) );
++        path.erase ( 0, z );
++        FXButton *bt = new FXButton ( hf, path_element.c_str (), NULL, tgt,
++                                      OSMainWindow::ID_DIR, FRAME_THICK, 0, 0, 0, 0, 0, 0,
++                                      0, 0 );
++        bt-&gt;setBackColor ( objmanager-&gt;maincolor );
++	
++	if(firstbutton!=NULL)
++        bt-&gt;create ();
++	
++        if ( prebutton != NULL )
++        {
++            box * boxel = ( box * ) prebutton-&gt;getUserData ();
++            boxel-&gt;nextbutton = bt;
++        }
++
++        else
++            firstbutton = bt;
++	    
++        bt-&gt;setUserData ( new box ( this, prebutton, bt, NULL ) );
++        prebutton = bt;
++    }
++}
++
++
++OSFrame::~OSFrame ()
++{
++	    
++    	    delete hf;
++            delete f;
++            delete frame;
++}
++
++bool OSFrame::openDir(string dir)
++{
++	return f-&gt;openDir(dir);
++}
++
++
++string OSFrame::getDir(void)
++{
++	return f-&gt;getDir();
++}
++
++
++void OSFrame::moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer,OSFrame * frameOpposite)  
++{
++	hf-&gt;reparent ( controlframeContainer );
++	frame-&gt;reparent ( frameContainer );
++	toleft-&gt;hide ();
++        toright-&gt;hide ();
++        toclose-&gt;hide ();
++	frame-&gt;show ();	
++	
++    	frameOpposite-&gt;f-&gt;filelist_opposite = f;
++	
++    	f-&gt;filelist_opposite = frameOpposite-&gt;f;    
++	f-&gt;toolbar-&gt;dock(dock1);
++  	f-&gt;toolbar2-&gt;dock(dock2);
++        f-&gt;toolbar-&gt;show();        
++        f-&gt;toolbar2-&gt;show();		
++	f-&gt;handle ( frameContainer, FXSEL ( SEL_FOCUSIN, OSFileList::ID_ICO ), NULL );	
++	
++	frameContainer-&gt;recalc();
++        
++}
++void OSFrame::moveToBack(FXComposite * controlframeContainer)
++{
++	hf-&gt;reparent ( controlframeContainer );
++	
++        f-&gt;toolbar-&gt;hide();
++        f-&gt;toolbar2-&gt;hide();
++	
++        toleft-&gt;show ();
++        toright-&gt;show ();
++        toclose-&gt;show ();
++        frame-&gt;hide ();
++
++	
++	controlframeContainer-&gt;recalc ();
++}
++
+
+Added: trunk/src/OSFrame.h
+===================================================================
+--- trunk/src/OSFrame.h	2006-02-12 22:21:00 UTC (rev 251)
++++ trunk/src/OSFrame.h	2006-02-12 23:48:56 UTC (rev 252)
+@@ -0,0 +1,70 @@
++#ifndef OSFRAME
++#define OSFRAME
++
++#include &lt;string&gt;
++#include &quot;fx.h&quot; 
++
++#include &quot;OSFileList.h&quot;
++
++using namespace std;
++
++class OSFrame;
++
++class box
++{
++
++  public:
++
++    OSFrame * fr;
++    FXButton *prebutton;
++    FXButton *bt;
++    FXButton *nextbutton;
++    
++
++     box (OSFrame * fr, FXButton * prebutton, FXButton * bt, FXButton * nextbutton)
++    {
++	this-&gt;bt = bt;
++	this-&gt;fr = fr;
++	this-&gt;prebutton = prebutton;
++	this-&gt;nextbutton = nextbutton;
++    }
++
++};
++
++
++class OSFrame
++{
++  private:
++	
++	FXDockSite* dock1;
++	FXDockSite* dock2;
++  public:
++
++    long id;
++    string pathdir;
++    string type;
++    OSFileList *f;
++    FXButton *toleft;
++    FXButton *toright;
++    FXButton *toclose;
++    FXButton *firstbutton;
++    
++    FXVerticalFrame * frame;
++    FXHorizontalFrame *hf;
++
++    OSFrame ( FXComposite * cp, FXComposite * p, OSPathType pt, FXObject * tgt,FXDockSite* dock1,FXDockSite* dock2,long id,OSFileListController* controller);
++    void generateMenu (string path, FXObject * tgt);
++    void moveToFront(FXComposite * controlframeContainer,FXComposite * frameContainer,OSFrame * frameOpposite);
++    void moveToBack(FXComposite * controlframeContainer);
++    bool openDir(string dir);
++    string getDir(void);
++    
++    ~OSFrame ();
++    void create(void);
++
++
++
++
++};
++
++#endif
+
+Modified: trunk/src/OSMainWindow.cpp
+===================================================================
+--- trunk/src/OSMainWindow.cpp	2006-02-12 22:21:00 UTC (rev 251)
++++ trunk/src/OSMainWindow.cpp	2006-02-12 23:48:56 UTC (rev 252)
+@@ -57,6 +57,7 @@
+             pane = NULL;
+             filemenu = NULL;
+             pref = NULL;
++	    lastId=0;
+ 
+             string fontdesc = conf-&gt;readonestring ( &quot;/OpenspaceConfig/fonts/normalfont&quot; );
+             FXFont *font = new FXFont( getApp(), fontdesc.c_str() );
+@@ -168,13 +169,13 @@
+             string dir = parseDir ( conf-&gt;readonestring ( &quot;/OpenspaceConfig/leftdir/dir&quot; ) );
+             string type = conf-&gt;readonestring ( &quot;/OpenspaceConfig/leftdir/type&quot; );
+             OSPathType pt ( dir, type );
+-            left_frame = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock);
++            left_frame = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock,lastId++,this);
+ 	    	   
+          
+             dir = parseDir ( conf-&gt;readonestring ( &quot;/OpenspaceConfig/rightdir/dir&quot; ) );
+             type = conf-&gt;readonestring ( &quot;/OpenspaceConfig/rightdir/type&quot; );
+             OSPathType pt2 ( dir, type );
+-            right_frame = new OSFrame (controlframe, rightframe, pt2, this,topdock,rightdock);
++            right_frame = new OSFrame (controlframe, rightframe, pt2, this,topdock,rightdock,lastId++,this);
+ 
+           
+ 	    left_frame-&gt;moveToFront(leftcontrolframe,leftframe,right_frame);
+@@ -302,7 +303,7 @@
+         controlframe-&gt;recalc ();
+     }
+     OSPathType pt ( dir, type, str_server, str_user, str_pass, str_port );
+-    OSFrame *fr = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock);
++    OSFrame *fr = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock,lastId++,this);
+     fr-&gt;create ();
+ 
+     this-&gt;handle ( fr-&gt;toleft, FXSEL ( SEL_LEFTBUTTONRELEASE, ID_TOLEFT ), NULL );
+@@ -635,7 +636,7 @@
+         OSPathType pt ( dir, type, str_server );
+         OSFrame *fr;
+ 	
+-        fr = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock);
++        fr = new OSFrame ( controlframe, leftframe, pt, this,topdock,rightdock,lastId++,this);
+ 	fr-&gt;create ();
+ 
+ 	    
+@@ -655,15 +656,6 @@
+ 	
+     }
+ 
+-    else if ( id == 666 )       //directory change, for example user clicked double on direcotry, or clicked with 3rd button to go to parent dir
+-    {
+-        if ( left_frame-&gt;f-&gt;active )
+-            left_frame-&gt;generateMenu( left_frame-&gt;getDir(), this );
+-
+-        else
+-            right_frame-&gt;generateMenu ( right_frame-&gt;getDir(), this );
+-    }
+-
+     else if ( id == 668 )
+     {
+         if ( left-&gt;getWidth () == 0 || right-&gt;getWidth () == 0 )
+@@ -1067,3 +1059,18 @@
+ 
+ }
+ 
++
++void OSMainWindow::dirChange(long id)
++{
++
++	if(left_frame-&gt;id==id)	
++	left_frame-&gt;generateMenu( left_frame-&gt;getDir(), this );
++	else
++	right_frame-&gt;generateMenu( right_frame-&gt;getDir(), this );
++
++}
++
++void OSMainWindow::getFocus(long id)
++{
++
++}
+
+Modified: trunk/src/OSMainWindow.h
+===================================================================
+--- trunk/src/OSMainWindow.h	2006-02-12 22:21:00 UTC (rev 251)
++++ trunk/src/OSMainWindow.h	2006-02-12 23:48:56 UTC (rev 252)
+@@ -11,13 +11,13 @@
+ #include &quot;OSPathType.h&quot;
+ #include &quot;OSFileList.h&quot;
+ #include &quot;OSFileTypeSymbol.h&quot;
+-
++#include &quot;OSFileListController.h&quot;
+ using namespace std;
+ 
+ 
+ //the main application window
+ 
+-class OSMainWindow:public FXMainWindow
++class OSMainWindow:public FXMainWindow, public OSFileListController
+ {
+   FXDECLARE (OSMainWindow) public:
+     enum
+@@ -65,7 +65,10 @@
+     long OSMainWindow::onUpdate (FXObject * sender, FXSelector sel, void *);
+     long OSMainWindow::onConfigure (FXObject * sender, FXSelector sel, void *);
+ 
++    void dirChange(long id);
++    void getFocus(long id);
+ 
++
+   private:
+     OSMainWindow ()
+     {
+@@ -102,6 +105,8 @@
+     FXMenuPane *pane;
+     OSPreferences *pref;
+     float ratio;
++    
++    long lastId;
+ 
+ 
+     FXToolBarShell *dragshell1;	
+
+
+</PRE>
+
+<!--endarticle-->
+    <HR>
+    <P><UL>
+        <!--threads-->
+	<LI>Previous message: <A HREF="000032.html">[Openspace-svn] r251 - trunk/src
+</A></li>
+	<LI>Next message: <A HREF="000034.html">[Openspace-svn] r253 - trunk/src
+</A></li>
+         <LI> <B>Messages sorted by:</B> 
+              <a href="date.html#33">[ date ]</a>
+              <a href="thread.html#33">[ thread ]</a>
+              <a href="subject.html#33">[ subject ]</a>
+              <a href="author.html#33">[ author ]</a>
+         </LI>
+       </UL>
+
+<hr>
+<a href="https://lists.berlios.de/mailman/listinfo/openspace-svn">More information about the Openspace-svn
+mailing list</a><br>
+</body></html>
